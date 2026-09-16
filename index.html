@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nitesh — Product, Design & Branding</title>
+  <meta name="description" content="Nitesh — Product, Design and Branding. Portfolio 2025." />
+
+  <!-- ============================================================
+       FONTS
+       Clash Display (headings) + Neue Montreal (body) via Fontshare
+  ============================================================ -->
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link
+    href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=general-sans@400,500,600&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- ============================================================
+       STYLES
+  ============================================================ -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       CUSTOM CURSOR
+  ============================================================ -->
+  <div class="cursor" id="cursor">
+    <span class="cursor-label" id="cursorLabel"></span>
+  </div>
+
+  <!-- ============================================================
+       PRELOADER
+  ============================================================ -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-top">
+      <span class="preloader-tag">PORTFOLIO 2025</span>
+    </div>
+    <div class="preloader-count">
+      <span id="preloaderNum">0</span><span class="pct">%</span>
+    </div>
+    <div class="preloader-name">
+      <div class="preloader-mask"><span>NITESH</span></div>
+    </div>
+    <div class="preloader-bar-wrap">
+      <div class="preloader-bar" id="preloaderBar"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       GRAIN / NOISE OVERLAY
+  ============================================================ -->
+  <div class="grain"></div>
+
+  <!-- ============================================================
+       NAV
+  ============================================================ -->
+  <header class="nav" id="nav">
+    <div class="nav-left">
+      <a href="#top" class="nav-mark magnetic">N.</a>
+    </div>
+    <div class="nav-center">
+      <span class="nav-status">
+        <span class="dot"></span> Available for select work
+      </span>
+    </div>
+    <div class="nav-right">
+      <button class="menu-btn magnetic" id="menuBtn" aria-label="Toggle menu">
+        <span>Menu</span>
+        <div class="menu-icon"><i></i><i></i></div>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       FULLSCREEN MENU OVERLAY
+  ============================================================ -->
+  <nav class="menu-overlay" id="menuOverlay">
+    <div class="menu-overlay-inner">
+      <ol class="menu-list">
+        <li><a href="#work" class="menu-link magnetic-lg"><span>Work</span><small>01</small></a></li>
+        <li><a href="#about" class="menu-link magnetic-lg"><span>Introduction</span><small>02</small></a></li>
+        <li><a href="#journey" class="menu-link magnetic-lg"><span>Journey</span><small>03</small></a></li>
+        <li><a href="#contact" class="menu-link magnetic-lg"><span>Contact</span><small>04</small></a></li>
+      </ol>
+      <div class="menu-footer">
+        <div class="menu-footer-col">
+          <p>Elsewhere</p>
+          <a href="#" class="magnetic">Instagram</a>
+          <a href="#" class="magnetic">LinkedIn</a>
+          <a href="#" class="magnetic">Behance</a>
+        </div>
+        <div class="menu-footer-col">
+          <p>Write</p>
+          <a href="mailto:hello@nitesh.design" class="magnetic">hello@nitesh.design</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       MAIN SCROLL CONTAINER (Lenis target)
+  ============================================================ -->
+  <div id="smooth-wrapper">
+    <main id="smooth-content">
+
+      <!-- ==========================================================
+           HERO
+      ========================================================== -->
+      <section class="hero" id="top">
+        <div class="hero-bg-text" aria-hidden="true">
+          <span>DESIGN</span>
+        </div>
+
+        <div class="hero-inner">
+          <div class="hero-tag-row">
+            <div class="hero-tag-mask"><p class="hero-tag">Product, Design &amp; Branding</p></div>
+          </div>
+
+          <h1 class="hero-title">
+            <div class="line-mask"><span class="line">I DESIGN</span></div>
+            <div class="line-mask"><span class="line">EXPERIENCES <em>that</em></span></div>
+            <div class="line-mask"><span class="line">LEAVE A MARK.</span></div>
+          </h1>
+
+          <div class="hero-bottom">
+            <div class="hero-bottom-left">
+              <div class="hero-tag-mask"><p class="hero-scroll-label">Scroll to explore</p></div>
+            </div>
+            <div class="hero-bottom-right">
+              <div class="hero-tag-mask"><p class="hero-name">Nitesh — Portfolio 2025</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-scroll-indicator">
+          <span class="scroll-line"></span>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           MARQUEE STRIP
+      ========================================================== -->
+      <section class="marquee-strip" aria-hidden="true">
+        <div class="marquee-track">
+          <span>PRODUCT DESIGN</span><span class="dash">—</span>
+          <span>BRAND IDENTITY</span><span class="dash">—</span>
+          <span>ART DIRECTION</span><span class="dash">—</span>
+          <span>UI / UX</span><span class="dash">—</span>
+          <span>PRODUCT DESIGN</span><span class="dash">—</span>
+          <span>BRAND IDENTITY</span><span class="dash">—</span>
+          <span>ART DIRECTION</span><span class="dash">—</span>
+          <span>UI / UX</span><span class="dash">—</span>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           ABOUT / INTRODUCTION
+      ========================================================== -->
+      <section class="about" id="about">
+        <div class="section-index">
+          <span>02</span>
+          <span class="section-index-label">Introduction</span>
+        </div>
+
+        <div class="about-grid">
+          <p class="about-copy reveal-text">
+            One half of me sees stories in <em>shadows</em>, rhythm in <em>routine</em>,
+            and beauty in the blink of a moment. Translating life's fleeting sparks
+            into <em>compelling designs.</em>
+          </p>
+
+          <div class="about-side">
+            <div class="about-side-block">
+              <h4>Focus</h4>
+              <ul>
+                <li>Product Design</li>
+                <li>Branding &amp; Identity</li>
+                <li>Art Direction</li>
+              </ul>
+            </div>
+            <div class="about-side-block">
+              <h4>Based in</h4>
+              <p>India — Working globally</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           SELECTED WORK
+      ========================================================== -->
+      <section class="work" id="work">
+        <div class="section-index">
+          <span>01</span>
+          <span class="section-index-label">Selected Work</span>
+        </div>
+
+        <div class="work-list">
+
+          <a href="#" class="work-item magnetic-block" data-cursor="View">
+            <div class="work-item-top">
+              <h3 class="work-title">Aurora — Fintech App</h3>
+              <span class="work-year">2025</span>
+            </div>
+            <div class="work-item-media">
+              <div class="work-item-img" style="background: linear-gradient(135deg,#c8ff4d,#1a1a1a);"></div>
+            </div>
+            <div class="work-item-bottom">
+              <span class="work-tag">Product Design</span>
+              <span class="work-tag">Mobile</span>
+            </div>
+          </a>
+
+          <a href="#" class="work-item magnetic-block" data-cursor="View">
+            <div class="work-item-top">
+              <h3 class="work-title">Monolith — Brand System</h3>
+              <span class="work-year">2024</span>
+            </div>
+            <div class="work-item-media">
+              <div class="work-item-img" style="background: linear-gradient(135deg,#ff4d6d,#1a1a1a);"></div>
+            </div>
+            <div class="work-item-bottom">
+              <span class="work-tag">Branding</span>
+              <span class="work-tag">Identity</span>
+            </div>
+          </a>
+
+          <a href="#" class="work-item magnetic-block" data-cursor="View">
+            <div class="work-item-top">
+              <h3 class="work-title">Ferro — E‑commerce Platform</h3>
+              <span class="work-year">2024</span>
+            </div>
+            <div class="work-item-media">
+              <div class="work-item-img" style="background: linear-gradient(135deg,#4d9fff,#1a1a1a);"></div>
+            </div>
+            <div class="work-item-bottom">
+              <span class="work-tag">UI / UX</span>
+              <span class="work-tag">Web</span>
+            </div>
+          </a>
+
+          <a href="#" class="work-item magnetic-block" data-cursor="View">
+            <div class="work-item-top">
+              <h3 class="work-title">Nocturne — Design System</h3>
+              <span class="work-year">2023</span>
+            </div>
+            <div class="work-item-media">
+              <div class="work-item-img" style="background: linear-gradient(135deg,#c8ff4d,#4d9fff);"></div>
+            </div>
+            <div class="work-item-bottom">
+              <span class="work-tag">Art Direction</span>
+              <span class="work-tag">Systems</span>
+            </div>
+          </a>
+
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           JOURNEY
+      ========================================================== -->
+      <section class="journey" id="journey">
+        <div class="section-index">
+          <span>03</span>
+          <span class="section-index-label">Journey So Far</span>
+        </div>
+
+        <div class="journey-grid">
+          <h2 class="journey-heading reveal-text">
+            I have been fortunate to collaborate and build products with
+            inspiring and creative teams across <em>global brands.</em>
+          </h2>
+
+          <div class="journey-stats">
+            <div class="journey-stat">
+              <span class="journey-stat-num" data-count="6">0</span>
+              <span class="journey-stat-plus">+</span>
+              <p>Years of craft</p>
+            </div>
+            <div class="journey-stat">
+              <span class="journey-stat-num" data-count="30">0</span>
+              <span class="journey-stat-plus">+</span>
+              <p>Products shipped</p>
+            </div>
+            <div class="journey-stat">
+              <span class="journey-stat-num" data-count="12">0</span>
+              <span class="journey-stat-plus">+</span>
+              <p>Global brands</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           CONTACT / CTA
+      ========================================================== -->
+      <section class="contact" id="contact">
+        <div class="contact-inner">
+          <p class="contact-eyebrow reveal-text">Have a project in mind?</p>
+          <a href="mailto:hello@nitesh.design" class="contact-cta magnetic-lg" data-cursor="Say Hi">
+            <span class="line-mask"><span class="line">Let's talk</span></span>
+          </a>
+          <div class="contact-email-row">
+            <a href="mailto:hello@nitesh.design" class="contact-email magnetic">hello@nitesh.design</a>
+          </div>
+        </div>
+
+        <footer class="footer">
+          <div class="footer-col">
+            <span class="nav-mark">N.</span>
+            <p>Product, Design &amp; Branding</p>
+          </div>
+          <div class="footer-col">
+            <p>Portfolio 2025</p>
+            <p>&copy; <span id="year"></span> Nitesh. All rights reserved.</p>
+          </div>
+          <div class="footer-col footer-social">
+            <a href="#" class="magnetic">Instagram</a>
+            <a href="#" class="magnetic">LinkedIn</a>
+            <a href="#" class="magnetic">Behance</a>
+          </div>
+        </footer>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ============================================================
+       SCRIPTS
+       GSAP core + ScrollTrigger + Lenis smooth scroll
+  ============================================================ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
