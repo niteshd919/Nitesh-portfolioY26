@@ -54,6 +54,13 @@
   <div class="grain"></div>
 
   <!-- ============================================================
+       PAGE TRANSITION OVERLAY (cross-page wipe, see transition.js)
+  ============================================================ -->
+  <div class="page-transition" id="pageTransition">
+    <span class="page-transition-label"></span>
+  </div>
+
+  <!-- ============================================================
        NAV
   ============================================================ -->
   <header class="nav" id="nav">
@@ -192,13 +199,26 @@
 
         <div class="work-list">
 
-          <a href="#" class="work-item magnetic-block" data-cursor="View">
+          <a href="case-study.html?p=aurora" class="work-item magnetic-block" data-cursor="View" data-transition data-transition-label="Aurora">
             <div class="work-item-top">
               <h3 class="work-title">Aurora — Fintech App</h3>
               <span class="work-year">2025</span>
             </div>
-            <div class="work-item-media">
-              <div class="work-item-img" style="background: linear-gradient(135deg,#c8ff4d,#1a1a1a);"></div>
+            <div class="work-item-media" style="--work-accent:#c8ff4d;">
+              <div class="work-item-details">
+                <div class="work-item-details-copy">
+                  <span class="work-item-details-label">Details</span>
+                  <p>Aurora is a mobile banking app built for freelancers with irregular income. Every payment auto-sorts into Spend, Save and Tax the moment it lands.</p>
+                </div>
+                <div class="work-item-details-impact">
+                  <span class="work-item-details-label">Impact</span>
+                  <div class="work-item-impact-grid">
+                    <div class="work-item-impact-stat"><strong>42%</strong><span>More weekly active use</span></div>
+                    <div class="work-item-impact-stat"><strong>3.1x</strong><span>More users saving for tax</span></div>
+                    <div class="work-item-impact-stat"><strong>96%</strong><span>Would recommend to a peer</span></div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="work-item-bottom">
               <span class="work-tag">Product Design</span>
@@ -206,13 +226,26 @@
             </div>
           </a>
 
-          <a href="#" class="work-item magnetic-block" data-cursor="View">
+          <a href="case-study.html?p=monolith" class="work-item magnetic-block" data-cursor="View" data-transition data-transition-label="Monolith">
             <div class="work-item-top">
               <h3 class="work-title">Monolith — Brand System</h3>
               <span class="work-year">2024</span>
             </div>
-            <div class="work-item-media">
-              <div class="work-item-img" style="background: linear-gradient(135deg,#ff4d6d,#1a1a1a);"></div>
+            <div class="work-item-media" style="--work-accent:#ff4d6d;">
+              <div class="work-item-details">
+                <div class="work-item-details-copy">
+                  <span class="work-item-details-label">Details</span>
+                  <p>Monolith is the brand identity system unifying eleven acquired products under one wordmark and token library — with zero forced rebuilds.</p>
+                </div>
+                <div class="work-item-details-impact">
+                  <span class="work-item-details-label">Impact</span>
+                  <div class="work-item-impact-grid">
+                    <div class="work-item-impact-stat"><strong>100%</strong><span>Migrated in two quarters</span></div>
+                    <div class="work-item-impact-stat"><strong>3x</strong><span>More guideline usage</span></div>
+                    <div class="work-item-impact-stat"><strong>27%</strong><span>Lift in deck-to-close rate</span></div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="work-item-bottom">
               <span class="work-tag">Branding</span>
@@ -220,13 +253,26 @@
             </div>
           </a>
 
-          <a href="#" class="work-item magnetic-block" data-cursor="View">
+          <a href="case-study.html?p=ferro" class="work-item magnetic-block" data-cursor="View" data-transition data-transition-label="Ferro">
             <div class="work-item-top">
               <h3 class="work-title">Ferro — E‑commerce Platform</h3>
               <span class="work-year">2024</span>
             </div>
-            <div class="work-item-media">
-              <div class="work-item-img" style="background: linear-gradient(135deg,#4d9fff,#1a1a1a);"></div>
+            <div class="work-item-media" style="--work-accent:#4d9fff;">
+              <div class="work-item-details">
+                <div class="work-item-details-copy">
+                  <span class="work-item-details-label">Details</span>
+                  <p>Ferro is a marketplace connecting independent metal and woodworkers directly with buyers, built around the maker's process, not just the product.</p>
+                </div>
+                <div class="work-item-details-impact">
+                  <span class="work-item-details-label">Impact</span>
+                  <div class="work-item-impact-grid">
+                    <div class="work-item-impact-stat"><strong>68%</strong><span>Higher average order value</span></div>
+                    <div class="work-item-impact-stat"><strong>2.4x</strong><span>More listings viewed</span></div>
+                    <div class="work-item-impact-stat"><strong>1,200+</strong><span>Makers onboarded</span></div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="work-item-bottom">
               <span class="work-tag">UI / UX</span>
@@ -234,13 +280,26 @@
             </div>
           </a>
 
-          <a href="#" class="work-item magnetic-block" data-cursor="View">
+          <a href="case-study.html?p=nocturne" class="work-item magnetic-block" data-cursor="View" data-transition data-transition-label="Nocturne">
             <div class="work-item-top">
               <h3 class="work-title">Nocturne — Design System</h3>
               <span class="work-year">2023</span>
             </div>
-            <div class="work-item-media">
-              <div class="work-item-img" style="background: linear-gradient(135deg,#c8ff4d,#4d9fff);"></div>
+            <div class="work-item-media" style="--work-accent:#c8ff4d;">
+              <div class="work-item-details">
+                <div class="work-item-details-copy">
+                  <span class="work-item-details-label">Details</span>
+                  <p>Nocturne is a shared design system unifying four nightlife and entertainment brands under one dark-first token grammar.</p>
+                </div>
+                <div class="work-item-details-impact">
+                  <span class="work-item-details-label">Impact</span>
+                  <div class="work-item-impact-grid">
+                    <div class="work-item-impact-stat"><strong>42%</strong><span>Faster feature ship time</span></div>
+                    <div class="work-item-impact-stat"><strong>90%</strong><span>UI inventory covered</span></div>
+                    <div class="work-item-impact-stat"><strong>4</strong><span>Brands unified</span></div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="work-item-bottom">
               <span class="work-tag">Art Direction</span>
@@ -327,6 +386,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+  <script src="core.js"></script>
+  <script src="transition.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
