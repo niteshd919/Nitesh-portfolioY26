@@ -107,10 +107,28 @@ function heroScrollOut() {
 
 /* ------------------------------------------------------------------
    7. MARQUEE — infinite horizontal loop, GSAP-driven so it can be
-      paused / resumed without hacky CSS keyframe restarts.
+      paused / resumed without hacky CSS keyframe restarts. Content
+      lives in one array; the track is built by looping over it twice
+      back-to-back so the halfway point is a seamless join.
 ------------------------------------------------------------------ */
+const MARQUEE_ITEMS = [
+  'USER RESERACH',
+  'BRAND and IDENTITY',
+  'UI / UX Design',
+  'AI PRODUCT DESIGN',
+  'HMI',
+  'WIREFRAMING',
+  'Advanced Prototyping',
+];
+
 function initMarquee() {
   const track = document.querySelector('.marquee-track');
+
+  const items = MARQUEE_ITEMS.map(
+    (item) => `<span>${item}</span><span class="dash">—</span>`
+  ).join('');
+  track.innerHTML = items + items;
+
   const distance = track.scrollWidth / 2;
 
   gsap.to(track, {
