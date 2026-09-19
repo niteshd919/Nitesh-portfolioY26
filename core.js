@@ -50,7 +50,7 @@ if (!isTouch) {
     yTo(e.clientY);
   });
 
-  document.querySelectorAll('a, button, .work-item').forEach((el) => {
+  document.querySelectorAll('a, button, .work-item, .testimonials-pin').forEach((el) => {
     el.addEventListener('mouseenter', () => {
       cursor.classList.add('is-hover');
       gsap.to(cursor, { width: 56, height: 56, duration: 0.35, ease: 'power3.out' });

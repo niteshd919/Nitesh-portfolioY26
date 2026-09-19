@@ -67,7 +67,7 @@ function heroEntrance() {
       ease: 'power4.out',
       stagger: 0.12,
     }, 0.15)
-    .to(['.hero-scroll-label', '.hero-name'], {
+    .to(['.hero-scroll-label', '.hero-meta', '.hero-name'], {
       y: '0%',
       duration: 0.9,
       ease: 'power4.out',
@@ -284,13 +284,67 @@ function initWorkDistortion() {
 }
 
 /* ------------------------------------------------------------------
+   10a. TESTIMONIALS — PINNED HORIZONTAL QUOTE DECK
+        Desktop/mouse only: pins the deck in place and trades vertical
+        scroll input for horizontal travel across the quote track, one
+        full-width quote at a time. ScrollTrigger's snap locks onto
+        the nearest slide as soon as scrolling settles, so there's
+        never a moment resting half-between two quotes. Touch devices
+        skip this entirely and get the CSS scroll-snap fallback in
+        style.css — pinch/scroll-jacking on a phone is more hostile
+        than helpful.
+------------------------------------------------------------------ */
+function initTestimonials() {
+  if (isTouch || isReducedMotion) return;
+
+  const section = document.querySelector('.testimonials');
+  const pinEl = document.querySelector('.testimonials-pin');
+  const track = document.querySelector('.testimonials-track');
+  if (!section || !pinEl || !track) return;
+
+  section.classList.add('has-pin');
+
+  const steps = gsap.utils.toArray('.testimonials-step');
+  const total = track.children.length;
+  const getMaxScroll = () => Math.max(0, track.scrollWidth - pinEl.clientWidth);
+  // A little slack beyond the raw pan distance so the eased snap has
+  // room to settle instead of running out of scroll mid-animation.
+  const SCROLL_DISTANCE_FACTOR = 1.2;
+  // Pin below the fixed nav rather than flush against the viewport top,
+  // or the deck slides in underneath it for the whole pinned dwell.
+  const navEl = document.querySelector('.nav');
+  const getPinOffset = () => (navEl ? navEl.getBoundingClientRect().height : 0) + 24;
+
+  const tween = gsap.to(track, { x: () => -getMaxScroll(), ease: 'none' });
+
+  ScrollTrigger.create({
+    trigger: pinEl,
+    start: () => 'top ' + getPinOffset() + 'px',
+    end: () => '+=' + getMaxScroll() * SCROLL_DISTANCE_FACTOR,
+    pin: true,
+    scrub: 1,
+    animation: tween,
+    invalidateOnRefresh: true,
+    snap: {
+      snapTo: 1 / (total - 1),
+      duration: { min: 0.2, max: 0.6 },
+      ease: 'power2.inOut',
+    },
+    onUpdate: (self) => {
+      const index = Math.round(self.progress * (total - 1));
+      steps.forEach((el, i) => el.classList.toggle('is-active', i === index));
+    },
+  });
+}
+
+/* ------------------------------------------------------------------
    11a. QUICK REVEAL — used instead of the full counting preloader
         when arriving back from a case study page, since the page
         transition wipe already served as the "loading" beat.
 ------------------------------------------------------------------ */
 function quickRevealPreloader(onComplete) {
   const preloader = document.getElementById('preloader');
-  gsap.set(['.preloader-mask span', '.hero-tag', '.hero-title .line', '.hero-scroll-label', '.hero-name'], { y: '0%' });
+  gsap.set(['.preloader-mask span', '.hero-tag', '.hero-title .line', '.hero-scroll-label', '.hero-meta', '.hero-name'], { y: '0%' });
   gsap.set('.hero-bg-text', { opacity: 1 });
   gsap.to(preloader, {
     yPercent: -100,
@@ -324,6 +378,7 @@ window.addEventListener('load', () => {
   initScrollReveals();
   initCounters();
   initWorkDistortion();
+  initTestimonials();
   heroScrollOut();
 
   let skipPreloader = false;
@@ -333,7 +388,7 @@ window.addEventListener('load', () => {
   if (isReducedMotion) {
     // Respect reduced-motion: skip preloader theatrics, reveal instantly.
     document.getElementById('preloader').style.display = 'none';
-    gsap.set(['.preloader-mask span', '.hero-tag', '.hero-title .line', '.hero-scroll-label', '.hero-name'], { y: '0%' });
+    gsap.set(['.preloader-mask span', '.hero-tag', '.hero-title .line', '.hero-scroll-label', '.hero-meta', '.hero-name'], { y: '0%' });
     gsap.set('.hero-bg-text', { opacity: 1 });
     scrollToHashIfNeeded();
     return;
