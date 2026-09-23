@@ -223,6 +223,20 @@ function initScrollReveals() {
     }
   );
 
+  // Brand wall — logo cells fade/scale in, left-to-right then wrap
+  gsap.fromTo(
+    '.brand-cell',
+    { opacity: 0, scale: 0.9 },
+    {
+      opacity: 1,
+      scale: 1,
+      duration: 0.7,
+      ease: 'power3.out',
+      stagger: 0.06,
+      scrollTrigger: { trigger: '.brand-grid', start: 'top 88%' },
+    }
+  );
+
   // Contact CTA line unmask on scroll into view
   gsap.fromTo(
     '.contact-cta .line',

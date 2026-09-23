@@ -742,6 +742,97 @@ section {
   margin-top: 0.25rem;
 }
 
+/* ---- Brand wall — logos of collaborators, rendered as a hairline
+   index grid so nine unrelated palettes read as one system: every
+   mark sits dim/mono until hover swaps it for the acid-green glow. ---- */
+.brand-wall {
+  margin-top: 6rem;
+}
+.brand-wall-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--c-line);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--c-fg-faint);
+}
+.brand-wall-count {
+  font-family: var(--f-display);
+  color: var(--c-fg-dim);
+}
+
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-left: 1px solid var(--c-line);
+}
+.brand-cell {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 3vw, 3rem);
+  border-right: 1px solid var(--c-line);
+  border-bottom: 1px solid var(--c-line);
+  overflow: hidden;
+  isolation: isolate;
+}
+.brand-cell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(200, 255, 77, 0.14), transparent 70%);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.5s var(--ease-out), transform 0.6s var(--ease-out);
+}
+.brand-cell::after {
+  content: attr(data-cursor);
+  position: absolute;
+  left: clamp(1rem, 2vw, 1.75rem);
+  bottom: 0.9rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-fg-faint);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+}
+.brand-cell img {
+  max-width: 100%;
+  max-height: 46px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.38;
+  transform: scale(0.94);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out),
+    filter 0.5s var(--ease-out);
+}
+.brand-cell:hover {
+  border-color: var(--c-line-strong);
+}
+.brand-cell:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+.brand-cell:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+.brand-cell:hover img {
+  opacity: 1;
+  transform: scale(1.08);
+  filter: brightness(0) invert(1)
+    drop-shadow(0 0 18px rgba(200, 255, 77, 0.55));
+}
+
 /* ================= TESTIMONIALS =================
    One quote fills the view at a time — no card, no background, no
    per-item color. Desktop: GSAP pins .testimonials-pin and scrubs
@@ -991,6 +1082,12 @@ html.is-transitioning button {
     gap: 2.5rem;
   }
   .about-copy, .journey-heading { max-width: none; }
+
+  .brand-wall { margin-top: 4rem; }
+  .brand-grid { grid-template-columns: repeat(2, 1fr); }
+  .brand-cell { aspect-ratio: 4 / 3; }
+  .brand-cell img { max-height: 34px; }
+  .brand-cell::after { display: none; }
 
   .menu-footer { flex-direction: column; gap: 2rem; }
 
