@@ -113,12 +113,14 @@ function heroScrollOut() {
 ------------------------------------------------------------------ */
 const MARQUEE_ITEMS = [
   'USER RESERACH',
-  'BRAND and IDENTITY',
-  'UI / UX Design',
+  'EXPERIENCE and INTERFACE DESIGN',
   'AI PRODUCT DESIGN',
-  'HMI',
   'WIREFRAMING',
   'Advanced Prototyping',
+  'BRAND and IDENTITY',
+  'HMI',
+  'COLLABORATION',
+  'WORKSHOP',
 ];
 
 function initMarquee() {
