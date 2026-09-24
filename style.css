@@ -832,6 +832,7 @@ section {
   filter: brightness(0) invert(1)
     drop-shadow(0 0 18px rgba(200, 255, 77, 0.55));
 }
+.brand-cell--lg img { max-height: 60px; }
 
 /* ================= TESTIMONIALS =================
    One quote fills the view at a time — no card, no background, no
@@ -1087,6 +1088,7 @@ html.is-transitioning button {
   .brand-grid { grid-template-columns: repeat(2, 1fr); }
   .brand-cell { aspect-ratio: 4 / 3; }
   .brand-cell img { max-height: 34px; }
+  .brand-cell--lg img { max-height: 44px; }
   .brand-cell::after { display: none; }
 
   .menu-footer { flex-direction: column; gap: 2rem; }
