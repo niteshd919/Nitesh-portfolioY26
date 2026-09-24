@@ -1,5 +1,5 @@
 /* ==================================================================
-   NITESH — PORTFOLIO 2025
+   NITESH — PORTFOLIO 2026
    Homepage-specific motion: preloader, hero entrance, marquee and
    scroll-triggered reveals. Shared chrome (Lenis, cursor, magnetic,
    menu) lives in core.js, loaded before this file.
