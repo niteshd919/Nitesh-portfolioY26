@@ -101,12 +101,12 @@ window.CASE_STUDIES = {
     title: 'Offpeak',
     subtitle: 'EV Tariff Input',
     tagline: 'A paper tariff, a phone, and not one uncovered minute.',
-    year: '2025',
+    year: '2023',
     role: 'UI / UX Designer',
     platform: 'Mobile app · iOS & Android',
     scope: 'Research, Concepts, Interaction, Handover',
     tools: 'Figma',
-    tags: ['Interaction Design', 'Data Viz'],
+    tags: ['UX Research', 'Data Viz'],
     gradient: 'linear-gradient(135deg,#35e0a8,#1a1a1a)',
     accent: '#35e0a8',
 
@@ -208,7 +208,7 @@ window.CASE_STUDIES = {
           ['Table', 'Exact values, screen readers, checking against the bill', 'Patterns', 'Review “Table” view'],
           ['Radial clock', 'The 24 h cycle metaphor', 'Labels, precise edits, comparison', 'Explored, parked'],
         ],
-        note: `The radial clock was tempting. A 24-hour ring shows the wrap past midnight
+        note: `Design tradeoff: The radial clock was tempting. A 24-hour ring shows the wrap past midnight
           beautifully, but it’s hard to label, hard to compare and fiddly to edit with a
           thumb. A plain linear bar with an explicit “crosses midnight” marker won.`,
       },
