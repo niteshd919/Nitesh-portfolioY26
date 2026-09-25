@@ -106,7 +106,7 @@ window.CASE_STUDIES = {
     platform: 'Mobile app · iOS & Android',
     scope: 'Research, Concepts, Interaction, Handover',
     tools: 'Figma',
-    tags: ['UX Research', 'Data Viz'],
+    tags: ['UX Research', 'Data Viz', 'Mobile'],
     gradient: 'linear-gradient(135deg,#35e0a8,#1a1a1a)',
     accent: '#35e0a8',
 
