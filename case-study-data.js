@@ -267,10 +267,10 @@ window.CASE_STUDIES = {
         intro: `The first four screens are an interview. Each asks one question in the
           bill’s own words, and every answer takes work away from the next step.`,
         screens: [
-          { code: 'F1', title: 'Intro', desc: 'Sets expectations up front: three questions, and have your bill ready. The bar at the top previews the goal. Flat tariffs get an exit right here: “My price never changes”.' },
-          { code: 'F2', title: 'Does your price change during the year?', desc: 'A yes/no question instead of an empty form. Answer “No” and the next screen disappears.' },
-          { code: 'F3', title: 'Two start dates split the year', desc: 'Only the start dates are editable, as day and month. The ends fill themselves in, New Year wrap and 29 February included. Period names are editable too.' },
-          { code: 'F4', title: 'Days as two groups', desc: 'One tap moves a day between groups, and every day always belongs to exactly one. “Mon, Fri, Sat” works as well as “Mon – Thu”.' },
+          { code: 'F1', title: 'Intro', desc: 'Sets expectations up front: three questions, and have your bill ready. The bar at the top previews the goal. Flat tariffs get an exit right here: “My price never changes”.', image: 'assets/offpeak/f1.png' },
+          { code: 'F2', title: 'Does your price change during the year?', desc: 'A yes/no question instead of an empty form. Answer “No” and the next screen disappears.', image: 'assets/offpeak/f2.png' },
+          { code: 'F3', title: 'Two start dates split the year', desc: 'Only the start dates are editable, as day and month. The ends fill themselves in, New Year wrap and 29 February included. Period names are editable too.', image: 'assets/offpeak/f3.png' },
+          { code: 'F4', title: 'Days as two groups', desc: 'One tap moves a day between groups, and every day always belongs to exactly one. “Mon, Fri, Sat” works as well as “Mon – Thu”.', image: 'assets/offpeak/f4.png' },
         ],
       },
       {
@@ -419,92 +419,364 @@ window.CASE_STUDIES = {
       },
     },
 
-    next: 'ferro',
+    next: 'codeflow',
   },
 
   /* ================================================================ */
-  ferro: {
-    slug: 'ferro',
-    title: 'Ferro',
-    subtitle: 'E-commerce Platform',
-    tagline: 'A marketplace that sells the maker, not just the product.',
-    year: '2024',
+  codeflow: {
+    slug: 'codeflow',
+    title: 'Codeflow',
+    subtitle: 'Daily Coding Challenge',
+    tagline: 'Getting a student to code today, and back the day after they don’t.',
+    year: '2026',
     role: 'Product Designer',
-    timeline: '6 Months',
-    platform: 'Web · Responsive',
-    team: '3 Designers, 6 Engineers, 2 PMs',
-    tools: 'Figma, Webflow, Framer',
-    tags: ['UI / UX', 'Web'],
-    gradient: 'linear-gradient(135deg,#4d9fff,#1a1a1a)',
-    accent: '#4d9fff',
+    platform: 'Web · Student portal',
+    scope: 'Research, IA, Interaction, Two rounds, Handover',
+    tools: 'Figma, FigJam',
+    tags: ['UX Research', 'Gamification', 'Web'],
+    gradient: 'linear-gradient(135deg,#ff7a3d,#1a1a1a)',
+    accent: '#ff7a3d',
 
-    heroScreen: {
-      device: 'browser',
-      html: `
-        <div class="wf-nav">
-          <span class="wf-dot"></span>
-          <span class="wf-bar" style="width:130px;border-radius:999px;flex:1;margin-left:0.5rem;"></span>
-          <span class="wf-bar wf-nav-cta" style="margin-left:0.5rem;"></span>
-        </div>
-        <div class="wf-list-row" style="border-top:none;padding-top:0;">
-          <span class="wf-dot" style="width:34px;height:34px;"></span>
-          <div class="wf-lines"><span class="wf-bar" style="width:100px;"></span><span class="wf-bar" style="width:64px;"></span></div>
-        </div>
-        <div class="wf-card-grid" data-anim="cards">
-          <div class="wf-card"><div class="wf-thumb"></div><span class="wf-bar" style="width:70%;"></span><span class="wf-bar"></span></div>
-          <div class="wf-card"><div class="wf-thumb"></div><span class="wf-bar" style="width:70%;"></span><span class="wf-bar"></span></div>
-        </div>
-      `,
-    },
+    /* Screens and boards below are placeholders. To drop in a real
+       export, add `image: 'assets/codeflow/h1.png'` (plus an optional
+       `alt`) to any screen, or to any `board` object. */
+    wideScreens: true,
+    heroScreens: [
+      { code: 'H1', title: 'Home hero' },
+      { code: 'C1', title: 'The editor' },
+      { code: 'R4', title: 'The day after' },
+    ],
 
-    overview: `Ferro connects independent metal and woodworkers — bladesmiths, furniture
-      makers, tool restorers — directly with buyers who care who made the thing
-      they're holding. My job was to design a marketplace that felt like a
-      workshop, not a warehouse.`,
+    overview: `Edwisely’s student portal already had assessments, reports and a
+      personality test. What it didn’t have was a reason to open it on a Tuesday.
+      Codeflow is the daily coding challenge that became that reason: one problem
+      picked for you on the homepage, a streak you can’t miss, and — the part most
+      streak features skip — somewhere for the missed day to land.`,
 
     problem: {
-      copy: `Existing marketplaces treated every maker as a storefront template: same
-        grid, same "Buy Now," same stock-photo conventions. Buyers couldn't tell a
-        first-time hobbyist from a smith with twenty years at the forge, and makers
-        had no way to show the process behind the price.`,
-      quote: `People aren't just buying a knife from me, they're buying forty hours in
-        the forge. Your website should let them see that.`,
-      attribution: 'Bladesmith, early Ferro seller',
+      copy: `Computer science students aren’t short of places to practise. They’re
+        short of a reason to practise today. Generic platforms serve the same problem
+        set to a first-year and a final-year, and nothing in them notices whether you
+        came back. The brief asked for a low-friction, personalised entry point on the
+        student homepage, with streaks and leaderboards to hold people there. Reading
+        it, the harder half was obvious: streaks are easy to start and easy to lose,
+        and the day a student loses one is usually the last day they open the product.`,
+      quote: `When I open the portal I want today’s problem already chosen for me, at a
+        level I can actually finish, so practising costs me one decision instead of ten.`,
+      attribution: 'The job story behind the brief',
+      context: [
+        { title: 'Who', desc: 'Undergraduates across all four years, on a college-issued portal they already have to log into. Mixed skill, mixed motivation, one shared leaderboard between them.' },
+        { title: 'What good looks like', desc: 'A student starts a challenge within a tap of landing, finishes it, and comes back tomorrow. And when they don’t come back, the product has something better to say than “streak lost”.' },
+      ],
+    },
+
+    framing: {
+      modelNote: 'One loop, five links · it only holds if every link does',
+      model: [
+        { title: 'Cue', desc: 'The reason to open the portal today. Ours is the homepage itself, not a notification.' },
+        { title: 'Entry', desc: 'One challenge, already chosen. No browse, no filters, no difficulty picker.' },
+        { title: 'The unit', desc: 'One problem, 25–30 minutes. Small enough to do in a bad week of term.' },
+        { title: 'Reward', desc: 'XP, accuracy and rank, credited on screen the second the tests pass.' },
+        { title: 'Proof', desc: 'Streak, league and the gap to the next rank. This is what brings them back tomorrow.' },
+      ],
+      insight: {
+        title: '“Keep the streak alive” is one job. Catching the student the day they slip is the other one, and it’s the one that decides retention.',
+        desc: `A single missed day does almost nothing to a forming habit — Lally’s UCL
+          work found no measurable effect on habit formation from one miss. What does the
+          damage is how the product frames it. Silverman and Barasch isolate two levers:
+          leave people blaming themselves and drop-off gets worse; give them a way to
+          repair and drop-off gets smaller. So the day-after screen is designed as a
+          screen in its own right, with the same care as the hero, instead of being left
+          as an error state nobody wrote.`,
+      },
+      edgeCasesLabel: 'Six moments where the loop actually breaks',
+      edgeCases: [
+        'Day one. A new student has no streak, no rank and no history, so every number on the page is a zero — and a zero motivates nobody.',
+        'The Goldilocks miss. Too hard and they close the tab; too easy and the XP feels made up. Either way the streak survives and the habit doesn’t.',
+        'The discouraging rank. “#1912 overall” is accurate and useless. Nobody has ever been motivated by four digits.',
+        'The near miss. Code compiles, six of eight test cases pass. This is the most common outcome of a submission and the least designed screen in v1.',
+        '11:40 pm. The student is awake, the streak expires at midnight, and nothing on screen says so.',
+        'The day after. They missed. Whatever this screen says decides whether they ever open the portal again.',
+      ],
     },
 
     approach: [
-      { title: 'Process over product', desc: 'Every listing supports a "making of" sequence — process photos and a note from the maker sit above the fold, not buried in a tab.' },
-      { title: 'Maker-first hierarchy', desc: 'Search and browse surface the maker’s name and shop as prominently as the item, reversing the usual marketplace order.' },
-      { title: 'Honest imperfection', desc: 'No forced white-background photography — natural, workshop-lit photos are the default template, matching how the goods are actually made.' },
-      { title: 'Trust through transparency', desc: 'Lead times, material sourcing and commission queues are shown plainly on every shop page instead of hidden until checkout.' },
+      { code: 'P1', title: 'One tap to the first keystroke', desc: 'The homepage picks the problem. Choosing is work, and work at the entry point is exactly where the funnel leaks.' },
+      { code: 'P2', title: 'Serve the next problem, not the hardest one', desc: 'Difficulty comes from recent accuracy and language history, and the card says why it was picked. A challenge that looks chosen for you beats one that’s objectively harder.' },
+      { code: 'P3', title: 'Make the rank a distance, not a position', desc: '“+80 XP to rank 2nd in your class” is an instruction. “#1912 overall” is a verdict. Lead with the gap that can close today.' },
+      { code: 'P4', title: 'Design the missed day before the perfect one', desc: 'The day-after screen is the only surface where the product can still change the outcome. It got drawn first, not last.' },
+      { code: 'P5', title: 'Earn it back, never buy it back', desc: 'A streak you can pay to restore is worth what you paid for it. Repair is always effort — extra challenges, inside a window.' },
     ],
 
-    flow: [
-      { title: 'Shop setup', desc: 'Makers build a shop page in under ten minutes, importing existing Instagram posts as a starting gallery.',
-        screen: `<div class="wf-list-row" style="border-top:none;padding:0;"><span class="wf-dot" style="width:34px;height:34px;"></span><div class="wf-lines"><span class="wf-bar"></span><span class="wf-bar"></span></div></div>` },
-      { title: 'Listing with process', desc: 'A guided listing flow prompts for at least one in-progress photo, turning craft documentation into the norm rather than the exception.',
-        screen: `<div class="wf-card"><div class="wf-thumb"></div><span class="wf-bar is-accent" style="width:50%;"></span></div>` },
-      { title: 'Discovery', desc: 'Browse and search are organized by material and technique first, category second — the way makers and enthusiasts actually think about the work.',
-        screen: `<div class="wf-card-grid"><div class="wf-card"><div class="wf-thumb"></div></div><div class="wf-card"><div class="wf-thumb"></div></div></div>` },
-      { title: 'Checkout & commission queue', desc: 'Custom orders route into a visible queue with realistic lead times, replacing the DM-based chaos most makers were using before.',
-        screen: `<div class="wf-stat"><span class="wf-bar" style="width:50%;"></span><div class="wf-fill"><span style="width:55%;"></span></div></div>` },
+    research: {
+      patterns: [
+        { title: 'Loss aversion, made visible', seenIn: 'Duolingo, Snapchat, GitHub’s contribution graph',
+          desc: 'Every day adds to something the user now owns, and losing it hurts more than earning it felt good. Simply showing an unbroken log lifts engagement on its own.',
+          applied: 'One flame, three placements: home hero, top strip and the challenge card. Same number in all of them.' },
+        { title: 'A unit small enough for a bad day', seenIn: 'Duolingo lessons, Wordle',
+          desc: 'Bingers churn faster than pacers. The daily unit has to be doable in the worst week of term, not the best one.',
+          applied: 'One problem, 25–30 minutes, and the streak counts the day — never the XP earned in it.' },
+        { title: 'Social duty beats self-discipline', seenIn: 'Snapchat shared streaks, Strava clubs',
+          desc: 'Breaking a shared streak lets a specific person down. Obligation to a human outlasts obligation to a number.',
+          applied: 'The home leaderboard shows classmates by name, not a global top 100. You are visibly in somebody’s list.' },
+        { title: 'Endowed progress', seenIn: 'Loyalty cards — Kivetz, Urminsky & Zheng, 2006',
+          desc: 'People push hardest when the goal is close and the remaining distance is stated in units they can earn today.',
+          applied: '“You need only +80 XP to reach rank 2nd in your class”, printed on the card before they start.' },
+        { title: 'Repair, not blame', seenIn: 'Silverman & Barasch, Journal of Consumer Research, 2023',
+          desc: 'Self-blame after a slip accelerates drop-off; an available repair slows it. Left alone, the “what-the-hell” effect turns one miss into quitting.',
+          applied: 'The day-after screen opens with “Life happened”, keeps total and best days on screen, and offers exactly one action.' },
+        { title: 'Earned protection over paid restore', seenIn: 'Duolingo streak freezes, Snapchat+ restores',
+          desc: 'Freezes granted for loyalty keep the streak meaningful. Restores sold for money quietly admit it never was.',
+          applied: 'Two freezes at 30 days, a third at 100. Nothing is purchasable — there’s no wallet in a college portal anyway.' },
+      ],
+      chartTable: {
+        title: 'The recovery ladder, and what made it into v1',
+        head: ['Mechanic', 'Fires', 'Best at', 'Cost to the streak’s meaning', 'In v1'],
+        rows: [
+          ['Streak freeze', 'Before the miss', 'Known unknowns: illness, travel, a bad week', 'Low, as long as it’s earned', 'Yes — at 30 and 100 days'],
+          ['Exam pause', 'Before the miss', 'Planned time off the college already knows about', 'None', 'Yes — from the academic calendar'],
+          ['Earn it back', 'Within 24 h of the miss', 'The student who wants it back and will work for it', 'None. The effort is the point', 'Yes — two challenges in 24 h'],
+          ['Paid restore', 'After the miss', 'Revenue', 'High. A bought streak is worth what it cost', 'No'],
+          ['Revival campaign', 'A week or more later', 'Students who have already gone', 'Low', 'v2 — needs a notification budget'],
+          ['Auto-repair', 'After our own outage', 'Streaks we broke ourselves', 'None. Fixing it quietly is the only honest option', 'Yes'],
+          ['Hard reset', 'At the miss', 'Nothing', 'It isn’t a mechanic, it’s the absence of one', 'No'],
+        ],
+        note: `Design tradeoff: leniency isn’t free. A freeze that’s too generous stops
+          being insurance and becomes the default, and the streak quietly stops meaning
+          “daily”. So: two earned freezes, an automatic pause for exam weeks, and a
+          24-hour window to earn one back. Past that the count resets — and the page
+          keeps total days and best-ever on screen, because that part was genuinely
+          earned and deleting it is just punishment.`,
+      },
+    },
+
+    directions: [
+      { letter: 'A', title: 'Challenge feed',
+        summary: 'The homepage is the catalogue. Today’s problems in a filterable list, difficulty and language chips along the top, streak in the header. The student picks.',
+        strengths: 'Everything is discoverable. Cheapest to build on the existing portal grid. Scales past the daily problem without a new page, and suits the confident final-year who knows what they want to drill.',
+        weaknesses: 'Puts a decision in front of a student who arrived with motivation, not a plan. Personalisation has nowhere to show itself. The streak becomes a header ornament, and the missed day has no surface at all.',
+        board: { label: 'Direction A · low-fi screens' } },
+      { letter: 'B', title: 'Progress dashboard',
+        summary: 'Stats first: challenges completed, accuracy, rank tiles, leaderboard. Today’s challenge is one row inside the dashboard, roughly where you’d expect a task list.',
+        strengths: 'Strongest social proof of the three, and it answers “where do I stand?” immediately. Good for the returning student. The leaderboard toggle has room to breathe.',
+        weaknesses: 'Reads as a report card. Four ranks arrive before any action, and the largest, worst number wins the student’s attention. The thing they came to do is the least prominent thing on the page.',
+        board: { label: 'Direction B · low-fi screens' } },
+      { letter: 'C', title: 'One card, already chosen', chosen: true,
+        summary: 'A single hero challenge with the reason it was picked, the XP it pays, the time left today and one button. Streak and league sit in the top strip. Progress and leaderboard move below the fold.',
+        strengths: 'One tap from landing to the editor. Personalisation is visible rather than implied. The streak has a permanent home, and there’s room above the fold for the at-risk and day-after states to take the page over when they need to.',
+        weaknesses: 'One card is one opinion — a bad match has no visible fallback. Everything wants to live in that hero. The catalogue disappears unless it’s deliberately signposted.',
+        board: { label: 'Direction C · low-fi screens' } },
     ],
+
+    /* Weighted totals are calculated from these rows, not typed in. */
+    decision: {
+      options: ['A · Feed', 'B · Dashboard', 'C · One card'],
+      criteria: [
+        { name: 'Time to first keystroke', detail: 'Decisions between landing and the editor', weight: 20, scores: [3, 2, 5] },
+        { name: 'Personalisation', detail: 'Does the served problem feel chosen for them', weight: 20, scores: [2, 3, 5] },
+        { name: 'Winnable social proof', detail: 'Rank reads as reachable, not as a verdict', weight: 15, scores: [2, 5, 4] },
+        { name: 'Streak legibility', detail: 'Active, at-risk and broken tell themselves apart', weight: 15, scores: [2, 3, 5] },
+        { name: 'Room for recovery', detail: 'Somewhere for the missed day to live', weight: 10, scores: [2, 3, 4] },
+        { name: 'Discovery', detail: 'Finding the other problems live today', weight: 10, scores: [5, 2, 3] },
+        { name: 'Build effort', detail: '5 = cheapest on the existing portal', weight: 10, scores: [4, 3, 3] },
+      ],
+      verdict: {
+        title: 'Direction C, the single pre-chosen card, with A’s catalogue moved one level down and B’s ranking panel kept below the fold.',
+        borrowed: [
+          { tag: '+A', text: 'The full list survives as its own page, reached from the card and from the nav — discovery, without putting a decision in the doorway.' },
+          { tag: '+B', text: 'Progress and leaderboard stay on the homepage, but under the hero, where they read as a reward for scrolling rather than a wall on arrival.' },
+        ],
+      },
+      risksLabel: 'Where C is weak, and what I did about it',
+      risks: [
+        { code: 'R1', title: 'One card, one opinion.', desc: 'If the match is wrong there’s no visible alternative. The card carries a quiet “Pick a different one” and states why this problem was chosen, so a student can disagree with the algorithm in a tap.' },
+        { code: 'R2', title: 'Everything competes for the hero.', desc: 'Streak, XP, league, countdown, rank and the problem all wanted the top of the page. One number per job: the flame counts days, the league states standing, the countdown states urgency. Nothing is printed twice.' },
+        { code: 'R3', title: 'The catalogue disappears.', desc: 'Students had no signal there was more. The card now ends with how many other problems are live today, which doubles as the way into the list.' },
+        { code: 'R4', title: 'Day one is empty.', desc: 'First run swaps the flame for “Day 1 starts now”, shows the nearest classmate above them instead of the class leader, and hides the progress row entirely until there’s something real in it.' },
+      ],
+    },
+
+    flowChapters: [
+      {
+        eyebrow: 'Part 1 of 3',
+        title: 'Land, and start within a tap',
+        intro: `The homepage has one job and a few seconds to do it. Everything above the
+          fold is either the problem, the reason it was picked, or the reason to finish
+          it before midnight.`,
+        screens: [
+          { code: 'H1', title: 'The hero card', desc: 'Today’s problem, its difficulty, the XP it pays, the time it should take and how many classmates have already solved it. Streak, league and total XP sit in the top strip — once each, and never repeated further down the page.' },
+          { code: 'H2', title: 'Why this one', desc: 'Three lines of reasoning beside the description: what it builds on, what it strengthens, where it turns up in interviews. Personalisation that can’t be seen may as well not be there.' },
+          { code: 'H3', title: 'Language, then go', desc: 'Python, Java or C++ as chips, defaulted to whichever they used last. One primary button, and one line under it naming the deadline instead of implying it.' },
+          { code: 'H4', title: 'Standing, below the fold', desc: 'Challenges completed, accuracy, average speed and best rank — four numbers that aren’t already in the top strip — with the class leaderboard alongside and the other three tiers a toggle away.' },
+        ],
+      },
+      {
+        eyebrow: 'Part 2 of 3',
+        title: 'The work, and the moment it lands',
+        intro: `The editor is where the time actually goes, so it gets the screen. Anything
+          that isn’t the problem or the code is collapsed, or deferred until it has
+          something to say.`,
+        screens: [
+          { code: 'C1', title: 'The editor', desc: 'Problem, example and constraints in a fixed left column capped at 46 characters; the editor takes everything else, with line numbers, a line-and-column readout and a full-screen toggle. Languages are tabs above the code, not a dropdown in a form.' },
+          { code: 'C2', title: 'Run, then submit', desc: 'The console doesn’t exist until the first run. Two empty input and output boxes on arrival told testers nothing and cost a third of the editor’s height.' },
+          { code: 'C3', title: 'Failed submission', desc: 'A compile error and a failed test case are different problems and get different screens: one points at a line, the other names the case and what it expected. Both keep the code, and neither costs the attempt.' },
+          { code: 'C4', title: 'Cleared', desc: 'XP credits on screen, the flame ticks over, and the rank line updates in place — “+150 XP · Rank 2 in your class”. Then one honest choice: next challenge, or done for today.' },
+        ],
+      },
+      {
+        eyebrow: 'Part 3 of 3',
+        title: 'Tomorrow, and the day they miss',
+        intro: `Everything up to here is the good day. This part is the reason the feature
+          retains anybody past week two.`,
+        screens: [
+          { code: 'R1', title: 'The leaderboard', desc: 'Class, department, college and overall as a toggle, opening on class — the only one of the four that’s winnable this week. League badges sit beside the rank, so standing survives a bad position.' },
+          { code: 'R2', title: 'Browse, when they want it', desc: 'The full list, filterable by language, with the personalised problem pinned at the top and still marked as such. Search is there for the student who arrived knowing exactly what they want to drill.' },
+          { code: 'R3', title: 'Streak at risk', desc: 'After 9 pm on an unplayed day the flame goes hollow and the hero swaps itself for the shortest problem live today. Urgency should arrive with a smaller ask, not a louder voice.' },
+          { code: 'R4', title: 'The day after', desc: '“Life happened. Your 24 days are still yours.” Total and best-ever stay on screen, the new count starts at zero underneath them, and one button offers the repair: two challenges in the next 24 hours puts the streak back where it was.' },
+        ],
+      },
+    ],
+
+    states: [
+      { code: 'S1', title: 'Day one', desc: 'No streak, no rank, no history. The flame becomes “Day 1 starts now”, the rank tile shows the nearest classmate above them rather than the class leader, and the progress row stays hidden until it has real numbers in it.' },
+      { code: 'S2', title: 'Near miss', desc: 'Six of eight cases passed. The screen leads with what passed, names the failing case and what it expected, and keeps the code intact — because this is the most common outcome of a submission, not an exception to it.' },
+      { code: 'S3', title: 'Exam week', desc: 'The academic calendar pauses every streak in the college automatically. Nobody has to remember to spend a freeze during finals, and nothing resets in a week when nobody was supposed to be practising.' },
+      { code: 'S4', title: 'Our fault', desc: 'If the judge or the portal is down past midnight, affected streaks repair themselves silently and the student is told afterwards. A streak the product broke was never the student’s to earn back.' },
+    ],
+
+    system: {
+      components: [
+        { title: 'Streak flame', usedIn: 'H1, H3, R3, R4, S1–S4',
+          desc: 'Five states: day zero (outline), active (filled, counting), at risk (hollow, after 9 pm), frozen (banded, with freezes remaining) and broken-but-repairable (grey, with the repair window counting down). The number is printed beside it in every state, so nothing depends on colour alone.',
+          board: { label: 'Streak flame · five states', ratio: '16 / 7' } },
+        { title: 'Challenge card',
+          desc: 'One layout, four contexts: home hero, browse row, browse detail and the at-risk swap. Difficulty, XP, time estimate and solved-today count are fixed slots in a fixed order, so they can be scanned the same way every time without being read.' },
+        { title: 'Rank row',
+          desc: 'Avatar, name, batch, streak, points, league badge. The student’s own row is pinned and highlighted, and the list always renders the two rows directly above them — being 4th is a story about 3rd, not about 1st.' },
+        { title: 'League scale',
+          desc: 'Five leagues, each with its own badge shape as well as a colour, so standing is readable in greyscale and with the common colour-vision deficiencies. The home strip shows the current league and the XP left to the next one, never the league on its own.',
+          scale: [
+            { token: 'league/bronze', range: '0–2k XP', hex: '#A8683C' },
+            { token: 'league/silver', range: '2–5k', hex: '#9BA3AD' },
+            { token: 'league/gold', range: '5–10k', hex: '#E0A32E' },
+            { token: 'league/platinum', range: '10–20k', hex: '#6FB6C9' },
+            { token: 'league/diamond', range: '20k+', hex: '#8E7BE8' },
+          ] },
+        { title: 'Editor shell',
+          desc: 'Language tabs, line numbers, a line-and-column readout, a full-screen toggle, and a console that appears on the first run and not before. Run and Submit are deliberately unalike: Run is quiet and repeatable, Submit is the one that touches the streak.' },
+      ],
+      note: 'Type: the portal’s existing Inter for the interface, JetBrains Mono for code, test output and every number that has to line up in a column — XP, ranks, times, streak counts.',
+    },
 
     testing: [
-      { title: 'Buyers skipped the process photos', desc: 'Moving the "making of" sequence above the price, not below, increased average time-on-listing by 40%.' },
-      { title: 'New makers felt intimidated', desc: 'A simple "shop since" badge, not a review score, reduced the pressure to look established from day one.' },
-      { title: 'Commission requests got lost in DMs', desc: 'The visible queue turned an invisible backlog into a trust signal — buyers now wait longer, happily, because they can see their place in line.' },
+      { title: 'It read like a report card, not a game', desc: 'All three participants said a version of the same sentence. A full dark theme is a design-system conversation rather than a feature decision, so the interim is a dark editor, a darker challenge surface, and the warm accent reserved for the two things being played: the streak and the XP.' },
+      { title: 'The numbers were on screen twice', desc: 'XP and streak sat in the top strip and again in the progress row four scrolls down. Two of the four progress tiles were spending space repeating what was already visible. They became accuracy and average speed, which nothing else on the page reported.' },
+      { title: 'Four ranks, none of them usable', desc: 'Class #3, department #102, college #812, overall #1912. Participants read the biggest number and stopped. v2 leads with the distance instead — “+80 XP to rank 2nd in your class” — and moves the other three behind the leaderboard toggle.' },
+      { title: 'Nobody could say what the points were for', desc: '“How does this actually help me get better?” came up unprompted, twice. XP on its own is a score. Paired with a league and a visible next threshold it becomes a ladder. The league badge and the progress-to-Diamond bar came straight out of that session.' },
+      { title: 'The editor was the smallest thing on the editing screen', desc: 'The code area was about a third of the viewport, with no line numbers, no sense of how much had been written, and whitespace in all the places that didn’t need it. It now takes the full width beside a fixed problem column.' },
+      { title: 'Empty input and output boxes taught nothing', desc: 'Two labelled boxes sat under the editor before anything had run, reading like fields waiting to be filled. They weren’t. The console now appears on the first run, with the actual result in it.' },
     ],
 
     impact: [
-      { value: 68, suffix: '%', decimals: 0, label: 'Increase in average order value' },
-      { value: 2.4, suffix: 'x', decimals: 1, label: 'More listings viewed per session' },
-      { value: 1200, suffix: '+', decimals: 0, label: 'Independent makers onboarded in year one' },
+      { value: 1, suffix: '', decimals: 0, label: 'Tap between landing on the homepage and the first keystroke, down from four' },
+      { value: 4.35, suffix: '/5', decimals: 2, label: 'Weighted score for the single-card entry, against 3.00 and 2.70' },
+      { value: 7, suffix: '', decimals: 0, label: 'Recovery mechanics mapped for the missed day. Three shipped in v1, none of them paid' },
+      { value: 0, suffix: '', decimals: 0, label: 'Screens where a broken streak is a dead end. Every one of them offers a way back' },
     ],
 
-    closing: `Ferro now hosts over a thousand independent makers, and the "making of"
-      sequence — originally a hard sell internally — is the single most-viewed part
-      of every listing page.`,
+    closing: `The hero card is the part people notice. The screen I’d defend in a review is
+      the one nobody is meant to see — the morning after a student misses. Any product
+      can celebrate a good run. The ones that keep people are the ones with something
+      honest to say on the bad day.`,
+
+    nextSteps: [
+      { title: 'Validate', items: [
+        'Moderated test with 8–10 students across all four years, on their own machines, mid-semester rather than in a quiet week.',
+        'Measure time to first keystroke, completion rate, and D1 / D7 return. The only numbers that matter here are the ones about coming back.',
+        'Test the day-after screen deliberately: simulate a broken streak and watch what people do with it. That’s the screen the whole feature rests on.',
+      ] },
+      { title: 'Assumptions', items: [
+        'Difficulty is served from recent accuracy and language history. The matching logic was out of scope; the design only has to make its reasoning visible.',
+        'A streak day is a calendar day in college local time, and it closes at midnight.',
+        'A college portal has no wallet, so nothing on the recovery ladder can be bought. That constraint made the right choice the easy one.',
+        'Notifications exist, but the budget for them wasn’t agreed, so nothing in v1 depends on a push arriving.',
+      ] },
+      { title: 'Open questions & v2', items: [
+        'Do shared or class streaks outperform individual ones here? Social duty is the strongest lever in the research and the one v1 doesn’t use.',
+        'Where does the streak sit relative to assessments and the personality test? Right now the daily loop and the academic track don’t know about each other.',
+        'Revival, once there’s a notification budget: what does a message to a student who left 30 days ago actually say, and does it earn the interruption?',
+      ] },
+    ],
+
+    /* Per-section label overrides and headings, keyed by section id. */
+    sections: {
+      problem: { label: 'The Brief' },
+      framing: {
+        title: 'A streak product has two jobs, and most only build the first',
+        intro: `I started by drawing the loop, because it makes the weak link obvious. Four
+          of the five steps are about the day a student shows up. The fifth is about the
+          day they don’t, and that’s where the drop-off actually happens.`,
+      },
+      approach: {
+        label: 'Principles',
+        title: 'Five rules every screen had to pass',
+        intro: 'They came out of the framing, and between them they settled most of the arguments that came later.',
+      },
+      research: {
+        title: 'What streak products already know, and what the research says they get wrong',
+        intro: `Two questions. Why do people come back to a streak, and what happens the day
+          they don’t? I read across Duolingo’s and Snapchat’s public product writing, then
+          went to the academic work underneath it — Silverman and Barasch on repair versus
+          blame, Lally on how little one missed day actually costs, Polivy and Herman on
+          the “what-the-hell” effect. Eighteen patterns made the long list. These six did
+          most of the work.`,
+      },
+      directions: {
+        title: 'Three ways to open the homepage',
+        intro: `Same brief, same student, three different opinions about what a homepage is
+          for: a catalogue, a report, or a single instruction. Each was taken far enough
+          that choosing between them was a real decision.`,
+      },
+      decision: {
+        title: 'Scoring against the brief, not against my taste',
+        intro: `The brief names cognitive load first, so time to first keystroke carries the
+          most weight, alongside personalisation. The scores are expert judgment. A
+          prototype test is what confirms them or proves me wrong.`,
+      },
+      flow: {
+        label: 'The Final Flow',
+        title: 'Twelve screens, in three parts',
+        intro: `Mid-fi wireframes, already through one round of testing. Parts 1 and 2 are
+          the good day. Part 3 is the one that decides whether there’s a week two.`,
+      },
+      states: {
+        title: 'The four states that had to be designed, not defaulted',
+        intro: `Each of these is a moment where a generic empty state or a red error box
+          would quietly cost a student. They get a specific, calm answer instead.`,
+      },
+      system: {
+        title: 'Five components carry the whole feature',
+        intro: `Handed over in Figma with anatomy, states and tokens, built on the portal’s
+          existing system rather than beside it. The flame got the most detailed spec: it
+          appears on more screens than anything else, and it’s wrong on most of them if
+          you only draw the happy state.`,
+      },
+      testing: {
+        label: 'Testing & Learnings',
+        title: 'Three students, six changes',
+        intro: `A small round, deliberately early — enough to catch what was structurally
+          wrong before anything got polished. Every finding below moved a pixel. Two of
+          them moved the whole layout.`,
+      },
+      impact: {
+        label: 'Outcome',
+        title: 'What the design changes',
+        intro: 'These are design outcomes, measured against the brief and the first test round. Retention numbers come after it ships.',
+      },
+      'whats-next': {
+        title: 'What I’d test next, and what’s still open',
+      },
+    },
 
     next: 'nocturne',
   },

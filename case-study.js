@@ -28,6 +28,10 @@
   ---------------------------------------------------------------- */
   document.documentElement.style.setProperty('--case-accent', data.accent);
 
+  /* Screen slots are phone-proportioned by default. Desktop products
+     opt into wider frames and a 2-up grid with `wideScreens: true`. */
+  if (data.wideScreens) document.body.classList.add('case-wide-screens');
+
   /* ----------------------------------------------------------------
      1. Meta
   ---------------------------------------------------------------- */
@@ -533,8 +537,8 @@
   /* ----------------------------------------------------------------
      9b. Signature hero-screen animation — each project's device
      mockup demonstrates its own core idea instead of sitting static:
-     Aurora's pots visibly auto-fill, Ferro's listings load in,
-     Nocturne's preview literally re-skins across brand tokens. Hero
+     Aurora's pots visibly auto-fill and Nocturne's preview literally
+     re-skins across its brand tokens. Hero
      screen rows simply rise in, one after another.
   ---------------------------------------------------------------- */
   const heroIntervals = [];
@@ -555,10 +559,6 @@
       gsap.utils.toArray(root.querySelectorAll('.wf-fill span')).forEach((el) => {
         const target = el.style.width;
         gsap.fromTo(el, { width: '0%' }, { width: target, duration: 1.3, ease: 'power3.out', delay: 0.2 });
-      });
-    } else if (data.slug === 'ferro') {
-      gsap.fromTo(root.querySelectorAll('.wf-card'), { opacity: 0, y: 14 }, {
-        opacity: 1, y: 0, duration: 0.6, stagger: 0.18, delay: 0.2, ease: 'power3.out',
       });
     } else if (data.slug === 'nocturne') {
       const colors = ['#c8ff4d', '#ff4d6d', '#4d9fff', '#f4f3ef'];
