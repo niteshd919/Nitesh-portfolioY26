@@ -427,268 +427,252 @@ window.CASE_STUDIES = {
     slug: 'codeflow',
     title: 'Codeflow',
     subtitle: 'Daily Coding Challenge',
-    tagline: 'Getting a student to code today, and back the day after they don’t.',
+    tagline: 'Make coding a daily habit.',
     year: '2026',
-    role: 'Product Designer',
-    platform: 'Web · Student portal',
-    scope: 'Research, IA, Interaction, Two rounds, Handover',
-    tools: 'Figma, FigJam',
+    role: 'Lead Product Designer',
+    timeline: 'Feb 2026',
+    platform: 'Desktop',
+    scope: 'UX Research · User Flow · UI Foundations · Intuitive UI with Success & Edge cases',
+    tools: 'Figma',
     tags: ['UX Research', 'Gamification', 'Web'],
     gradient: 'linear-gradient(135deg,#ff7a3d,#1a1a1a)',
     accent: '#ff7a3d',
 
-    /* Screens and boards below are placeholders. To drop in a real
-       export, add `image: 'assets/codeflow/h1.png'` (plus an optional
-       `alt`) to any screen, or to any `board` object. */
+    /* Everything below mirrors the pages of the Figma file, in order:
+       Cover, Context, Research, Foundations, Components, Design. Screens
+       are 2x exports from Figma (assets/codeflow/), shown 16:10 unless a
+       `ratio` says otherwise; `full` lets a tall screen span both columns. */
     wideScreens: true,
-    heroScreens: [
-      { code: 'H1', title: 'Home hero' },
-      { code: 'C1', title: 'The editor' },
-      { code: 'R4', title: 'The day after' },
-    ],
+    order: ['overview', 'problem', 'personas', 'solution', 'research', 'foundation', 'system', 'flow', 'whats-next', 'figma-file'],
 
-    overview: `Edwisely’s student portal already had assessments, reports and a
-      personality test. What it didn’t have was a reason to open it on a Tuesday.
-      Codeflow is the daily coding challenge that became that reason: one problem
-      picked for you on the homepage, a streak you can’t miss, and — the part most
-      streak features skip — somewhere for the missed day to land.`,
+    heroImage: {
+      image: 'assets/codeflow/cover.png',
+      alt: 'Codeflow cover: “Make coding a daily habit.” beside the daily challenge card, weekly streak and class leaderboard.',
+      ratio: '16 / 9',
+    },
 
+    overview: `Codeflow is a daily coding challenge for Edwisely’s student portal, a design
+      assignment. A personalised challenge sits on every student’s homepage, with
+      streaks that pull them back daily and leaderboards that motivate the whole
+      class, not just the top five.`,
+
+    /* ---------------- Context · 01 · What we’re solving ---------------- */
     problem: {
-      copy: `Computer science students aren’t short of places to practise. They’re
-        short of a reason to practise today. Generic platforms serve the same problem
-        set to a first-year and a final-year, and nothing in them notices whether you
-        came back. The brief asked for a low-friction, personalised entry point on the
-        student homepage, with streaks and leaderboards to hold people there. Reading
-        it, the harder half was obvious: streaks are easy to start and easy to lose,
-        and the day a student loses one is usually the last day they open the product.`,
-      quote: `When I open the portal I want today’s problem already chosen for me, at a
-        level I can actually finish, so practising costs me one decision instead of ten.`,
-      attribution: 'The job story behind the brief',
+      copy: `Coding skill compounds through small, regular practice. But most students
+        only practise in the weeks before exams and placement drives. Between those
+        bursts, nothing on the platform gives them a reason to come back tomorrow,
+        so the habit never forms.`,
+      quote: `How might we turn coding practice into a daily habit for every student,
+        whatever their level, and keep them going when they slip, without making
+        those who fall behind feel left out?`,
+      attribution: 'Problem statement',
+      brief: {
+        label: 'The brief',
+        text: `Computer science students need a way to build a consistent, daily coding
+          habit because generic practice platforms often lack personalization and
+          social motivation, leading to high drop-off rates. Our design must create a
+          personalized, low-friction entry point that leverages social competition and
+          streaks to keep students engaged throughout their academic journey.`,
+      },
+      contextLabel: 'Why it happens today',
+      contextCols: 3,
+      contextNumbered: true,
       context: [
-        { title: 'Who', desc: 'Undergraduates across all four years, on a college-issued portal they already have to log into. Mixed skill, mixed motivation, one shared leaderboard between them.' },
-        { title: 'What good looks like', desc: 'A student starts a challenge within a tap of landing, finishes it, and comes back tomorrow. And when they don’t come back, the product has something better to say than “streak lost”.' },
+        { title: 'No clear next step', desc: 'An open problem bank asks students to choose. Choosing is friction, and many leave without solving anything.' },
+        { title: 'The wrong difficulty', desc: 'Generic problems are too hard for beginners, who quit, and too easy for strong students, who get bored.' },
+        { title: 'No reason to return tomorrow', desc: 'Nothing records consistency, so skipping a day costs nothing and a routine never takes hold.' },
+        { title: 'Competition that excludes', desc: 'A single ranking motivates the top few and tells everyone else they are losing (JMIR Serious Games, 2021).' },
+        { title: 'One slip ends everything', desc: 'When a streak breaks with blame, “it’s broken anyway” turns a missed day into quitting (Silverman & Barasch, JCR 2023).' },
+      ],
+      jobsLabel: 'So the feature has two jobs',
+      jobs: ['Pull them back daily', 'Catch them when they fall'],
+    },
+
+    /* ---------------- Context · 02 · Who we’re solving for ---------------- */
+    personas: {
+      items: [
+        {
+          name: 'The placement-chaser',
+          who: '3rd–4th year · high motivation',
+          quote: 'I practise hard for a few weeks before every drive, then life takes over. I want to know where I stand.',
+          needs: ['A challenge that actually stretches them', 'An honest sense of rank', 'A daily unit that fits a busy day'],
+          gives: ['Picks from their weakest topic, medium–hard', 'Department & college boards, leagues of 30', '~15-minute challenge, one tap to start'],
+        },
+        {
+          name: 'The foundation-builder',
+          who: '1st–2nd year · still learning basics',
+          quote: 'Most problems feel impossible, and seeing my name near the bottom makes me not want to open the app.',
+          needs: ['Problems they can actually finish', 'Small, frequent wins', 'Comparison that feels safe'],
+          gives: ['Calibrated warm-up on Day 1, then easy-to-medium', 'Hints that never break a streak', 'Window boards, Most improved, section race'],
+        },
+        {
+          name: 'The slipping streaker',
+          who: 'Any year · just missed a day',
+          quote: 'I had 13 days and lost it to one bad day. Honestly, what’s the point of starting again?',
+          needs: ['Forgiveness without streaks losing meaning', 'No blame', 'The smallest way back'],
+          gives: ['Auto freezes, earned every 7 days', 'Repair quest (earn it back) once a month', 'Best streak kept forever, one-tap restart'],
+        },
       ],
     },
 
-    framing: {
-      modelNote: 'One loop, five links · it only holds if every link does',
-      model: [
-        { title: 'Cue', desc: 'The reason to open the portal today. Ours is the homepage itself, not a notification.' },
-        { title: 'Entry', desc: 'One challenge, already chosen. No browse, no filters, no difficulty picker.' },
-        { title: 'The unit', desc: 'One problem, 25–30 minutes. Small enough to do in a bad week of term.' },
-        { title: 'Reward', desc: 'XP, accuracy and rank, credited on screen the second the tests pass.' },
-        { title: 'Proof', desc: 'Streak, league and the gap to the next rank. This is what brings them back tomorrow.' },
+    /* ---------------- Context · 03 · How the solution solves it ---------------- */
+    solution: {
+      loopLabel: 'The habit loop · cue, action, reward, investment',
+      loop: [
+        { title: 'Cue', desc: 'One reminder at the time the student picked, and a dashed flame on Home that says “today isn’t done yet”.' },
+        { title: 'Action', desc: 'One ~15-minute challenge as the Home hero, picked for their level. Their language is remembered, so it’s one tap to start.' },
+        { title: 'Reward', desc: 'XP, a lit flame and a rank move, all on one screen. Big celebrations are saved for milestones so they stay special.' },
+        { title: 'Investment', desc: 'The streak itself, milestones at 3·7·14·30·100, weekly quests and a shared class goal. All of them are reasons to protect tomorrow.' },
       ],
-      insight: {
-        title: '“Keep the streak alive” is one job. Catching the student the day they slip is the other one, and it’s the one that decides retention.',
-        desc: `A single missed day does almost nothing to a forming habit — Lally’s UCL
-          work found no measurable effect on habit formation from one miss. What does the
-          damage is how the product frames it. Silverman and Barasch isolate two levers:
-          leave people blaming themselves and drop-off gets worse; give them a way to
-          repair and drop-off gets smaller. So the day-after screen is designed as a
-          screen in its own right, with the same care as the hero, instead of being left
-          as an error state nobody wrote.`,
-      },
-      edgeCasesLabel: 'Six moments where the loop actually breaks',
-      edgeCases: [
-        'Day one. A new student has no streak, no rank and no history, so every number on the page is a zero — and a zero motivates nobody.',
-        'The Goldilocks miss. Too hard and they close the tab; too easy and the XP feels made up. Either way the streak survives and the habit doesn’t.',
-        'The discouraging rank. “#1912 overall” is accurate and useless. Nobody has ever been motivated by four digits.',
-        'The near miss. Code compiles, six of eight test cases pass. This is the most common outcome of a submission and the least designed screen in v1.',
-        '11:40 pm. The student is awake, the streak expires at midnight, and nothing on screen says so.',
-        'The day after. They missed. Whatever this screen says decides whether they ever open the portal again.',
-      ],
-    },
-
-    approach: [
-      { code: 'P1', title: 'One tap to the first keystroke', desc: 'The homepage picks the problem. Choosing is work, and work at the entry point is exactly where the funnel leaks.' },
-      { code: 'P2', title: 'Serve the next problem, not the hardest one', desc: 'Difficulty comes from recent accuracy and language history, and the card says why it was picked. A challenge that looks chosen for you beats one that’s objectively harder.' },
-      { code: 'P3', title: 'Make the rank a distance, not a position', desc: '“+80 XP to rank 2nd in your class” is an instruction. “#1912 overall” is a verdict. Lead with the gap that can close today.' },
-      { code: 'P4', title: 'Design the missed day before the perfect one', desc: 'The day-after screen is the only surface where the product can still change the outcome. It got drawn first, not last.' },
-      { code: 'P5', title: 'Earn it back, never buy it back', desc: 'A streak you can pay to restore is worth what you paid for it. Repair is always effort — extra challenges, inside a window.' },
-    ],
-
-    research: {
-      patterns: [
-        { title: 'Loss aversion, made visible', seenIn: 'Duolingo, Snapchat, GitHub’s contribution graph',
-          desc: 'Every day adds to something the user now owns, and losing it hurts more than earning it felt good. Simply showing an unbroken log lifts engagement on its own.',
-          applied: 'One flame, three placements: home hero, top strip and the challenge card. Same number in all of them.' },
-        { title: 'A unit small enough for a bad day', seenIn: 'Duolingo lessons, Wordle',
-          desc: 'Bingers churn faster than pacers. The daily unit has to be doable in the worst week of term, not the best one.',
-          applied: 'One problem, 25–30 minutes, and the streak counts the day — never the XP earned in it.' },
-        { title: 'Social duty beats self-discipline', seenIn: 'Snapchat shared streaks, Strava clubs',
-          desc: 'Breaking a shared streak lets a specific person down. Obligation to a human outlasts obligation to a number.',
-          applied: 'The home leaderboard shows classmates by name, not a global top 100. You are visibly in somebody’s list.' },
-        { title: 'Endowed progress', seenIn: 'Loyalty cards — Kivetz, Urminsky & Zheng, 2006',
-          desc: 'People push hardest when the goal is close and the remaining distance is stated in units they can earn today.',
-          applied: '“You need only +80 XP to reach rank 2nd in your class”, printed on the card before they start.' },
-        { title: 'Repair, not blame', seenIn: 'Silverman & Barasch, Journal of Consumer Research, 2023',
-          desc: 'Self-blame after a slip accelerates drop-off; an available repair slows it. Left alone, the “what-the-hell” effect turns one miss into quitting.',
-          applied: 'The day-after screen opens with “Life happened”, keeps total and best days on screen, and offers exactly one action.' },
-        { title: 'Earned protection over paid restore', seenIn: 'Duolingo streak freezes, Snapchat+ restores',
-          desc: 'Freezes granted for loyalty keep the streak meaningful. Restores sold for money quietly admit it never was.',
-          applied: 'Two freezes at 30 days, a third at 100. Nothing is purchasable — there’s no wallet in a college portal anyway.' },
-      ],
-      chartTable: {
-        title: 'The recovery ladder, and what made it into v1',
-        head: ['Mechanic', 'Fires', 'Best at', 'Cost to the streak’s meaning', 'In v1'],
+      map: {
+        title: 'Problem → solution map',
+        head: ['Root cause', 'What we designed', 'Why it works'],
         rows: [
-          ['Streak freeze', 'Before the miss', 'Known unknowns: illness, travel, a bad week', 'Low, as long as it’s earned', 'Yes — at 30 and 100 days'],
-          ['Exam pause', 'Before the miss', 'Planned time off the college already knows about', 'None', 'Yes — from the academic calendar'],
-          ['Earn it back', 'Within 24 h of the miss', 'The student who wants it back and will work for it', 'None. The effort is the point', 'Yes — two challenges in 24 h'],
-          ['Paid restore', 'After the miss', 'Revenue', 'High. A bought streak is worth what it cost', 'No'],
-          ['Revival campaign', 'A week or more later', 'Students who have already gone', 'Low', 'v2 — needs a notification budget'],
-          ['Auto-repair', 'After our own outage', 'Streaks we broke ourselves', 'None. Fixing it quietly is the only honest option', 'Yes'],
-          ['Hard reset', 'At the miss', 'Nothing', 'It isn’t a mechanic, it’s the absence of one', 'No'],
-        ],
-        note: `Design tradeoff: leniency isn’t free. A freeze that’s too generous stops
-          being insurance and becomes the default, and the streak quietly stops meaning
-          “daily”. So: two earned freezes, an automatic pause for exam weeks, and a
-          24-hour window to earn one back. Past that the count resets — and the page
-          keeps total days and best-ever on screen, because that part was genuinely
-          earned and deleting it is just punishment.`,
-      },
-    },
-
-    directions: [
-      { letter: 'A', title: 'Challenge feed',
-        summary: 'The homepage is the catalogue. Today’s problems in a filterable list, difficulty and language chips along the top, streak in the header. The student picks.',
-        strengths: 'Everything is discoverable. Cheapest to build on the existing portal grid. Scales past the daily problem without a new page, and suits the confident final-year who knows what they want to drill.',
-        weaknesses: 'Puts a decision in front of a student who arrived with motivation, not a plan. Personalisation has nowhere to show itself. The streak becomes a header ornament, and the missed day has no surface at all.',
-        board: { label: 'Direction A · low-fi screens' } },
-      { letter: 'B', title: 'Progress dashboard',
-        summary: 'Stats first: challenges completed, accuracy, rank tiles, leaderboard. Today’s challenge is one row inside the dashboard, roughly where you’d expect a task list.',
-        strengths: 'Strongest social proof of the three, and it answers “where do I stand?” immediately. Good for the returning student. The leaderboard toggle has room to breathe.',
-        weaknesses: 'Reads as a report card. Four ranks arrive before any action, and the largest, worst number wins the student’s attention. The thing they came to do is the least prominent thing on the page.',
-        board: { label: 'Direction B · low-fi screens' } },
-      { letter: 'C', title: 'One card, already chosen', chosen: true,
-        summary: 'A single hero challenge with the reason it was picked, the XP it pays, the time left today and one button. Streak and league sit in the top strip. Progress and leaderboard move below the fold.',
-        strengths: 'One tap from landing to the editor. Personalisation is visible rather than implied. The streak has a permanent home, and there’s room above the fold for the at-risk and day-after states to take the page over when they need to.',
-        weaknesses: 'One card is one opinion — a bad match has no visible fallback. Everything wants to live in that hero. The catalogue disappears unless it’s deliberately signposted.',
-        board: { label: 'Direction C · low-fi screens' } },
-    ],
-
-    /* Weighted totals are calculated from these rows, not typed in. */
-    decision: {
-      options: ['A · Feed', 'B · Dashboard', 'C · One card'],
-      criteria: [
-        { name: 'Time to first keystroke', detail: 'Decisions between landing and the editor', weight: 20, scores: [3, 2, 5] },
-        { name: 'Personalisation', detail: 'Does the served problem feel chosen for them', weight: 20, scores: [2, 3, 5] },
-        { name: 'Winnable social proof', detail: 'Rank reads as reachable, not as a verdict', weight: 15, scores: [2, 5, 4] },
-        { name: 'Streak legibility', detail: 'Active, at-risk and broken tell themselves apart', weight: 15, scores: [2, 3, 5] },
-        { name: 'Room for recovery', detail: 'Somewhere for the missed day to live', weight: 10, scores: [2, 3, 4] },
-        { name: 'Discovery', detail: 'Finding the other problems live today', weight: 10, scores: [5, 2, 3] },
-        { name: 'Build effort', detail: '5 = cheapest on the existing portal', weight: 10, scores: [4, 3, 3] },
-      ],
-      verdict: {
-        title: 'Direction C, the single pre-chosen card, with A’s catalogue moved one level down and B’s ranking panel kept below the fold.',
-        borrowed: [
-          { tag: '+A', text: 'The full list survives as its own page, reached from the card and from the nav — discovery, without putting a decision in the doorway.' },
-          { tag: '+B', text: 'Progress and leaderboard stay on the homepage, but under the hero, where they read as a reward for scrolling rather than a wall on arrival.' },
+          ['1 · No clear next step', 'One challenge pinned as the Home hero, the only dark surface on the page. Last language remembered; a single “Start challenge” button.', 'Removes the choice entirely. Visual priority makes it the first thing every session sees, on desktop and mobile.'],
+          ['2 · The wrong difficulty', 'Picked from the student’s weakest active topic, with a visible “Picked for you” reason. Day 1 is an Easy warm-up that calibrates level.', 'Hard enough to grow, easy enough to finish. Showing the reason makes personalisation feel fair rather than random.'],
+          ['3 · No reason to return', 'Streaks with one glanceable state (dashed → lit), milestones at 3·7·14·30·100, a reminder at a chosen time and a “Commit to 7 days” goal at setup.', 'Loss aversion and explicit commitment. Learners who reach a 7-day streak are 3.6× more likely to complete their course (Duolingo).'],
+          ['4 · Competition that excludes', 'Full ranking only for the class. Department and college show a window around you plus a percentile; leagues of 30; weekly reset; Most improved; section race.', 'Everyone has a race they can win. Relative leaderboards outperform absolute ones for motivation (Li et al., 2024 review).'],
+          ['5 · One slip ends everything', 'Automatic freezes, an earn-back repair quest once a month, best streak kept forever, blame-free copy. Outages never break a streak.', 'A way to repair shrinks the drop-off after a miss; self-blame grows it (Silverman & Barasch, 2023). Earning it back keeps streaks meaningful.'],
+          ['6 · Failing feels like punishment', 'Runs are free; hints never break a streak; a wrong answer offers Try again with “your streak is safe until midnight”; syntax errors don’t count.', 'Keeps students inside the task instead of abandoning it, at the moment a habit is most at risk mid-session.'],
         ],
       },
-      risksLabel: 'Where C is weak, and what I did about it',
-      risks: [
-        { code: 'R1', title: 'One card, one opinion.', desc: 'If the match is wrong there’s no visible alternative. The card carries a quiet “Pick a different one” and states why this problem was chosen, so a student can disagree with the algorithm in a tap.' },
-        { code: 'R2', title: 'Everything competes for the hero.', desc: 'Streak, XP, league, countdown, rank and the problem all wanted the top of the page. One number per job: the flame counts days, the league states standing, the countdown states urgency. Nothing is printed twice.' },
-        { code: 'R3', title: 'The catalogue disappears.', desc: 'Students had no signal there was more. The card now ends with how many other problems are live today, which doubles as the way into the list.' },
-        { code: 'R4', title: 'Day one is empty.', desc: 'First run swaps the flame for “Day 1 starts now”, shows the nearest classmate above them instead of the class leader, and hides the progress row entirely until there’s something real in it.' },
+      measuresTitle: 'How we’ll know',
+      measures: [
+        { label: 'North-star metric', title: 'Share of new students who reach a 7-day streak', desc: 'The moment habit retention flattens and so our onboarding goal.' },
+        { label: 'Supporting', title: 'Day 7 and Day 30 retention · Daily solve rate (DAU) · Challenge completion', desc: 'A/B: 7- vs 14-day first goal, hint cost, class list vs window.' },
+        { label: 'Guardrails', title: 'Churn among bottom half ranks · hint usage · median time on challenge', desc: 'Leaderboards must not push weaker students out; speed must not replace learning.' },
       ],
     },
 
-    flowChapters: [
-      {
-        eyebrow: 'Part 1 of 3',
-        title: 'Land, and start within a tap',
-        intro: `The homepage has one job and a few seconds to do it. Everything above the
-          fold is either the problem, the reason it was picked, or the reason to finish
-          it before midnight.`,
-        screens: [
-          { code: 'H1', title: 'The hero card', desc: 'Today’s problem, its difficulty, the XP it pays, the time it should take and how many classmates have already solved it. Streak, league and total XP sit in the top strip — once each, and never repeated further down the page.' },
-          { code: 'H2', title: 'Why this one', desc: 'Three lines of reasoning beside the description: what it builds on, what it strengthens, where it turns up in interviews. Personalisation that can’t be seen may as well not be there.' },
-          { code: 'H3', title: 'Language, then go', desc: 'Python, Java or C++ as chips, defaulted to whichever they used last. One primary button, and one line under it naming the deadline instead of implying it.' },
-          { code: 'H4', title: 'Standing, below the fold', desc: 'Challenges completed, accuracy, average speed and best rank — four numbers that aren’t already in the top strip — with the class leaderboard alongside and the other three tiers a toggle away.' },
-        ],
+    /* ---------------- Research · Streak based motivation ---------------- */
+    research: {
+      board: {
+        image: 'assets/codeflow/research-playbook.png',
+        alt: 'The Streak Playbook: research on a page. It covers why people come back, the fragile moment and the recovery ladder.',
+        label: 'The Streak Playbook: research on a page',
+        ratio: '3200 / 2554',
       },
-      {
-        eyebrow: 'Part 2 of 3',
-        title: 'The work, and the moment it lands',
-        intro: `The editor is where the time actually goes, so it gets the screen. Anything
-          that isn’t the problem or the code is collapsed, or deferred until it has
-          something to say.`,
-        screens: [
-          { code: 'C1', title: 'The editor', desc: 'Problem, example and constraints in a fixed left column capped at 46 characters; the editor takes everything else, with line numbers, a line-and-column readout and a full-screen toggle. Languages are tabs above the code, not a dropdown in a form.' },
-          { code: 'C2', title: 'Run, then submit', desc: 'The console doesn’t exist until the first run. Two empty input and output boxes on arrival told testers nothing and cost a third of the editor’s height.' },
-          { code: 'C3', title: 'Failed submission', desc: 'A compile error and a failed test case are different problems and get different screens: one points at a line, the other names the case and what it expected. Both keep the code, and neither costs the attempt.' },
-          { code: 'C4', title: 'Cleared', desc: 'XP credits on screen, the flame ticks over, and the rank line updates in place — “+150 XP · Rank 2 in your class”. Then one honest choice: next challenge, or done for today.' },
-        ],
-      },
-      {
-        eyebrow: 'Part 3 of 3',
-        title: 'Tomorrow, and the day they miss',
-        intro: `Everything up to here is the good day. This part is the reason the feature
-          retains anybody past week two.`,
-        screens: [
-          { code: 'R1', title: 'The leaderboard', desc: 'Class, department, college and overall as a toggle, opening on class — the only one of the four that’s winnable this week. League badges sit beside the rank, so standing survives a bad position.' },
-          { code: 'R2', title: 'Browse, when they want it', desc: 'The full list, filterable by language, with the personalised problem pinned at the top and still marked as such. Search is there for the student who arrived knowing exactly what they want to drill.' },
-          { code: 'R3', title: 'Streak at risk', desc: 'After 9 pm on an unplayed day the flame goes hollow and the hero swaps itself for the shortest problem live today. Urgency should arrive with a smaller ask, not a louder voice.' },
-          { code: 'R4', title: 'The day after', desc: '“Life happened. Your 24 days are still yours.” Total and best-ever stay on screen, the new count starts at zero underneath them, and one button offers the repair: two challenges in the next 24 hours puts the streak back where it was.' },
-        ],
-      },
-    ],
+      sources: 'Sources: Silverman & Barasch, Journal of Consumer Research (2023) · Lally et al., UCL (2009) · Polivy & Herman · Duolingo blog & product team · Snapchat Support & Newsroom',
+    },
 
-    states: [
-      { code: 'S1', title: 'Day one', desc: 'No streak, no rank, no history. The flame becomes “Day 1 starts now”, the rank tile shows the nearest classmate above them rather than the class leader, and the progress row stays hidden until it has real numbers in it.' },
-      { code: 'S2', title: 'Near miss', desc: 'Six of eight cases passed. The screen leads with what passed, names the failing case and what it expected, and keeps the code intact — because this is the most common outcome of a submission, not an exception to it.' },
-      { code: 'S3', title: 'Exam week', desc: 'The academic calendar pauses every streak in the college automatically. Nobody has to remember to spend a freeze during finals, and nothing resets in a week when nobody was supposed to be practising.' },
-      { code: 'S4', title: 'Our fault', desc: 'If the judge or the portal is down past midnight, affected streaks repair themselves silently and the student is told afterwards. A streak the product broke was never the student’s to earn back.' },
-    ],
+    /* ---------------- Foundations ---------------- */
+    foundation: {
+      components: [
+        { title: 'Color tokens',
+          desc: 'Backgrounds, text, borders and icons, each a semantic token that aliases a primitive: bg/canvas → sand/100, bg/flame → flame/500, text/brand → indigo/800. Flame = streak & primary action. Indigo = XP, rank and “you”. Ice = freeze protection.',
+          board: { image: 'assets/codeflow/fnd-color.png', alt: 'Colour tokens: backgrounds, text, borders and icons.', label: 'Color tokens', ratio: '3040 / 3098' } },
+        { title: 'Typography',
+          desc: 'Bricolage Grotesque for display and stats, IBM Plex Sans for headings, body, labels and captions, and JetBrains Mono for code. Seventeen styles, from Display/Stat at 52 down to Caption and Overline at 12.',
+          board: { image: 'assets/codeflow/fnd-typography.png', alt: 'Type styles from Display/XL to Code/S.', label: 'Typography', ratio: '1800 / 2332' } },
+        { title: 'Spacing & radius',
+          desc: 'Spacing runs 4 · 8 · 12 · 16 · 20 · 24 · 32 · 40 · 48 · 64. Radius runs 6 · 10 · 14 · 20 · 24, plus full for pills and dots.',
+          board: { image: 'assets/codeflow/fnd-spacing.png', alt: 'Spacing and radius scales.', label: 'Spacing & radius', ratio: '1280 / 2008' } },
+        { title: 'Icons',
+          desc: 'A 25-icon set on a 24 px grid: flame, zap, clock, snowflake, arrows, check, sparkle, lightbulb, code and the error and offline states.',
+          board: { image: 'assets/codeflow/fnd-icons.png', alt: 'The Codeflow icon set.', label: 'Icons', ratio: '2000 / 304' } },
+      ],
+    },
 
+    /* ---------------- Components (a few) ---------------- */
     system: {
       components: [
-        { title: 'Streak flame', usedIn: 'H1, H3, R3, R4, S1–S4',
-          desc: 'Five states: day zero (outline), active (filled, counting), at risk (hollow, after 9 pm), frozen (banded, with freezes remaining) and broken-but-repairable (grey, with the repair window counting down). The number is printed beside it in every state, so nothing depends on colour alone.',
-          board: { label: 'Streak flame · five states', ratio: '16 / 7' } },
         { title: 'Challenge card',
-          desc: 'One layout, four contexts: home hero, browse row, browse detail and the at-risk swap. Difficulty, XP, time estimate and solved-today count are fixed slots in a fixed order, so they can be scanned the same way every time without being read.' },
-        { title: 'Rank row',
-          desc: 'Avatar, name, batch, streak, points, league badge. The student’s own row is pinned and highlighted, and the list always renders the two rows directly above them — being 4th is a story about 3rd, not about 1st.' },
-        { title: 'League scale',
-          desc: 'Five leagues, each with its own badge shape as well as a colour, so standing is readable in greyscale and with the common colour-vision deficiencies. The home strip shows the current league and the XP left to the next one, never the league on its own.',
-          scale: [
-            { token: 'league/bronze', range: '0–2k XP', hex: '#A8683C' },
-            { token: 'league/silver', range: '2–5k', hex: '#9BA3AD' },
-            { token: 'league/gold', range: '5–10k', hex: '#E0A32E' },
-            { token: 'league/platinum', range: '10–20k', hex: '#6FB6C9' },
-            { token: 'league/diamond', range: '20k+', hex: '#8E7BE8' },
-          ] },
-        { title: 'Editor shell',
-          desc: 'Language tabs, line numbers, a line-and-column readout, a full-screen toggle, and a console that appears on the first run and not before. Run and Submit are deliberately unalike: Run is quiet and repeatable, Submit is the one that touches the streak.' },
+          desc: 'The home hero. Desktop and mobile sizes, with Default, Done and Error states for the desktop card.',
+          board: { image: 'assets/codeflow/cmp-challenge-card.png', alt: 'Challenge card in desktop and mobile sizes, with default, done and error states.', label: 'Challenge card', ratio: '4000 / 2032' } },
+        { title: 'Button',
+          desc: 'Primary, Dark, Secondary and Ghost styles, each in Large and Medium.',
+          board: { image: 'assets/codeflow/cmp-button.png', alt: 'Button styles and sizes.', label: 'Button', ratio: '1440 / 752' } },
+        { title: 'Day dot',
+          desc: 'The streak’s day marker: Solved, Freeze, Today and Upcoming, in Large and Small.',
+          board: { image: 'assets/codeflow/cmp-day-dot.png', alt: 'Day dot states.', label: 'Day dot', ratio: '968 / 248' } },
+        { title: 'Leaderboard row',
+          desc: 'Default and You rows, each in Compact and Full density.',
+          board: { image: 'assets/codeflow/cmp-leaderboard-row.png', alt: 'Leaderboard row variants.', label: 'Leaderboard row', ratio: '1648 / 616' } },
+        { title: 'Info banner',
+          desc: 'Seven tones: Freeze, Hint, Personalised, Neutral, Success, Error and Warning.',
+          board: { image: 'assets/codeflow/cmp-info-banner.png', alt: 'Info banner tones.', label: 'Info banner', ratio: '928 / 918' } },
       ],
-      note: 'Type: the portal’s existing Inter for the interface, JetBrains Mono for code, test output and every number that has to line up in a column — XP, ranks, times, streak counts.',
+      more: {
+        title: 'There are more on the Figma file',
+        text: 'This is only a selection. The file also holds the chip, streak and XP pills, progress bar, nav item, language toggle, segment, scope tab, choice, calendar day, test case, console, coachmark, app bar and more.',
+      },
     },
 
-    testing: [
-      { title: 'It read like a report card, not a game', desc: 'All three participants said a version of the same sentence. A full dark theme is a design-system conversation rather than a feature decision, so the interim is a dark editor, a darker challenge surface, and the warm accent reserved for the two things being played: the streak and the XP.' },
-      { title: 'The numbers were on screen twice', desc: 'XP and streak sat in the top strip and again in the progress row four scrolls down. Two of the four progress tiles were spending space repeating what was already visible. They became accuracy and average speed, which nothing else on the page reported.' },
-      { title: 'Four ranks, none of them usable', desc: 'Class #3, department #102, college #812, overall #1912. Participants read the biggest number and stopped. v2 leads with the distance instead — “+80 XP to rank 2nd in your class” — and moves the other three behind the leaderboard toggle.' },
-      { title: 'Nobody could say what the points were for', desc: '“How does this actually help me get better?” came up unprompted, twice. XP on its own is a score. Paired with a league and a visible next threshold it becomes a ladder. The league badge and the progress-to-Diamond bar came straight out of that session.' },
-      { title: 'The editor was the smallest thing on the editing screen', desc: 'The code area was about a third of the viewport, with no line numbers, no sense of how much had been written, and whitespace in all the places that didn’t need it. It now takes the full width beside a fixed problem column.' },
-      { title: 'Empty input and output boxes taught nothing', desc: 'Two labelled boxes sat under the editor before anything had run, reading like fields waiting to be filled. They weren’t. The console now appears on the first run, with the actual result in it.' },
+    /* ---------------- Design · the screens ---------------- */
+    flowChapters: [
+      {
+        eyebrow: 'Flow · Existing students',
+        title: 'The daily loop for a student with a streak',
+        intro: `From the homepage to the challenge, the reward, the leaderboard and the
+          streak itself, and what happens when a day is missed.`,
+        screens: [
+          { code: 'A1', title: 'Home', ratio: '1440 / 1365', image: 'assets/codeflow/ex-home.png', alt: 'Codeflow home: the daily challenge hero, streak card, weekly leaderboard, quests and topic strengths.',
+            desc: 'One dark hero card is the only thing asking for a decision: today’s challenge, why it was picked for you, the language remembered from last time and a single “Start challenge” button. Beside it, the streak shows a dashed, not-yet-lit flame, the week so far, a freeze that’s ready and the next badge. Below the fold: this week’s board, weekly quests and the topics the dailies are tuned to.' },
+          { code: 'A2', title: 'Workspace · problem', image: 'assets/codeflow/ex-workspace-1.png', alt: 'The workspace with the problem, example and constraints beside the code editor.',
+            desc: 'Problem, example and constraints on the left, a dark editor with language tabs on the right. The header keeps the stakes in view (“Solve to light day 13”, “60 XP on the table”) and says plainly that it’s untimed. Run tests and Submit are separate, and the footer explains how.' },
+          { code: 'A3', title: 'Workspace · hints', image: 'assets/codeflow/ex-workspace-2.png', alt: 'The hints tab, offering hint 1 for 5 XP.',
+            desc: 'Hints live in their own tab and cost 5 XP each. The banner above them says the thing a stuck student needs to hear: the streak counts the moment a correct solution is submitted, with or without hints.' },
+          { code: 'A4', title: 'Solved · the reward', ratio: '1440 / 932', image: 'assets/codeflow/ex-leaderboard-2.png', alt: 'A celebration over the leaderboard: Day 13, still burning, with the XP breakdown and new rank.',
+            desc: '“Day 13. Still burning.” The XP is itemised (+30 medium, +10 first submit, +10 no hint, +10 for a 10+ day streak, +60 total), the rank moves up two places and names who was passed. The close is a reminder for tomorrow, at the time the student usually solves.' },
+          { code: 'A5', title: 'Leaderboard', ratio: '1440 / 932', image: 'assets/codeflow/ex-leaderboard-1.png', alt: 'The leaderboard with class, department, college and league scopes.',
+            desc: 'Class, Department, College and League as scopes, opening on class. The student’s own rank leads with a distance (“Top 3 is 30 XP away”) rather than a verdict. The side column adds a section race, a most-improved board that anyone can top, and a plain explanation of how ranking works.' },
+          { code: 'A6', title: 'Streak', ratio: '1440 / 1282', image: 'assets/codeflow/ex-streak.png', alt: 'The streak page with the current streak, a monthly calendar, milestones and streak freezes.',
+            desc: 'The streak page: current streak, longest ever (kept forever) and days solved this month. A calendar marks solved, freeze-used and missed days, so a covered day reads as protected rather than lost. Milestones run from Spark at 3 days to Galaxy at 365, with “How streaks work” and the freezes alongside.' },
+          { code: 'A7', title: 'Streak paused', ratio: '1440 / 1024', image: 'assets/codeflow/ex-streak-missed.png', alt: 'An overlay on the home screen: “Yesterday slipped by. It happens.” with a repair quest.',
+            desc: '“Yesterday slipped by. It happens.” The streak is paused, not gone: a seven-day strip shows what happened, and a two-challenge repair quest with a visible clock offers the way back. The 21-day best stays on the profile either way, and “Start fresh from Day 1” is there as the quieter option.' },
+        ],
+      },
+      {
+        eyebrow: 'Flow · Day 1',
+        title: 'Day 1: a new student starts their streak',
+        screens: [
+          { code: 'D1', title: 'Habit setup', image: 'assets/codeflow/d1-1-setup.png', alt: 'Habit setup: language, a reminder time and a first goal.',
+            desc: 'Three choices in 30 seconds: language, a reminder slot (the cue) and a short first goal. “Commit to 7 days” uses commitment wording: it measurably lifts Day-7 retention.' },
+          { code: 'D2', title: 'Home, Day 0', ratio: '1440 / 1274', image: 'assets/codeflow/d1-2-home.png', alt: 'The home screen on day zero, with honest empty states.',
+            desc: 'Every module has an honest empty state: 0-day streak with a dashed “today” ring, a board slot that says how to join, and a topic map that is visibly calibrating. The first challenge is an Easy warm-up.' },
+          { code: 'D3', title: 'First challenge', image: 'assets/codeflow/d1-3-challenge.png', alt: 'The workspace with a one-time coachmark.',
+            desc: 'One-time coachmarks (max 3, skippable) explain the single rule that confuses newcomers most: Run is free and unlimited; Submit is what counts.' },
+          { code: 'D4', title: 'First solve', image: 'assets/codeflow/d1-4-solve.png', alt: 'The first-solve reward screen.',
+            desc: 'The first reward is bigger than usual (+10 first-challenge bonus) and introduces the board gently: “You joined at #29”, plus the next small goal, Spark in 2 days.' },
+          { code: 'D5', title: 'Home, after the solve', ratio: '1440 / 1173', image: 'assets/codeflow/d1-5-home-after.png', alt: 'The home screen after the first solve, with the hero switched to Done.',
+            desc: 'The hero switches to Done: confirms the lit day, counts down to Day 2 and offers optional practice, never a second mandatory task. Every card on the page has moved one step.' },
+        ],
+      },
+      {
+        eyebrow: 'States · Workspace',
+        title: 'Workspace: run & submit scenarios',
+        screens: [
+          { code: 'S1', title: 'Run · in progress', image: 'assets/codeflow/st-1-running.png', alt: 'Tests running, each case reporting as it finishes.',
+            desc: 'Each case reports as it finishes, so a slow case never looks like a frozen page. Both buttons are disabled to stop double-runs; the code is already saved.' },
+          { code: 'S2', title: 'Run · all samples passed', image: 'assets/codeflow/st-2-passed.png', alt: 'All sample cases passed, prompting a submit.',
+            desc: 'A successful run is not a solve. The console says so plainly and makes “Submit solution” the obvious next step, while warning that hidden cases test edge inputs.' },
+          { code: 'S3', title: 'Run · a sample failed', image: 'assets/codeflow/st-3-failed.png', alt: 'A failed sample case showing expected against actual output.',
+            desc: 'Expected vs. actual side by side, with the wrong value in red and stdout shown. The failing line is tinted in the editor. Runs are free, so the message is “fix and run again”, not a penalty.' },
+          { code: 'S4', title: 'Submit · wrong answer', image: 'assets/codeflow/st-4-wrong.png', alt: 'A wrong-answer result showing 9 of 15 cases.',
+            desc: 'Shows the score (9/15) and reveals the first failing hidden case. Retry is primary; a hint is the secondary path. The key line: your streak is safe until midnight. Only the first-try bonus is lost.' },
+          { code: 'S5', title: 'Compile / syntax error', image: 'assets/codeflow/st-5-compile.png', alt: 'A parsed compile error with a line number and a go-to-line action.',
+            desc: 'Parsed error, not a raw stack dump: line number, caret and a “Go to line 4” jump. Syntax errors never count as an attempt, so nobody is punished for a typo.' },
+          { code: 'S6', title: 'Time limit exceeded', image: 'assets/codeflow/st-6-tle.png', alt: 'A time-limit-exceeded result explaining which case was too slow.',
+            desc: 'Says which case was too slow and why (input size vs. limit), then names the complexity problem in plain words. It’s coaching, not just a verdict.' },
+        ],
+      },
+      {
+        eyebrow: 'States · Errors',
+        title: 'Technical errors & failure cases',
+        screens: [
+          { code: 'T1', title: 'Offline during submit', image: 'assets/codeflow/err-1-offline.png', alt: 'An offline warning bar with the submit queued.',
+            desc: 'A page-level warning bar plus the console state. The three promises that matter: the code is saved, the submit is queued and sends itself, and the timestamp protects today’s streak even if the connection returns after midnight.' },
+          { code: 'T2', title: 'Code runner down (503)', image: 'assets/codeflow/err-2-runner.png', alt: 'The code runner unavailable, retrying with a countdown.',
+            desc: 'Leads with “this isn’t your code”, retries automatically with a visible countdown, doesn’t count attempts during the outage, and gives a reference ID for support. Streak protection is stated explicitly.' },
+          { code: 'T3', title: 'Challenge failed to load', ratio: '1440 / 1221', image: 'assets/codeflow/err-3-load.png', alt: 'The home screen where the challenge card failed to load.',
+            desc: 'The hero card keeps its size (no layout jump) and switches to State=Error: retry, a past-challenge fallback, and an automatic excuse if the outage outlasts the day. The rest of Home keeps working.' },
+          { code: 'T4', title: 'Streak ended', image: 'assets/codeflow/err-4-streak-ended.png', alt: 'The streak-ended screen with a new first goal.',
+            desc: 'The hardest moment in the product. No blame language, the 21-day best and all XP are kept, and the screen turns the loss into a new first goal (Spark at 3) plus the safeguard that prevents a repeat: earn a freeze by Day 7.' },
+        ],
+      },
     ],
 
-    impact: [
-      { value: 1, suffix: '', decimals: 0, label: 'Tap between landing on the homepage and the first keystroke, down from four' },
-      { value: 4.35, suffix: '/5', decimals: 2, label: 'Weighted score for the single-card entry, against 3.00 and 2.70' },
-      { value: 7, suffix: '', decimals: 0, label: 'Recovery mechanics mapped for the missed day. Three shipped in v1, none of them paid' },
-      { value: 0, suffix: '', decimals: 0, label: 'Screens where a broken streak is a dead end. Every one of them offers a way back' },
-    ],
-
-    closing: `The hero card is the part people notice. The screen I’d defend in a review is
-      the one nobody is meant to see — the morning after a student misses. Any product
-      can celebrate a good run. The ones that keep people are the ones with something
-      honest to say on the bad day.`,
-
+    /* Restored from the earlier version of this case study. */
     nextSteps: [
       { title: 'Validate', items: [
         'Moderated test with 8–10 students across all four years, on their own machines, mid-semester rather than in a quiet week.',
@@ -708,73 +692,63 @@ window.CASE_STUDIES = {
       ] },
     ],
 
-    /* Per-section label overrides and headings, keyed by section id. */
+    figma: {
+      eyebrow: 'Go deeper',
+      title: 'The thinking lives in the Figma file.',
+      intro: `This page is the short version. The file holds the full working: every
+        decision, the ideas I parked, and the handoff a developer would build from.`,
+      cta: 'Explore Figma file',
+      url: 'https://www.figma.com/design/O0BFKhT0SUl7z2WqEcU8cU/For-Edwisely?node-id=2069-1361&t=b8BEudMS0KdeEyZ7-1',
+      reasons: [
+        { title: 'See the approach', desc: 'A clearer picture of how it was done, what was built, and why.' },
+        { title: 'Follow the decisions', desc: 'Explore how each call was made, and what it was weighed against.' },
+        { title: 'Visit the dump yard', desc: 'Everything I explored but parked, kept in one place rather than deleted.' },
+        { title: 'Check the handoff', desc: 'How the file is organised and how the dev-handoff is maintained.' },
+      ],
+    },
+
     sections: {
-      problem: { label: 'The Brief' },
-      framing: {
-        title: 'A streak product has two jobs, and most only build the first',
-        intro: `I started by drawing the loop, because it makes the weak link obvious. Four
-          of the five steps are about the day a student shows up. The fifth is about the
-          day they don’t, and that’s where the drop-off actually happens.`,
+      problem: {
+        label: 'What we’re solving',
+        title: 'Students practise in bursts, then disappear.',
       },
-      approach: {
-        label: 'Principles',
-        title: 'Five rules every screen had to pass',
-        intro: 'They came out of the framing, and between them they settled most of the arguments that came later.',
+      personas: {
+        label: 'Who we’re solving for',
+        title: 'Every student in the class, not just the top of the board.',
+        intro: `Primary users are engineering students on the platform, grouped into class →
+          department → college. Their motivation, skill and fragility vary a lot, so one
+          design has to work for three very different moments.`,
+      },
+      solution: {
+        label: 'How the approach solves it',
+        title: 'One personalised challenge a day, built around the habit loop.',
       },
       research: {
-        title: 'What streak products already know, and what the research says they get wrong',
-        intro: `Two questions. Why do people come back to a streak, and what happens the day
-          they don’t? I read across Duolingo’s and Snapchat’s public product writing, then
-          went to the academic work underneath it — Silverman and Barasch on repair versus
-          blame, Lally on how little one missed day actually costs, Polivy and Herman on
-          the “what-the-hell” effect. Eighteen patterns made the long list. These six did
-          most of the work.`,
+        title: 'Streak based motivation',
+        intro: 'How streak platforms pull people back every day, and how the best ones catch users the day they slip.',
       },
-      directions: {
-        title: 'Three ways to open the homepage',
-        intro: `Same brief, same student, three different opinions about what a homepage is
-          for: a catalogue, a report, or a single instruction. Each was taken far enough
-          that choosing between them was a real decision.`,
-      },
-      decision: {
-        title: 'Scoring against the brief, not against my taste',
-        intro: `The brief names cognitive load first, so time to first keystroke carries the
-          most weight, alongside personalisation. The scores are expert judgment. A
-          prototype test is what confirms them or proves me wrong.`,
-      },
-      flow: {
-        label: 'The Final Flow',
-        title: 'Twelve screens, in three parts',
-        intro: `Mid-fi wireframes, already through one round of testing. Parts 1 and 2 are
-          the good day. Part 3 is the one that decides whether there’s a week two.`,
-      },
-      states: {
-        title: 'The four states that had to be designed, not defaulted',
-        intro: `Each of these is a moment where a generic empty state or a red error box
-          would quietly cost a student. They get a specific, calm answer instead.`,
+      foundation: {
+        label: 'Foundations',
+        title: 'Tokens before screens',
+        intro: `Semantic tokens alias a hidden primitive palette. Always bind to a semantic
+          token, never a primitive.`,
       },
       system: {
-        title: 'Five components carry the whole feature',
-        intro: `Handed over in Figma with anatomy, states and tokens, built on the portal’s
-          existing system rather than beside it. The flame got the most detailed spec: it
-          appears on more screens than anything else, and it’s wrong on most of them if
-          you only draw the happy state.`,
+        label: 'Components',
+        title: 'The pieces the screens are built from',
+        intro: 'A short selection of the components behind the screens.',
       },
-      testing: {
-        label: 'Testing & Learnings',
-        title: 'Three students, six changes',
-        intro: `A small round, deliberately early — enough to catch what was structurally
-          wrong before anything got polished. Every finding below moved a pixel. Two of
-          them moved the whole layout.`,
-      },
-      impact: {
-        label: 'Outcome',
-        title: 'What the design changes',
-        intro: 'These are design outcomes, measured against the brief and the first test round. Retention numbers come after it ships.',
+      flow: {
+        label: 'Design',
+        title: 'The screens',
+        intro: 'Desktop, 1440 px wide. Select any screen to open it at full resolution.',
       },
       'whats-next': {
+        label: 'What I would do next',
         title: 'What I’d test next, and what’s still open',
+      },
+      'figma-file': {
+        label: 'Explore the file',
       },
     },
 

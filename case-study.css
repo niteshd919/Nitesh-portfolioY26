@@ -1234,7 +1234,7 @@
    chrome strip instead of a notch, and half as many per row.
    ================================================================== */
 .case-wide-screens .screen-slot-frame { aspect-ratio: 16 / 10; }
-.case-wide-screens .screen-grid { grid-template-columns: repeat(2, 1fr); }
+.case-wide-screens .screen-grid { grid-template-columns: repeat(3, 1fr); }
 
 .case-wide-screens .screen-slot-frame.is-empty::before {
   top: 0;
@@ -1253,6 +1253,10 @@
 .case-wide-screens .case-hero-screens .screen-slot-frame { border-width: 4px; }
 
 @media (max-width: 900px) {
+  .case-wide-screens .screen-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
   .case-wide-screens .screen-grid { grid-template-columns: 1fr; }
 }
 
@@ -1263,3 +1267,227 @@
 @media (max-width: 600px) {
   .case-wide-screens .case-hero-screens .screen-slot.is-center { flex-basis: 100%; }
 }
+
+/* ==================================================================
+   IMAGE-LED CASE STUDIES — exported Figma screens and boards, a cover
+   hero, and the extra context blocks (brief, jobs, personas, solution).
+   ================================================================== */
+
+/* ---- hero: a single exported cover ---- */
+.case-hero-device-wrap.is-cover { max-width: 1120px; perspective: none; }
+.case-hero-cover { margin: 0; }
+.case-hero-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 50px 90px -30px rgba(0, 0, 0, 0.7);
+}
+
+/* ---- screens: tall frames span both columns, exports are click-to-zoom ---- */
+.screen-slot.is-full { grid-column: 1 / -1; }
+.screen-slot.is-full figcaption { max-width: 72ch; }
+.screen-slot-frame img[data-zoom],
+.board-slot img[data-zoom],
+.case-hero-cover img[data-zoom] { cursor: none; }
+@media (hover: none) {
+  .screen-slot-frame img[data-zoom],
+  .board-slot img[data-zoom],
+  .case-hero-cover img[data-zoom] { cursor: zoom-in; }
+}
+/* three-up grids with a short last row: the odd card fills the gap */
+.case-panel-grid.is-fill .case-panel:last-child:nth-child(3n+2) { grid-column: span 2; }
+
+/* ---- problem: brief, numbered causes, the two jobs ---- */
+.case-brief {
+  margin-top: clamp(3rem, 6vw, 5rem);
+  max-width: 72ch;
+}
+.case-brief p {
+  font-size: clamp(1rem, 1.4vw, 1.12rem);
+  line-height: 1.7;
+  color: var(--c-fg-dim);
+}
+.case-problem-context .case-label { margin-bottom: 1.4rem; }
+.case-jobs { margin-top: clamp(2.5rem, 5vw, 4rem); }
+.case-jobs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.case-job {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.4rem;
+  border: 1px solid var(--case-accent, var(--c-accent));
+  border-radius: 999px;
+  font-family: var(--f-display);
+  font-weight: 500;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+}
+.case-job small {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--case-accent, var(--c-accent));
+}
+
+/* ---- personas ---- */
+.case-persona-quote {
+  margin: 0 0 1.75rem;
+  font-family: var(--f-display);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--c-fg);
+}
+.case-panel .case-label { margin-bottom: 0.8rem; }
+.case-label-gap { margin-top: 1.75rem; }
+
+/* ---- research + solution extras ---- */
+.case-insight-flush { margin: 0 0 2.5rem; }
+.case-levers { margin-top: 2rem; }
+.case-note-flush { margin: -0.75rem 0 1.75rem; }
+.case-subblock > .case-table-wrap + .case-table-wrap,
+.case-insight + .case-table-wrap { margin-top: 0; }
+
+/* ---- components: "there are more" callout ---- */
+.case-more {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border: 1px dashed var(--c-line-strong);
+}
+.case-more h3 {
+  font-family: var(--f-display);
+  font-weight: 500;
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+  margin-bottom: 0.6rem;
+  color: var(--case-accent, var(--c-accent));
+}
+.case-more p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--c-fg-dim);
+  max-width: 64ch;
+}
+
+/* ---- closing card: explore the Figma file ---- */
+.case-figma {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  padding: clamp(1.75rem, 4vw, 3.5rem);
+  background: var(--c-bg-alt);
+  border: 1px solid var(--c-line-strong);
+}
+.case-section-alt .case-figma { background: var(--c-bg); }
+.case-figma-copy .case-label { color: var(--case-accent, var(--c-accent)); }
+.case-figma-copy h3 {
+  font-family: var(--f-display);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin-bottom: 1rem;
+}
+.case-figma-copy p {
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--c-fg-dim);
+  max-width: 44ch;
+}
+.case-figma-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 2rem;
+  padding: 0.95rem 1.6rem;
+  border-radius: 999px;
+  background: var(--case-accent, var(--c-accent));
+  color: #0a0a0a;
+  font-family: var(--f-display);
+  font-weight: 500;
+  font-size: 1rem;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+.case-figma-cta:hover { filter: brightness(1.08); }
+.case-figma-arrow { transition: transform 0.3s ease; }
+.case-figma-cta:hover .case-figma-arrow { transform: translate(3px, -3px); }
+.case-figma-list { list-style: none; }
+.case-figma-list li {
+  display: grid;
+  grid-template-columns: 2.25rem 1fr;
+  gap: 0.5rem;
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--c-line);
+}
+.case-figma-list li:last-child { border-bottom: 1px solid var(--c-line); }
+.case-figma-list li > span {
+  font-family: var(--f-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  padding-top: 0.2rem;
+  color: var(--case-accent, var(--c-accent));
+}
+.case-figma-list strong {
+  display: block;
+  font-family: var(--f-display);
+  font-weight: 500;
+  font-size: 1.05rem;
+  margin-bottom: 0.25rem;
+}
+.case-figma-list p {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--c-fg-dim);
+}
+@media (max-width: 800px) {
+  .case-figma { grid-template-columns: 1fr; }
+}
+
+/* ---- zoom overlay ---- */
+.zoom-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(10, 10, 10, 0.94);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.zoom-overlay[hidden] { display: none; }
+.zoom-overlay.is-open { opacity: 1; }
+.zoom-scroll {
+  height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: clamp(3.5rem, 7vw, 5rem) clamp(1rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3rem);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.zoom-scroll img {
+  display: block;
+  width: auto;
+  max-width: min(100%, 1800px);
+  height: auto;
+  margin: auto 0;
+  background: #fff;
+  border-radius: 6px;
+}
+.zoom-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--c-line-strong);
+  border-radius: 999px;
+  background: rgba(10, 10, 10, 0.8);
+  color: var(--c-fg);
+  font: inherit;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: none;
+}
+@media (hover: none) { .zoom-close { cursor: pointer; } }

@@ -76,7 +76,12 @@
     return `<div class="device-chrome"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url"></span></div>`;
   }
   const heroDevice = document.getElementById('caseHeroDevice');
-  if (data.heroScreens) {
+  if (data.heroImage) {
+    // A single exported cover, shown at its real proportions.
+    const wrap = document.querySelector('.case-hero-device-wrap');
+    wrap.classList.add('is-cover');
+    wrap.innerHTML = `<figure class="case-hero-cover"><img src="${data.heroImage.image}" alt="${data.heroImage.alt || data.title}" data-zoom /></figure>`;
+  } else if (data.heroScreens) {
     // A row of phone screens (real exports or placeholders) instead of
     // one abstracted device — the middle one sits slightly larger.
     const wrap = document.querySelector('.case-hero-device-wrap');
@@ -95,7 +100,7 @@
      code, so the layout is final before the visuals are. ---- */
   function screenSlotHTML(screen, opts = {}) {
     const media = screen.image
-      ? `<img src="${screen.image}" alt="${screen.alt || screen.title}" loading="lazy" />`
+      ? `<img src="${screen.image}" alt="${screen.alt || screen.title}" loading="lazy" data-zoom />`
       : `<div class="slot-empty">
            <span class="slot-code">${screen.code}</span>
            ${opts.caption === false ? `<span class="slot-name">${screen.title}</span>` : ''}
@@ -107,13 +112,15 @@
         <h4>${screen.title}</h4>
         ${screen.desc ? `<p>${screen.desc}</p>` : ''}
       </figcaption>`;
-    return `<figure class="screen-slot${opts.className ? ` ${opts.className}` : ''}"><div class="screen-slot-frame${screen.image ? '' : ' is-empty'}">${media}</div>${caption}</figure>`;
+    const classes = ['screen-slot', opts.className, screen.full && 'is-full'].filter(Boolean).join(' ');
+    const frameStyle = screen.ratio ? ` style="aspect-ratio:${screen.ratio};"` : '';
+    return `<figure class="${classes}"><div class="screen-slot-frame${screen.image ? '' : ' is-empty'}"${frameStyle}>${media}</div>${caption}</figure>`;
   }
 
   function boardSlotHTML(board) {
     if (!board) return '';
     const media = board.image
-      ? `<img src="${board.image}" alt="${board.alt || board.label}" loading="lazy" />`
+      ? `<img src="${board.image}" alt="${board.alt || board.label}" loading="lazy" data-zoom />`
       : `<div class="slot-empty"><span class="slot-name">${board.label}</span><span class="slot-hint">Board placeholder</span></div>`;
     return `<div class="board-slot${board.image ? '' : ' is-empty'}" style="aspect-ratio:${board.ratio || '16 / 10'};">${media}</div>`;
   }
@@ -131,29 +138,56 @@
   } else {
     document.querySelector('#problem .case-quote').remove();
   }
-  if (data.problem.context) {
-    document.getElementById('caseProblemContext').innerHTML = `
-      <div class="case-panel-grid case-problem-context" style="--cols:${data.problem.context.length};">
-        ${data.problem.context.map((item) => `
-          <div class="case-panel case-reveal">
-            <span class="case-label">${item.title}</span>
-            <p>${item.desc}</p>
-          </div>
-        `).join('')}
-      </div>`;
+  const problem = data.problem;
+  const problemExtras = [];
+  if (problem.brief) {
+    problemExtras.push(`
+      <div class="case-brief case-reveal">
+        <span class="case-label">${problem.brief.label}</span>
+        <p>${problem.brief.text}</p>
+      </div>`);
   }
+  if (problem.context) {
+    // Numbered causes read as h3s; the plain version keeps the small label.
+    problemExtras.push(`
+      <div class="case-problem-context">
+        ${problem.contextLabel ? `<span class="case-label reveal-text">${problem.contextLabel}</span>` : ''}
+        <div class="case-panel-grid is-fill" style="--cols:${problem.contextCols || problem.context.length};">
+          ${problem.context.map((item, i) => `
+            <div class="case-panel case-reveal">
+              ${problem.contextNumbered
+                ? `<span class="case-panel-index">${pad(i + 1)}</span><h3>${item.title}</h3>`
+                : `<span class="case-label">${item.title}</span>`}
+              <p>${item.desc}</p>
+            </div>
+          `).join('')}
+        </div>
+      </div>`);
+  }
+  if (problem.jobs) {
+    problemExtras.push(`
+      <div class="case-jobs case-reveal">
+        <span class="case-label">${problem.jobsLabel || 'Jobs'}</span>
+        <div class="case-jobs-list">${problem.jobs.map((job, i) => `<span class="case-job"><small>${pad(i + 1)}</small>${job}</span>`).join('')}</div>
+      </div>`);
+  }
+  document.getElementById('caseProblemContext').innerHTML = problemExtras.join('');
 
   /* ----------------------------------------------------------------
-     4. Approach
+     4. Approach — optional; a project can drop it entirely.
   ---------------------------------------------------------------- */
-  document.getElementById('caseApproachGrid').innerHTML = data.approach
-    .map((item, i) => `
-      <div class="case-approach-card">
-        <span class="case-approach-index">${item.code || pad(i + 1)}</span>
-        <h3>${item.title}</h3>
-        <p>${item.desc}</p>
-      </div>
-    `).join('');
+  if (data.approach) {
+    document.getElementById('caseApproachGrid').innerHTML = data.approach
+      .map((item, i) => `
+        <div class="case-approach-card">
+          <span class="case-approach-index">${item.code || pad(i + 1)}</span>
+          <h3>${item.title}</h3>
+          <p>${item.desc}</p>
+        </div>
+      `).join('');
+  } else {
+    document.getElementById('approach').hidden = true;
+  }
 
   /* ----------------------------------------------------------------
      5. The Flow — alternating text/media, gradient angle varies per
@@ -214,16 +248,20 @@
   /* ----------------------------------------------------------------
      7. Impact
   ---------------------------------------------------------------- */
-  document.getElementById('caseImpactGrid').innerHTML = data.impact
-    .map((stat) => `
-      <div class="case-impact-stat">
-        <div class="case-impact-num-row">
-          <span class="case-impact-num" data-count="${stat.value}" data-decimals="${stat.decimals || 0}">0</span><span class="case-impact-suffix">${stat.suffix || ''}</span>
+  if (data.impact) {
+    document.getElementById('caseImpactGrid').innerHTML = data.impact
+      .map((stat) => `
+        <div class="case-impact-stat">
+          <div class="case-impact-num-row">
+            <span class="case-impact-num" data-count="${stat.value}" data-decimals="${stat.decimals || 0}">0</span><span class="case-impact-suffix">${stat.suffix || ''}</span>
+          </div>
+          <p>${stat.label}</p>
         </div>
-        <p>${stat.label}</p>
-      </div>
-    `).join('');
-  document.getElementById('caseClosing').textContent = data.closing;
+      `).join('');
+    document.getElementById('caseClosing').textContent = data.closing;
+  } else {
+    document.getElementById('impact').hidden = true;
+  }
 
   /* ----------------------------------------------------------------
      7b. Optional sections — each renderer returns the section body;
@@ -277,24 +315,136 @@
   }
 
   function researchHTML(r) {
+    const f = r.fragile;
     return `
-      <div class="case-panel-grid" style="--cols:3;">
-        ${r.patterns.map((p, i) => `
-          <div class="case-panel case-reveal">
-            <span class="case-panel-index">${pad(i + 1)}</span>
-            <h3>${p.title}</h3>
-            ${p.seenIn ? `<span class="case-seen">Seen in: ${p.seenIn}</span>` : ''}
-            <p>${p.desc}</p>
-            ${p.applied ? `<p class="case-applied"><span aria-hidden="true">&rarr;</span> ${p.applied}</p>` : ''}
+      ${r.board ? `<div class="case-reveal">${boardSlotHTML(r.board)}</div>` : ''}
+      ${r.patterns ? `
+      <div class="${r.board || r.patternsTitle ? 'case-subblock' : ''}">
+        ${r.patternsTitle ? `<h3 class="case-subtitle reveal-text">${r.patternsTitle}</h3>` : ''}
+        <div class="case-panel-grid" style="--cols:3;">
+          ${r.patterns.map((p, i) => `
+            <div class="case-panel case-reveal">
+              <span class="case-panel-index">${pad(i + 1)}</span>
+              <h3>${p.title}</h3>
+              ${p.seenIn ? `<span class="case-seen">Seen in: ${p.seenIn}</span>` : ''}
+              <p>${p.desc}</p>
+              ${p.applied ? `<p class="case-applied"><span aria-hidden="true">&rarr;</span> ${p.applied}</p>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      </div>` : ''}
+      ${f ? `
+        <div class="case-subblock">
+          <h3 class="case-subtitle reveal-text">${f.index}</h3>
+          <div class="case-insight case-insight-flush">
+            <span class="case-label">${f.label}</span>
+            <h3 class="reveal-text">${f.title}</h3>
           </div>
-        `).join('')}
-      </div>
+          <div class="case-panel-grid" style="--cols:${f.facts.length};">
+            ${f.facts.map((fact) => `
+              <div class="case-panel case-reveal">
+                <h3>${fact.title}</h3>
+                <p>${fact.desc}</p>
+              </div>
+            `).join('')}
+          </div>
+          <div class="case-levers case-reveal">
+            <span class="case-label">${f.leversTitle}</span>
+            <ul class="case-bullets">${f.levers.map((l) => `<li>${l}</li>`).join('')}</ul>
+          </div>
+        </div>` : ''}
       ${r.chartTable ? `
         <div class="case-subblock">
           <h3 class="case-subtitle reveal-text">${r.chartTable.title}</h3>
           ${tableHTML(r.chartTable)}
           ${r.chartTable.note ? `<p class="case-note reveal-text">${r.chartTable.note}</p>` : ''}
-        </div>` : ''}`;
+        </div>` : ''}
+      ${r.rules ? `
+        <div class="case-subblock">
+          <h3 class="case-subtitle reveal-text">${r.rulesTitle || 'Design rules'}</h3>
+          <div class="case-panel-grid" style="--cols:3;">
+            ${r.rules.map((rule, i) => `
+              <div class="case-panel case-reveal">
+                <span class="case-panel-index">${pad(i + 1)}</span>
+                <h3>${rule.title}</h3>
+                <p>${rule.desc}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>` : ''}
+      ${r.sources ? `<p class="case-note reveal-text">${r.sources}</p>` : ''}`;
+  }
+
+  function personasHTML(p) {
+    return `
+      <div class="case-panel-grid" style="--cols:${p.items.length};">
+        ${p.items.map((x, i) => `
+          <article class="case-panel case-reveal">
+            <span class="case-panel-index">${pad(i + 1)}</span>
+            <h3>${x.name}</h3>
+            <span class="case-seen">${x.who}</span>
+            <blockquote class="case-persona-quote">&ldquo;${x.quote}&rdquo;</blockquote>
+            <span class="case-label">Needs</span>
+            <ul class="case-bullets">${x.needs.map((n) => `<li>${n}</li>`).join('')}</ul>
+            <span class="case-label case-label-gap">What the design gives them</span>
+            <ul class="case-bullets">${x.gives.map((g) => `<li>${g}</li>`).join('')}</ul>
+          </article>
+        `).join('')}
+      </div>`;
+  }
+
+  function solutionHTML(s) {
+    const last = s.loop.length - 1;
+    return `
+      <div class="case-model-wrap case-reveal">
+        <span class="case-label">${s.loopLabel}</span>
+        <div class="case-model">
+          ${s.loop.map((node, i) => `
+            ${i ? '<span class="case-model-arrow" aria-hidden="true">&rarr;</span>' : ''}
+            <div class="case-model-node${i === last ? ' is-accent' : ''}">
+              <h3>${node.title}</h3>
+              <p>${node.desc}</p>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="case-subblock">
+        <h3 class="case-subtitle reveal-text">${s.map.title}</h3>
+        ${tableHTML(s.map)}
+      </div>
+      <div class="case-subblock">
+        <h3 class="case-subtitle reveal-text">${s.measuresTitle}</h3>
+        <div class="case-panel-grid" style="--cols:${s.measures.length};">
+          ${s.measures.map((m) => `
+            <div class="case-panel case-reveal">
+              <span class="case-label">${m.label}</span>
+              <h3>${m.title}</h3>
+              <p>${m.desc}</p>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      ${s.priorities ? `
+      <div class="case-subblock">
+        <h3 class="case-subtitle reveal-text">${s.priorities.title}</h3>
+        <p class="case-note reveal-text case-note-flush">${s.priorities.intro}</p>
+        <div class="case-panel-grid" style="--cols:2;">
+          ${s.priorities.items.map((item, i) => `
+            <div class="case-panel case-reveal">
+              <span class="case-panel-index">${pad(i + 1)}</span>
+              <h3>${item.title}</h3>
+              <p>${item.desc}</p>
+            </div>
+          `).join('')}
+        </div>
+      </div>` : ''}
+      ${s.statement ? `
+      <div class="case-insight">
+        <span class="case-label">${s.statement.label}</span>
+        <h3 class="reveal-text">${s.statement.title}</h3>
+        <p class="reveal-text">${s.statement.text}</p>
+      </div>` : ''}
+      ${s.pillars ? tableHTML(s.pillars) : ''}`;
   }
 
   // Weighted totals come straight from the criteria rows (weights in %),
@@ -391,6 +541,11 @@
           </div>
         `).join('')}
       </div>
+      ${s.more ? `
+        <div class="case-more case-reveal">
+          <h3>${s.more.title}</h3>
+          <p>${s.more.text}</p>
+        </div>` : ''}
       ${s.note ? `<p class="case-note reveal-text">${s.note}</p>` : ''}`;
   }
 
@@ -407,12 +562,29 @@
   }
 
   if (data.framing) fillSection('framing', framingHTML(data.framing));
+  if (data.personas) fillSection('personas', personasHTML(data.personas));
+  if (data.solution) fillSection('solution', solutionHTML(data.solution));
+  if (data.foundation) fillSection('foundation', systemHTML(data.foundation));
   if (data.research) fillSection('research', researchHTML(data.research));
   if (data.directions) fillSection('directions', directionsHTML(data.directions));
   if (data.decision) fillSection('decision', decisionHTML(data.decision));
   if (data.states) fillSection('states', `<div class="screen-grid">${data.states.map((s) => screenSlotHTML(s)).join('')}</div>`);
   if (data.system) fillSection('system', systemHTML(data.system));
   if (data.nextSteps) fillSection('whats-next', nextStepsHTML(data.nextSteps));
+
+  // Closing card that points to the source Figma file.
+  if (data.figma) {
+    const f = data.figma;
+    document.getElementById('figmaEyebrow').textContent = f.eyebrow;
+    document.getElementById('figmaTitle').textContent = f.title;
+    document.getElementById('figmaIntro').textContent = f.intro;
+    document.getElementById('figmaCtaLabel').textContent = f.cta;
+    document.getElementById('figmaCta').setAttribute('href', f.url);
+    document.getElementById('figmaList').innerHTML = f.reasons
+      .map((r, i) => `<li><span>${pad(i + 1)}</span><div><strong>${r.title}</strong><p>${r.desc}</p></div></li>`)
+      .join('');
+    document.getElementById('figma-file').hidden = false;
+  }
 
   /* ----------------------------------------------------------------
      7c. Section labels + headings per project, then number the
@@ -432,6 +604,16 @@
         </div>`);
     }
   });
+
+  // A project can list its sections in the order of its source file;
+  // anything not listed keeps its default place (and stays hidden).
+  if (data.order) {
+    const anchor = document.querySelector('.case-next');
+    data.order.forEach((id) => {
+      const section = document.getElementById(id);
+      if (section) anchor.parentNode.insertBefore(section, anchor);
+    });
+  }
 
   let prevAlt = true;
   Array.from(document.querySelectorAll('.case-section'))
@@ -545,6 +727,13 @@
   function animateHeroScreen() {
     if (reducedMotion) return;
 
+    if (data.heroImage) {
+      gsap.fromTo('.case-hero-cover', { opacity: 0, y: 40 }, {
+        opacity: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out',
+      });
+      return;
+    }
+
     if (data.heroScreens) {
       gsap.fromTo('.case-hero-screens .screen-slot', { opacity: 0, y: 40 }, {
         opacity: 1, y: 0, duration: 0.9, stagger: 0.12, delay: 0.2, ease: 'power3.out',
@@ -598,6 +787,77 @@
     });
   }
 
+  /* ----------------------------------------------------------------
+     9c. Zoom — exported screens are 2x, so any image tagged `data-zoom`
+     opens full-width in an overlay with its own scroll for tall ones.
+  ---------------------------------------------------------------- */
+  function initZoom() {
+    if (!document.querySelector('img[data-zoom]')) return;
+
+    const box = document.createElement('div');
+    box.className = 'zoom-overlay';
+    box.hidden = true;
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-modal', 'true');
+    box.setAttribute('aria-label', 'Image preview');
+    box.setAttribute('data-lenis-prevent', '');
+    box.innerHTML = '<button type="button" class="zoom-close" aria-label="Close preview">Close</button><div class="zoom-scroll"><img alt="" /></div>';
+    document.body.appendChild(box);
+
+    const img = box.querySelector('img');
+    const closeBtn = box.querySelector('.zoom-close');
+    const cursor = document.getElementById('cursor');
+    const cursorLabel = document.getElementById('cursorLabel');
+    let lastFocus = null;
+
+    const resetCursor = () => {
+      if (!cursor || isTouch) return;
+      cursor.classList.remove('is-hover', 'is-label');
+      gsap.to(cursor, { width: 16, height: 16, duration: 0.35, ease: 'power3.out' });
+    };
+
+    function open(src, alt) {
+      lastFocus = document.activeElement;
+      img.src = src;
+      img.alt = alt;
+      box.hidden = false;
+      box.scrollTop = 0;
+      box.querySelector('.zoom-scroll').scrollTop = 0;
+      requestAnimationFrame(() => box.classList.add('is-open'));
+      if (typeof lenis !== 'undefined') lenis.stop();
+      resetCursor();
+      closeBtn.focus();
+    }
+
+    function close() {
+      box.classList.remove('is-open');
+      setTimeout(() => { box.hidden = true; img.removeAttribute('src'); }, 250);
+      if (typeof lenis !== 'undefined') lenis.start();
+      if (lastFocus) lastFocus.focus({ preventScroll: true });
+    }
+
+    document.addEventListener('click', (e) => {
+      const target = e.target.closest('img[data-zoom]');
+      if (target && !box.contains(target)) open(target.currentSrc || target.src, target.alt);
+    });
+    box.addEventListener('click', (e) => { if (e.target !== img) close(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !box.hidden) close(); });
+
+    if (!isTouch && cursor) {
+      document.addEventListener('mouseover', (e) => {
+        const target = e.target.closest && e.target.closest('img[data-zoom]');
+        if (!target || box.contains(target)) return;
+        cursorLabel.textContent = 'Zoom';
+        cursor.classList.add('is-hover', 'is-label');
+        gsap.to(cursor, { width: 90, height: 90, duration: 0.35, ease: 'power3.out' });
+      });
+      document.addEventListener('mouseout', (e) => {
+        const target = e.target.closest && e.target.closest('img[data-zoom]');
+        if (target && !box.contains(target)) resetCursor();
+      });
+    }
+  }
+
   const reducedMotion = typeof isReducedMotion !== 'undefined' && isReducedMotion;
 
   if (!reducedMotion) {
@@ -610,6 +870,7 @@
   function boot() {
     initCaseReveals();
     initImpactCounters();
+    initZoom();
 
     const afterCover = () => {
       if (!reducedMotion) heroEntrance();
