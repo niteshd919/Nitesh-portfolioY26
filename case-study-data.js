@@ -752,91 +752,106 @@ window.CASE_STUDIES = {
       },
     },
 
-    next: 'nocturne',
+    next: 'hmi',
   },
 
   /* ================================================================ */
-  nocturne: {
-    slug: 'nocturne',
-    title: 'Nocturne',
-    subtitle: 'Design System',
-    tagline: 'Four brands, one grammar, infinite variation.',
-    year: '2023',
-    role: 'Design Systems Lead',
-    timeline: '7 Months',
-    platform: 'Design Tokens · Web · Native',
-    team: '2 Designers, 3 Engineers',
-    tools: 'Figma, Style Dictionary, Storybook',
-    tags: ['Art Direction', 'Systems'],
-    gradient: 'linear-gradient(135deg,#c8ff4d,#4d9fff)',
-    accent: '#c8ff4d',
+  hmi: {
+    slug: 'hmi',
+    title: 'HMI',
+    subtitle: 'Cockpit experience',
+    tagline: 'Four surfaces, one cockpit.',
+    year: '2026',
+    platform: 'In-car · Škoda',
+    scope: 'Virtual Cockpit, AR Head-Up Display, 13" infotainment, Laura voice assistant',
+    tags: ['HMI', 'Automotive', 'Voice'],
+    gradient: 'linear-gradient(135deg,#4ba82e,#1a1a1a)',
+    accent: '#4ba82e',
+    wideScreens: true,
 
-    heroScreen: {
-      device: 'browser',
-      html: `
-        <div class="wf-swatch-row" data-anim="tokens">
-          <span class="wf-swatch is-active" style="background:#c8ff4d;"></span>
-          <span class="wf-swatch" style="background:#ff4d6d;"></span>
-          <span class="wf-swatch" style="background:#4d9fff;"></span>
-          <span class="wf-swatch" style="background:#f4f3ef;"></span>
-        </div>
-        <div class="wf-preview-card">
-          <span class="wf-bar" style="width:50%;height:14px;"></span>
-          <span class="wf-bar" style="width:85%;"></span>
-          <span class="wf-bar" style="width:60%;"></span>
-          <div class="wf-fakebtn"></div>
-        </div>
-      `,
+    /* 2x export of the Cover page of the Figma file (assets/hmi/). */
+    heroImage: {
+      image: 'assets/hmi/cover.png',
+      alt: 'Cockpit Experience cover: Škoda in-car experience across Virtual Cockpit, AR Head-Up Display, 13" infotainment and Laura voice, with the four parts of the Figma file.',
+      ratio: '16 / 9',
     },
 
-    overview: `Nocturne unifies four nightlife and entertainment brands — a ticketing
-      app, a streaming radio product, an events platform and a loyalty program —
-      under one flexible system, letting each brand keep its own visual voice while
-      sharing every component underneath.`,
+    overview: `A unified in-car HMI concept for Škoda. It treats four surfaces as one
+      system rather than four separate products: the Virtual Cockpit behind the
+      wheel, an AR Head-Up Display on the windshield, the 13" infotainment screen
+      and Laura, Škoda’s voice assistant.`,
 
     problem: {
-      copy: `Four teams were rebuilding the same button, the same modal, the same
-        date picker four separate times, each slightly different, each slightly
-        broken in a different way. Nothing was reusable because nothing was
-        designed to be shared in the first place.`,
-      quote: `We had four teams solving the same problem badly instead of one team
-        solving it well.`,
-      attribution: 'VP of Product, internal kickoff',
+      copy: `Inside a car, every surface competes for the same pair of eyes. The
+        cluster, the windshield, the centre screen and the voice assistant are
+        usually designed as separate products, each with its own logic. The driver
+        is left to reconcile them, at speed, while the road is the thing that needs
+        their attention.`,
     },
 
     approach: [
-      { title: 'Grammar, not templates', desc: 'Nocturne defines relationships — spacing ratios, type scale, motion curves — so each brand’s skin can flex without breaking the rhythm underneath.' },
-      { title: 'Dark by default', desc: 'Every brand lives in low-light contexts — venues, late-night listening, event nights — so the system was built dark-first, with light mode the exception.' },
-      { title: 'Theming via tokens, not forks', desc: 'Brand personality lives in a single token layer on top of one shared component library, so no team maintains its own fork.' },
-      { title: 'Motion as identity', desc: 'Where color is constrained by accessibility, motion timing became the main differentiator between each brand’s personality.' },
+      { title: 'One system, four surfaces', desc: 'The cluster, the HUD, the central screen and Laura share one logic, so what the driver learns on one surface holds on the rest.' },
+      { title: 'Each surface has a job', desc: 'What sits in front of the driver, what sits in the line of sight and what sits to the side are decided by the moment of driving, not by what each screen can show.' },
+      { title: 'Voice as a surface', desc: 'Laura is designed as part of the cockpit rather than a feature added on top, so a request can start on one surface and finish on another.' },
     ],
 
     flow: [
-      { title: 'Shared primitives', desc: 'Built the atomic layer first — color, type, spacing, elevation, motion — with zero brand-specific decisions baked in.',
-        screen: `<div class="wf-swatch-row" style="margin-bottom:0;"><span class="wf-swatch is-active" style="background:#c8ff4d;"></span><span class="wf-swatch" style="background:#4d9fff;"></span><span class="wf-swatch" style="background:#f4f3ef;"></span></div>` },
-      { title: 'Component library', desc: 'Forty-two components built once against the primitives, covering 90% of every brand’s existing UI inventory.',
-        screen: `<div class="wf-card-grid"><div class="wf-card"><span class="wf-bar" style="width:60%;"></span></div><div class="wf-card"><span class="wf-bar" style="width:60%;"></span></div></div>` },
-      { title: 'Brand token layers', desc: 'Each brand overrides a single token file — around 30 values — to fully re-skin the shared components.',
-        screen: `<div class="wf-preview-card" style="padding:0.85rem;"><span class="wf-bar" style="width:70%;"></span><div class="wf-fakebtn" style="width:70px;height:22px;margin-top:0.5rem;"></div></div>` },
-      { title: 'Native + web parity', desc: 'Tokens compile to both CSS custom properties and native design tokens, keeping all four apps and the web product visually in sync.',
-        screen: `<div class="wf-stat"><span class="wf-bar" style="width:45%;"></span><div class="wf-fill"><span style="width:95%;"></span></div></div>` },
+      { title: 'Virtual Cockpit', desc: 'The instrument cluster behind the wheel: the surface a driver reads most often, and the one that sets the visual language for the rest.',
+        image: 'assets/hmi/ic-parked.png', ratio: '8 / 3',
+        alt: 'Virtual Cockpit, parked and ready: a Good afternoon greeting, READY in large type with the prompt to press brake and select D, and the battery, range and gear selector on the right.' },
+      { title: 'AR Head-Up Display', desc: 'Information placed on the windshield, in the line of sight, so the driver does not have to look away from the road to get it.',
+        image: 'assets/hmi/hud-driving.png', ratio: '3 / 1',
+        alt: 'AR Head-Up Display while driving: speed at 48 km/h on the left, a right-turn arrow with 300 m in the centre and the adaptive cruise control telltale on the right.' },
+      { title: '13" infotainment screen', desc: 'The central IVI: navigation, media and vehicle functions, designed as the place for everything that does not need to be glanced at while driving.',
+        image: 'assets/hmi/ivi-parked.png', ratio: '16 / 9',
+        alt: '13-inch infotainment screen, parked: a media player, eight shortcut tiles for navigation, phone, climate, seats, charging, vehicle, apps and settings, an energy card and a persistent climate bar.' },
+      { title: 'Laura', desc: 'Škoda’s voice assistant, so the driver can ask for something without taking a hand off the wheel or an eye off the road.',
+        image: 'assets/hmi/laura-parked.png', ratio: '16 / 9', inset: true,
+        alt: 'Laura voice prompt: “Hi Petr — home, or the office?”' },
     ],
 
-    testing: [
-      { title: 'Teams didn’t trust a shared library at first', desc: 'Shipping the ticketing app’s redesign first, visibly faster than any previous cycle, converted the other three teams without a single mandate.' },
-      { title: 'Token overrides became de-facto forks', desc: 'A token linter now flags any override outside the approved 30 values in code review, catching drift before it ships.' },
-      { title: 'Motion felt inconsistent across platforms', desc: 'Standardizing on a shared, natively-ported easing curve library fixed the last visible seam between native and web.' },
+    nextSteps: [
+      { title: 'Validate', items: [
+        'Test the four surfaces together in a driving simulator, not one screen at a time. The concept only works if the handoffs between them do.',
+        'Measure glance time away from the road, time on task and how often drivers fall back to touch when voice would have done.',
+        'Test with drivers who already use a Škoda, to see what the new logic breaks from habit.',
+      ] },
+      { title: 'Assumptions', items: [
+        'Each surface keeps the job it was given: the cluster for reading, the HUD for the line of sight, the central screen for everything else.',
+        'Laura is available for the tasks that would otherwise pull a hand or an eye off the driving.',
+        'This is a concept. Hardware limits of the cluster, the HUD and the 13" display have not been tested against it.',
+      ] },
+      { title: 'Open questions & v2', items: [
+        'How much should the HUD carry before it competes with the road? Where that line sits needs real-road testing.',
+        'How far should a request travel between surfaces? Starting on Laura and finishing on the central screen is the case to prove first.',
+        'What changes for the passenger, who has the same screen but not the same constraints?',
+      ] },
     ],
 
-    impact: [
-      { value: 42, suffix: '%', decimals: 0, label: 'Faster feature ship time across brands' },
-      { value: 90, suffix: '%', decimals: 0, label: 'Of existing UI inventory covered by 42 shared components' },
-      { value: 4, suffix: '', decimals: 0, label: 'Brands unified under one design grammar' },
-    ],
+    figma: {
+      eyebrow: 'Go deeper',
+      title: 'The thinking lives in the Figma file.',
+      intro: `This page is the short version. The file holds the full working: every
+        decision, the ideas I parked, and the handoff a developer would build from.`,
+      cta: 'Explore Figma file',
+      url: 'https://www.figma.com/design/vAQjMwK3312ErtmDLKloSU/In-car---Experience-for-skoda?node-id=0-1&t=uS3d6tgBq9BEgt5s-1',
+      reasons: [
+        { title: 'See the approach', desc: 'A clearer picture of how it was done, what was built, and why.' },
+        { title: 'Follow the decisions', desc: 'Explore how each call was made, and what it was weighed against.' },
+        { title: 'Visit the dump yard', desc: 'Everything I explored but parked, kept in one place rather than deleted.' },
+        { title: 'Check the handoff', desc: 'How the file is organised and how the dev-handoff is maintained.' },
+      ],
+    },
 
-    closing: `Two years on, launching a fifth brand took three weeks instead of
-      three months — Nocturne's token layer meant the new brand only had to decide
-      what made it different, not rebuild everything from zero.`,
+    sections: {
+      'whats-next': {
+        label: 'What I would do next',
+        title: 'What I’d test next, and what’s still open',
+      },
+      'figma-file': {
+        label: 'Explore the file',
+      },
+    },
 
     next: 'aurora',
   },

@@ -221,9 +221,11 @@
             <h3>${step.title}</h3>
             <p>${step.desc}</p>
           </div>
-          <div class="case-flow-media">
+          <div class="case-flow-media${step.image ? ' has-image' : ''}"${step.image && step.ratio ? ` style="aspect-ratio:${step.ratio};"` : ''}>
             <div class="case-flow-media-img" style="background: linear-gradient(${flowAngles[i % flowAngles.length]}deg, ${gradientColors[0]}, ${gradientColors[1] || gradientColors[0]});"></div>
-            ${step.screen ? `<div class="case-flow-chip">${step.screen}</div>` : ''}
+            ${step.image
+              ? `<img class="case-flow-shot${step.inset ? ' is-inset' : ''}" src="${step.image}" alt="${step.alt || step.title}" loading="lazy" data-zoom />`
+              : step.screen ? `<div class="case-flow-chip">${step.screen}</div>` : ''}
           </div>
         </div>
       `).join('');
@@ -719,8 +721,7 @@
   /* ----------------------------------------------------------------
      9b. Signature hero-screen animation — each project's device
      mockup demonstrates its own core idea instead of sitting static:
-     Aurora's pots visibly auto-fill and Nocturne's preview literally
-     re-skins across its brand tokens. Hero
+     Aurora's pots visibly auto-fill. Hero
      screen rows simply rise in, one after another.
   ---------------------------------------------------------------- */
   const heroIntervals = [];
@@ -749,17 +750,6 @@
         const target = el.style.width;
         gsap.fromTo(el, { width: '0%' }, { width: target, duration: 1.3, ease: 'power3.out', delay: 0.2 });
       });
-    } else if (data.slug === 'nocturne') {
-      const colors = ['#c8ff4d', '#ff4d6d', '#4d9fff', '#f4f3ef'];
-      const swatches = root.querySelectorAll('.wf-swatch');
-      const btn = root.querySelector('.wf-fakebtn');
-      let i = 0;
-      heroIntervals.push(setInterval(() => {
-        swatches.forEach((s) => s.classList.remove('is-active'));
-        swatches[i % swatches.length].classList.add('is-active');
-        if (btn) btn.style.background = colors[i % colors.length];
-        i += 1;
-      }, 1100));
     }
   }
   window.addEventListener('beforeunload', () => heroIntervals.forEach(clearInterval));

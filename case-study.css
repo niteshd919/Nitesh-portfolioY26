@@ -457,6 +457,35 @@
   width: 100%;
   height: 100%;
 }
+/* exported screens: the box takes the screen's own proportions, and the
+   brand gradient only shows around an inset shot (e.g. the Laura pill) */
+.case-flow-media.has-image {
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.case-flow-media.has-image .case-flow-media-img {
+  position: absolute;
+  inset: 0;
+}
+.case-flow-shot {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: none;
+}
+.case-flow-shot.is-inset {
+  width: 82%;
+  height: auto;
+  border-radius: 999px;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.55);
+}
+@media (hover: none) {
+  .case-flow-shot { cursor: zoom-in; }
+}
 
 /* ================= TESTING & LEARNINGS ================= */
 .case-testing-grid {
