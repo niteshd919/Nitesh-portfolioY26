@@ -65,6 +65,21 @@
     });
   });
 
+  // Browser back/forward can restore this page from the back/forward cache
+  // exactly as it was left — i.e. with the wipe still covering the viewport
+  // and smooth scroll stopped. No load event fires, so reset it here.
+  window.addEventListener('pageshow', (e) => {
+    if (!e.persisted) return;
+    gsap.killTweensOf([overlay, label]);
+    overlay.classList.remove('is-covering');
+    overlay.style.display = 'none';
+    overlay.style.clipPath = '';
+    overlay.style.transform = '';
+    document.documentElement.classList.remove('is-transitioning');
+    if (typeof lenis !== 'undefined') lenis.start();
+    if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+  });
+
   window.revealPageTransition = function (onComplete) {
     if (reduced || !overlay.classList.contains('is-covering')) {
       overlay.classList.remove('is-covering');
