@@ -15,7 +15,7 @@
   const params = new URLSearchParams(window.location.search);
   const requested = params.get('p');
   const store = window.CASE_STUDIES || {};
-  const data = store[requested] || store.aurora;
+  const data = store[requested] || store.suspension;
 
   if (!data) {
     window.location.href = 'index.html';
@@ -80,7 +80,25 @@
     // A single exported cover, shown at its real proportions.
     const wrap = document.querySelector('.case-hero-device-wrap');
     wrap.classList.add('is-cover');
-    wrap.innerHTML = `<figure class="case-hero-cover"><img src="${data.heroImage.image}" alt="${data.heroImage.alt || data.title}" data-zoom /></figure>`;
+    const hero = data.heroImage;
+    const img = `<img src="${hero.image}" alt="${hero.alt || data.title}" data-zoom />`;
+    if (hero.hotspots) {
+      // A "live" cover: the screen boots with a scan sweep, the sensors
+      // ping on the wheels, and the whole display tilts with the cursor.
+      const spots = hero.hotspots
+        .map((s) => `<span class="case-hotspot" style="left:${s.x}%;top:${s.y}%;" tabindex="0" role="img" aria-label="${s.label}"><i></i><b>${s.label}</b></span>`)
+        .join('');
+      wrap.innerHTML = `
+        <figure class="case-hero-cover is-live">
+          <div class="case-hero-tilt">
+            ${img}${spots}
+            <span class="case-hero-scanlines" aria-hidden="true"></span>
+            <span class="case-hero-scan" aria-hidden="true"></span>
+          </div>
+        </figure>`;
+    } else {
+      wrap.innerHTML = `<figure class="case-hero-cover">${img}</figure>`;
+    }
   } else if (data.heroScreens) {
     // A row of phone screens (real exports or placeholders) instead of
     // one abstracted device — the middle one sits slightly larger.
@@ -131,6 +149,13 @@
      3. Overview / Problem
   ---------------------------------------------------------------- */
   document.getElementById('caseOverview').textContent = data.overview;
+  // Longer overviews: the first paragraph leads, the rest follow in body size.
+  if (data.overviewMore) {
+    document.getElementById('caseOverview').insertAdjacentHTML('afterend', `
+      <div class="case-overview-more">
+        ${data.overviewMore.map((p) => `<p class="case-copy reveal-text">${p}</p>`).join('')}
+      </div>`);
+  }
   document.getElementById('caseProblem').textContent = data.problem.copy;
   if (data.problem.quote) {
     document.getElementById('caseQuoteText').textContent = data.problem.quote;
@@ -198,7 +223,9 @@
 
   // Longer flows come in chapters: a short intro, then a row of screens.
   const flowList = document.getElementById('caseFlowList');
-  if (data.flowChapters) {
+  if (!data.flowChapters && !data.flow) {
+    document.getElementById('flow').hidden = true;
+  } else if (data.flowChapters) {
     flowList.innerHTML = data.flowChapters
       .map((chapter) => `
         <div class="case-chapter">
@@ -588,6 +615,20 @@
     document.getElementById('figma-file').hidden = false;
   }
 
+  // Closing card that invites the viewer to try the live prototype.
+  if (data.playground) {
+    const p = data.playground;
+    document.getElementById('playgroundEyebrow').textContent = p.eyebrow;
+    document.getElementById('playgroundTitle').textContent = p.title;
+    document.getElementById('playgroundIntro').textContent = p.intro;
+    document.getElementById('playgroundCtaLabel').textContent = p.cta;
+    document.getElementById('playgroundCta').setAttribute('href', p.url);
+    document.getElementById('playgroundPreview').setAttribute('href', p.url);
+    document.getElementById('playgroundImg').setAttribute('src', p.image);
+    document.getElementById('playgroundBadge').textContent = p.badge;
+    document.getElementById('playground').hidden = false;
+  }
+
   /* ----------------------------------------------------------------
      7c. Section labels + headings per project, then number the
          visible sections in order and alternate their backgrounds.
@@ -721,12 +762,43 @@
   /* ----------------------------------------------------------------
      9b. Signature hero-screen animation — each project's device
      mockup demonstrates its own core idea instead of sitting static:
-     Aurora's pots visibly auto-fill. Hero
-     screen rows simply rise in, one after another.
+     the wireframe meters visibly fill to their level.
   ---------------------------------------------------------------- */
   const heroIntervals = [];
   function animateHeroScreen() {
     if (reducedMotion) return;
+
+    if (data.heroImage && data.heroImage.hotspots) {
+      const tilt = document.querySelector('.case-hero-tilt');
+      const shot = tilt.querySelector('img');
+      const spots = gsap.utils.toArray('.case-hotspot');
+
+      gsap.set(shot, { clipPath: 'inset(0 100% 0 0)' });
+      gsap.set('.case-hero-scan', { left: '0%', opacity: 1 });
+      gsap.set(spots, { scale: 0, opacity: 0 });
+
+      gsap.timeline({ delay: 0.3 })
+        .fromTo('.case-hero-cover', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0)
+        .to(shot, { clipPath: 'inset(0 0% 0 0)', duration: 2, ease: 'power2.inOut' }, 0.3)
+        .to('.case-hero-scan', { left: '100%', duration: 2, ease: 'power2.inOut' }, 0.3)
+        .to('.case-hero-scan', { opacity: 0, duration: 0.3 }, 2.3)
+        .to(spots, { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(2.2)', stagger: 0.15 }, 1.1);
+
+      // Tilt toward the cursor, the way a screen angled in a dashboard would.
+      if (!isTouch) {
+        const rotX = gsap.quickTo(tilt, 'rotationX', { duration: 0.8, ease: 'power3.out' });
+        const rotY = gsap.quickTo(tilt, 'rotationY', { duration: 0.8, ease: 'power3.out' });
+        gsap.set(tilt, { transformPerspective: 1400 });
+        const media = document.getElementById('caseHeroMedia');
+        media.addEventListener('pointermove', (e) => {
+          const r = media.getBoundingClientRect();
+          rotY(((e.clientX - r.left) / r.width - 0.5) * 9);
+          rotX(-((e.clientY - r.top) / r.height - 0.5) * 6);
+        });
+        media.addEventListener('pointerleave', () => { rotX(0); rotY(0); });
+      }
+      return;
+    }
 
     if (data.heroImage) {
       gsap.fromTo('.case-hero-cover', { opacity: 0, y: 40 }, {
@@ -745,12 +817,10 @@
     const root = document.getElementById('caseHeroDevice');
     if (!root) return;
 
-    if (data.slug === 'aurora') {
-      gsap.utils.toArray(root.querySelectorAll('.wf-fill span')).forEach((el) => {
-        const target = el.style.width;
-        gsap.fromTo(el, { width: '0%' }, { width: target, duration: 1.3, ease: 'power3.out', delay: 0.2 });
-      });
-    }
+    gsap.utils.toArray(root.querySelectorAll('.wf-fill span')).forEach((el) => {
+      const target = el.style.width;
+      gsap.fromTo(el, { width: '0%' }, { width: target, duration: 1.3, ease: 'power3.out', delay: 0.2 });
+    });
   }
   window.addEventListener('beforeunload', () => heroIntervals.forEach(clearInterval));
 

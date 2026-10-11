@@ -7,90 +7,99 @@
 window.CASE_STUDIES = {
 
   /* ================================================================ */
-  aurora: {
-    slug: 'aurora',
-    title: 'Aurora',
-    subtitle: 'Fintech App',
-    tagline: 'Banking that finally moves at the speed of freelance income.',
-    year: '2025',
-    role: 'Lead Product Designer',
-    timeline: '5 Months',
-    platform: 'iOS · Android',
-    team: '2 Designers, 4 Engineers, 1 PM',
-    tools: 'Figma, Framer, ProtoPie',
-    tags: ['Product Design', 'Mobile'],
-    gradient: 'linear-gradient(135deg,#c8ff4d,#1a1a1a)',
-    accent: '#c8ff4d',
+  suspension: {
+    slug: 'suspension',
+    title: 'Suspension Diagnostics',
+    subtitle: 'Sensor based suspension diagnostic system on IVI',
+    tagline: 'See what the suspension sees, before the terrain does.',
+    year: '2026',
+    platform: 'In-car · Center infotainment display',
+    scope: 'IVI concept for a next-generation SUV or electric off-road vehicle',
+    tags: ['HMI', 'Automotive', 'Diagnostics'],
+    gradient: 'linear-gradient(135deg,#17e0c0,#04110f)',
+    accent: '#2ef2d0',
 
-    heroScreen: {
-      device: 'phone',
-      html: `
-        <div class="wf-nav">
-          <span class="wf-dot"></span>
-          <span class="wf-bar" style="width:44px;"></span>
-          <span class="wf-bar wf-nav-cta"></span>
-        </div>
-        <span class="wf-bar is-accent" style="width:42%;height:26px;margin-bottom:1.4rem;"></span>
-        <div class="wf-statrow" data-anim="pots">
-          <div class="wf-stat"><span class="wf-bar"></span><div class="wf-fill"><span style="width:70%;"></span></div></div>
-          <div class="wf-stat"><span class="wf-bar"></span><div class="wf-fill"><span style="width:40%;"></span></div></div>
-          <div class="wf-stat"><span class="wf-bar"></span><div class="wf-fill"><span style="width:88%;"></span></div></div>
-        </div>
-        <div class="wf-list-row"><span class="wf-dot"></span><div class="wf-lines"><span class="wf-bar"></span><span class="wf-bar"></span></div><span class="wf-bar wf-amount"></span></div>
-        <div class="wf-list-row"><span class="wf-dot"></span><div class="wf-lines"><span class="wf-bar"></span><span class="wf-bar"></span></div><span class="wf-bar wf-amount"></span></div>
-        <div class="wf-list-row"><span class="wf-dot"></span><div class="wf-lines"><span class="wf-bar"></span><span class="wf-bar"></span></div><span class="wf-bar wf-amount"></span></div>
-      `,
+    /* The real IVI screen as the cover. `hotspots` (x / y in % of the
+       image) become sensor pings on the four wheels, with a hover label. */
+    heroImage: {
+      image: 'assets/suspension/cover.png',
+      alt: 'The suspension diagnostics screen, parked: a wireframe 3D SUV with all four wheels highlighted, per-corner readouts for air pressure, spring life, damper life and temperature, a suspension health score of 97, a trip summary and the ride-height selector.',
+      ratio: '1912 / 931',
+      hotspots: [
+        { x: 38.0, y: 54.0, label: 'Front left · 91% life left' },
+        { x: 44.7, y: 51.1, label: 'Front right · 90% life left' },
+        { x: 50.2, y: 60.1, label: 'Rear left · 94% life left' },
+        { x: 57.5, y: 55.9, label: 'Rear right · 93% life left' },
+      ],
     },
 
-    overview: `Aurora set out to replace the spreadsheet-and-screenshot banking habits of
-      independent workers with a single app built around income that never arrives on
-      schedule. My role was to take the idea from a whiteboard thesis to a shipped
-      product used by freelancers across three markets.`,
+    /* ---------------- 1. What is this about? ---------------- */
+    overview: `Predictive Suspension Intelligence is an IVI concept for suspension diagnostics
+      on the center infotainment display of a next-generation SUV or electric off-road
+      vehicle. It gives the driver a clear, visual picture of what the suspension is
+      doing: what the vehicle’s sensors detect on the terrain ahead, how the suspension
+      is expected to respond, whether it has adjusted, and when the vehicle needs attention.`,
 
+    overviewMore: [
+      `The experience covers the whole journey. Before the drive, a readiness check confirms
+        the system can assist. During the drive, glanceable status shows terrain predictions,
+        automatic ride-height adjustments, and clear warnings when conditions turn hazardous.
+        After the drive, a detailed health summary covers suspension and underbody events.`,
+      `At its center is a real-time 3D vehicle visualization. Animated terrain, independently
+        articulating wheels, and a moving suspension are all driven by one simulation, so
+        prediction, physical response, and on-screen guidance always stay in sync.`,
+    ],
+
+    /* ---------------- 2. What problem does it solve? ---------------- */
     problem: {
-      copy: `Freelancers don't get paid like employees — money arrives in bursts, taxes
-        are self-managed, and every existing banking app is built around a monthly
-        salary that never comes. Users were stitching together four separate apps
-        just to answer one question: can I afford this right now?`,
-      quote: `I have my rent, my tax savings and my actual spending money all sitting in
-        one number. I have no idea what's really mine.`,
-      attribution: 'Research participant, freelance illustrator',
+      copy: `Suspension health is mostly invisible to drivers today. Problems show up as a
+        scrape, a hard impact, or a generic warning light, often with no explanation and
+        after damage is done. Adaptive suspension systems adjust silently, so drivers
+        can’t tell whether the car is handling a situation or needs their help.`,
+      contextLabel: 'This concept turns suspension diagnostics into something drivers can understand and act on',
+      contextNumbered: true,
+      contextCols: 3,
+      context: [
+        { title: 'From reactive to predictive', desc: 'Drivers see upcoming terrain, which wheel will be affected, and whether clearance may be limited before they reach it.' },
+        { title: 'Making automation visible', desc: 'Ride-height changes show clear “preparing → adjusting → adjusted” states. A failed adjustment is never shown as a success.' },
+        { title: 'Honest about uncertainty', desc: 'When sensors are obscured, data conflicts, or an actuator fails, the system explains the limitation and gives the safest next step. It doesn’t stay in a reassuring state.' },
+        { title: 'Safe water guidance', desc: 'Floodwater or unknown water depth triggers a conservative “Do not enter. Turn around when safe.” message. Raising the suspension is never presented as a reason to cross.' },
+        { title: 'Diagnostics that make sense to drivers', desc: 'Raw telemetry becomes plain-language health insights and clear inspection recommendations, without needing a workshop scan tool.' },
+      ],
     },
 
+    /* ---------------- 3. Where does it exist in the car experience? ---------------- */
     approach: [
-      { title: 'Income, not salary', desc: 'Every surface treats income as irregular by default — no monthly assumptions baked into the math.' },
-      { title: 'Auto-sorted money', desc: 'Incoming payments split into Spend, Save and Tax pots the moment they land, based on rules set once.' },
-      { title: 'Calm numbers', desc: 'Balances show confidence ranges, not false precision, because freelance income is never exact.' },
-      { title: 'One glance, one answer', desc: 'The home screen answers "can I spend this?" without a single tap, every time it opens.' },
+      { title: 'Before the drive (parked)', desc: 'A readiness view shows suspension status, sensor availability, current ride height and mode, whether automatic adjustment is available, and any faults.' },
+      { title: 'While driving (glanceable mode)', desc: 'The interface shrinks to a minimal view the driver can read in a quick glance and never needs to touch: a simplified vehicle stance, the most relevant wheel or terrain prediction, adjustment status, and one clear instruction when action is needed. Critical warnings can also be mirrored to the instrument cluster, so the driver doesn’t have to look away toward the center screen.' },
+      { title: 'After the drive (parked)', desc: 'The full diagnostic view unlocks. It includes a 3D vehicle model with per-wheel telemetry, a timeline replay of terrain events, clearance concerns, adjustment failures, sensor interruptions, and recommended inspections.' },
     ],
 
-    flow: [
-      { title: 'Connect & categorize', desc: 'Linking a bank account triggers an on-device pass that tags the last 90 days of income as regular, irregular or one-off.',
-        screen: `<div class="wf-list-row"><span class="wf-dot"></span><div class="wf-lines"><span class="wf-bar"></span><span class="wf-bar"></span></div><span class="wf-bar is-accent wf-amount"></span></div>` },
-      { title: 'Set the split', desc: 'A single slider view lets users define how incoming payments divide between Spend, Save and Tax — editable anytime.',
-        screen: `<div class="wf-stat"><span class="wf-bar" style="width:40%;"></span><div class="wf-fill"><span style="width:62%;"></span></div></div>` },
-      { title: 'Live pots', desc: 'Three pots update in real time as money moves, each carrying its own color language from the brand system.',
-        screen: `<div class="wf-statrow"><div class="wf-stat"><span class="wf-bar"></span><div class="wf-fill"><span style="width:70%;"></span></div></div><div class="wf-stat"><span class="wf-bar"></span><div class="wf-fill"><span style="width:40%;"></span></div></div><div class="wf-stat"><span class="wf-bar"></span><div class="wf-fill"><span style="width:88%;"></span></div></div></div>` },
-      { title: 'Tax, handled', desc: 'A dedicated tax view projects what’s owed quarterly, pulling straight from the Tax pot so filing never comes as a surprise.',
-        screen: `<span class="wf-bar is-accent" style="width:50%;height:20px;margin-bottom:0.5rem;"></span><span class="wf-bar" style="width:70%;"></span>` },
-    ],
+    /* Closing card: invites the viewer to try the live prototype. */
+    playground: {
+      eyebrow: 'Try it live',
+      title: 'Simulate it yourself.',
+      intro: 'Reading about a suspension is one thing. Drive it, watch the terrain come in, and see how the screen responds in the moment.',
+      cta: 'Take me to playground',
+      url: 'https://suspension-hud.vercel.app/',
+      image: 'assets/suspension/cover.png',
+      badge: 'Interactive prototype',
+    },
 
-    testing: [
-      { title: 'The split felt invisible', desc: 'Testers didn’t trust automatic splitting until a weekly digest showed exactly where each payment went.' },
-      { title: 'Confidence ranges confused first-timers', desc: 'Pairing every range with a one-line explainer on first view — fading after three sessions — solved it.' },
-      { title: 'Tax anxiety needed a home', desc: 'Users wanted reassurance before information, so the tax view now opens with a single "you’re on track" verdict.' },
-    ],
-
-    impact: [
-      { value: 42, suffix: '%', decimals: 0, label: 'Increase in weekly active use' },
-      { value: 3.1, suffix: 'x', decimals: 1, label: 'More users actively saving toward tax' },
-      { value: 96, suffix: '%', decimals: 0, label: 'Would recommend to another freelancer' },
-    ],
-
-    closing: `Aurora shipped to three markets in its first year, and the auto-sort
-      mechanic became the reason most users cited for staying — not the interest
-      rate, not the visuals, but the simple fact that the app finally understood
-      how their money actually behaved.`,
+    sections: {
+      overview: { label: 'What is this about?' },
+      problem: {
+        label: 'What problem does it solve?',
+        title: 'Drivers can’t see what the suspension is doing.',
+      },
+      approach: {
+        label: 'Where does it exist in the car experience?',
+        title: 'On the center display, with depth that follows the vehicle’s state.',
+        intro: `It lives on the center infotainment display as a dedicated vehicle or suspension
+          app. Its depth changes with the vehicle’s state, because the screen sits outside
+          the driver’s direct line of sight.`,
+      },
+    },
 
     next: 'offpeak',
   },
@@ -853,7 +862,7 @@ window.CASE_STUDIES = {
       },
     },
 
-    next: 'aurora',
+    next: 'suspension',
   },
 
 };
