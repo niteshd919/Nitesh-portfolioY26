@@ -1333,8 +1333,9 @@
   .board-slot img[data-zoom],
   .case-hero-cover img[data-zoom] { cursor: zoom-in; }
 }
-/* three-up grids with a short last row: the odd card fills the gap */
-.case-panel-grid.is-fill .case-panel:last-child:nth-child(3n+2) { grid-column: span 2; }
+/* three-up grids with a short last row: the odd card fills the gap
+   (from the fifth card on, so a two-card grid stays side by side) */
+.case-panel-grid.is-fill .case-panel:nth-child(n+3):last-child:nth-child(3n+2) { grid-column: span 2; }
 
 /* ---- problem: brief, numbered causes, the two jobs ---- */
 .case-brief {
@@ -1698,4 +1699,384 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .case-playground-play, .case-playground-badge i { animation: none; }
+}
+
+/* ---- screens ticker: an endless reel that bleeds to the page edges,
+   paused on hover so a screen can be picked and zoomed ---- */
+.case-ticker {
+  margin-inline: calc(-1 * var(--gutter));
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.case-ticker-track {
+  display: flex;
+  width: max-content;
+  animation: case-ticker var(--ticker-duration, 50s) linear infinite;
+  will-change: transform;
+}
+.case-ticker:hover .case-ticker-track { animation-play-state: paused; }
+/* the trailing padding matches the gap, so the join between sets is invisible */
+.case-ticker-set {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  padding-right: clamp(1.25rem, 2.5vw, 2rem);
+}
+.case-ticker .screen-slot { flex: 0 0 clamp(170px, 18vw, 250px); }
+.case-ticker .screen-slot figcaption { margin-top: 1rem; }
+.case-ticker .screen-slot figcaption h4 { font-size: 0.95rem; }
+@keyframes case-ticker { to { transform: translateX(-50%); } }
+
+/* no motion: the repeats drop out and the row scrolls by hand */
+@media (prefers-reduced-motion: reduce) {
+  .case-ticker {
+    overflow-x: auto;
+    padding-inline: var(--gutter);
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .case-ticker-track { animation: none; }
+  .case-ticker [aria-hidden="true"] { display: none; }
+}
+
+/* ---- closing card: the rest is under NDA ---- */
+.case-nda-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ==================================================================
+   EV-CHARGING COVER — opted into with `heroCharging` in the data. A
+   night scene behind the screens, a live status card, the day's
+   schedule and a 24 h tariff bar with a running playhead. The live
+   state sits on the media as data-charge="waiting|charging|full|away".
+   ================================================================== */
+.case-hero-media.is-charging {
+  position: relative;
+  flex-direction: column;
+}
+.is-charging .case-hero-device-wrap { position: relative; z-index: 1; }
+
+.charge-scene {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 40%, rgba(53, 224, 168, 0.12), transparent 70%),
+    linear-gradient(180deg, #06120e 0%, #0b0e0d 100%);
+}
+/* a faint dot grid, like a charging-station display */
+.charge-scene::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(53, 224, 168, 0.18) 1px, transparent 1.6px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 45%, #000 15%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 50% 45%, #000 15%, transparent 72%);
+}
+
+/* the glow behind the centre screen breathes while charging */
+.charge-glow {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: min(70%, 760px);
+  aspect-ratio: 1.5;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(53, 224, 168, 0.4), rgba(53, 224, 168, 0.08) 60%, transparent);
+  opacity: 0.2;
+  transition: opacity 1s ease;
+}
+[data-charge="charging"] .charge-glow {
+  opacity: 1;
+  animation: charge-breathe 2.4s ease-in-out infinite;
+}
+@keyframes charge-breathe {
+  50% { transform: translate(-50%, -50%) scale(1.08); opacity: 0.7; }
+}
+
+/* energy streaks flowing in from both edges toward the centre screen */
+.charge-lanes {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+[data-charge="charging"] .charge-lanes { opacity: 1; }
+.charge-lane {
+  position: absolute;
+  width: 50%;
+  height: 2px;
+}
+.charge-lane.is-left { left: 0; }
+.charge-lane.is-right { right: 0; transform: scaleX(-1); }
+.charge-lane i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 28%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(53, 224, 168, 0.5) 55%, var(--case-accent) 85%, #eafff7);
+  filter: drop-shadow(0 0 6px var(--case-accent));
+  animation: charge-flow var(--d, 2s) linear var(--delay, 0s) infinite;
+}
+@keyframes charge-flow {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(357%); }
+}
+
+/* the centre screen pulses like an EV charge-port light */
+.is-charging .case-hero-screens .screen-slot-frame { transition: box-shadow 0.6s ease; }
+[data-charge="charging"] .case-hero-screens .is-center .screen-slot-frame {
+  box-shadow: 0 0 0 2px rgba(53, 224, 168, 0.5), 0 0 40px rgba(53, 224, 168, 0.35), 0 50px 90px -30px rgba(0, 0, 0, 0.7);
+  animation: charge-port 2.2s ease-out infinite;
+}
+@keyframes charge-port {
+  from { box-shadow: 0 0 0 0 rgba(53, 224, 168, 0.55), 0 0 40px rgba(53, 224, 168, 0.35), 0 50px 90px -30px rgba(0, 0, 0, 0.7); }
+  to { box-shadow: 0 0 0 22px rgba(53, 224, 168, 0), 0 0 40px rgba(53, 224, 168, 0.15), 0 50px 90px -30px rgba(0, 0, 0, 0.7); }
+}
+
+/* ---- glass cards: live status + the night's schedule ---- */
+.charge-hud {
+  position: relative;
+  z-index: 1;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(53, 224, 168, 0.22);
+  border-radius: 14px;
+  background: rgba(6, 18, 14, 0.62);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  color: var(--c-fg);
+  text-align: left;
+}
+.charge-status {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: 'pill' 'level' 'battery' 'sub';
+  align-items: center;
+}
+.charge-pill {
+  grid-area: pill;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(244, 243, 239, 0.08);
+  color: var(--c-fg-dim);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+[data-charge="charging"] .charge-pill { background: var(--case-accent); color: #04110c; }
+[data-charge="charging"] .charge-pill svg { animation: charge-blink 1.2s ease-in-out infinite; }
+[data-charge="waiting"] .charge-pill { background: rgba(231, 163, 107, 0.16); color: #e7a36b; }
+[data-charge="full"] .charge-pill { background: rgba(53, 224, 168, 0.14); color: var(--case-accent); }
+@keyframes charge-blink { 50% { opacity: 0.35; } }
+
+.charge-level {
+  grid-area: level;
+  margin: 0.85rem 0 0.7rem;
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 2.6rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.charge-level small {
+  margin-left: 0.15rem;
+  font-size: 1rem;
+  color: var(--c-fg-dim);
+}
+.charge-battery {
+  grid-area: battery;
+  position: relative;
+  height: 12px;
+  margin-right: 4px;
+  padding: 2px;
+  border: 1px solid rgba(244, 243, 239, 0.28);
+  border-radius: 4px;
+}
+.charge-battery::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  width: 3px;
+  height: 5px;
+  border-radius: 0 2px 2px 0;
+  background: rgba(244, 243, 239, 0.35);
+  transform: translateY(-50%);
+}
+.charge-battery i {
+  position: relative;
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  overflow: hidden;
+  background: linear-gradient(90deg, #0f6b5f, var(--case-accent));
+}
+[data-charge="away"] .charge-battery i { background: linear-gradient(90deg, #4a4a47, #8a8a86); }
+[data-charge="charging"] .charge-battery i::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: charge-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes charge-shimmer {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+.charge-sub {
+  grid-area: sub;
+  display: block;
+  margin-top: 0.7rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--c-fg-dim);
+}
+
+.charge-plan { display: none; }
+.charge-eyebrow {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--case-accent);
+}
+.charge-plan strong {
+  display: block;
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.charge-plan strong span { color: var(--case-accent); }
+
+/* ---- the day's tariff, with a playhead running the clock ---- */
+.charge-timeline {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 820px;
+  margin-top: clamp(3rem, 5vw, 4rem);
+}
+.charge-bar {
+  position: relative;
+  display: flex;
+  gap: 3px;
+  height: 34px;
+}
+.charge-seg {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding-left: 0.6rem;
+  border-radius: 6px;
+  overflow: hidden;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.charge-seg em { position: relative; z-index: 1; font-style: normal; color: inherit; white-space: nowrap; }
+.charge-seg.is-cheap { background: var(--case-accent); color: #04110c; }
+.charge-seg.is-mid { background: rgba(228, 220, 200, 0.16); color: #e4dcc8; }
+.charge-seg.is-peak { background: #e7a36b; color: #1d1006; }
+/* moving stripes on the cheap window while the car is drawing power */
+[data-charge="charging"] .charge-seg.is-cheap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0 6px, transparent 6px 14px);
+  animation: charge-stripes 0.8s linear infinite;
+}
+@keyframes charge-stripes { to { background-position: 19.8px 0; } }
+
+.charge-head {
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  z-index: 2;
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 0 10px 2px rgba(53, 224, 168, 0.8);
+}
+.charge-head b {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  background: var(--c-fg);
+  color: #0a0a0a;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.charge-ticks {
+  position: relative;
+  height: 1rem;
+  margin-top: 0.65rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--c-fg-faint);
+  font-variant-numeric: tabular-nums;
+}
+.charge-ticks span { position: absolute; top: 0; transform: translateX(-50%); }
+.charge-ticks span:first-child { transform: none; }
+.charge-ticks span:last-child { transform: translateX(-100%); }
+
+/* wide screens: the cards float beside the phones */
+@media (min-width: 1280px) {
+  .charge-status,
+  .charge-plan {
+    position: absolute;
+    top: clamp(2.5rem, 6vw, 5rem);
+    width: 220px;
+  }
+  .charge-status { left: clamp(1.5rem, 3vw, 3rem); }
+  .charge-plan { display: block; right: clamp(1.5rem, 3vw, 3rem); }
+}
+
+/* narrower: the status becomes one strip under the phones */
+@media (max-width: 1279px) {
+  .charge-status {
+    order: 1;
+    width: 100%;
+    max-width: 820px;
+    margin-top: clamp(2rem, 4vw, 3rem);
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: 'pill battery level' 'sub sub sub';
+    column-gap: 1rem;
+  }
+  .charge-level { margin: 0; font-size: 1.6rem; }
+  .charge-timeline { order: 2; margin-top: 3rem; }
+}
+@media (max-width: 600px) {
+  .charge-status { grid-template-columns: auto 1fr; grid-template-areas: 'pill level' 'battery battery' 'sub sub'; }
+  .charge-level { justify-self: end; }
+  .charge-battery { margin-top: 0.8rem; }
+  .charge-seg em { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .charge-glow,
+  .charge-pill svg,
+  .charge-battery i::after,
+  .charge-seg::after,
+  .case-hero-screens .screen-slot-frame { animation: none !important; }
+  .charge-lanes { display: none; }
 }
