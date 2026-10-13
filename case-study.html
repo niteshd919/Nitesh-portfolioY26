@@ -191,6 +191,12 @@
         <div class="case-section-body"></div>
       </section>
 
+      <!-- Opt-in: an endless ticker of screens, from the project's `ticker` data. -->
+      <section class="case-section" id="screens" hidden>
+        <div class="section-index"><span></span><span class="section-index-label">Screens</span></div>
+        <div class="case-section-body"></div>
+      </section>
+
       <!-- ==========================================================
            THE FLOW
       ========================================================== -->
@@ -266,6 +272,26 @@
             <span class="case-playground-badge"><i></i><span id="playgroundBadge"></span></span>
             <span class="case-playground-play"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg></span>
           </a>
+        </div>
+      </section>
+
+      <!-- Opt-in: shown only when the project's data has an `nda` block. -->
+      <section class="case-section" id="nda" hidden>
+        <div class="section-index"><span></span><span class="section-index-label">Under NDA</span></div>
+        <div class="case-figma case-nda case-reveal">
+          <div class="case-figma-copy">
+            <span class="case-label case-nda-eyebrow">
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /><rect x="4.5" y="10" width="15" height="11" rx="2" fill="currentColor" /></svg>
+              <span id="ndaEyebrow"></span>
+            </span>
+            <h3 id="ndaTitle"></h3>
+            <p id="ndaIntro"></p>
+            <a href="#" class="case-figma-cta magnetic" id="ndaCta" data-cursor="Say Hi">
+              <span id="ndaCtaLabel">Let's set up a call</span>
+              <span class="case-figma-arrow" aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+          <ol class="case-figma-list" id="ndaList"></ol>
         </div>
       </section>
 

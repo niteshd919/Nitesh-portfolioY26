@@ -107,7 +107,7 @@ window.CASE_STUDIES = {
   /* ================================================================ */
   offpeak: {
     slug: 'offpeak',
-    title: 'Offpeak',
+    title: 'Tariff Based EV Charging',
     subtitle: 'EV Tariff Input',
     tagline: 'A paper tariff, a phone, and not one uncovered minute.',
     year: '2023',
@@ -119,20 +119,41 @@ window.CASE_STUDIES = {
     gradient: 'linear-gradient(135deg,#35e0a8,#1a1a1a)',
     accent: '#35e0a8',
 
-    /* Screens and boards below are placeholders. To drop in a real
-       export, add `image: 'assets/offpeak/f5.png'` (plus an optional
-       `alt`) to any screen, or to any `board` object. */
+    /* The project is under NDA, so the page stays short: cover,
+       introduction, problem statement, a ticker of screens, then an
+       invitation to talk it through on a call. */
+
+    /* ---------------- 1. Cover ---------------- */
     heroScreens: [
-      { code: 'F5', title: '24 h bar editor' },
-      { code: 'F9', title: 'Review heatmap' },
-      { code: 'F11', title: 'Tariff saved' },
+      { code: 'F3', title: 'Two start dates split the year', image: 'assets/offpeak/f3.png',
+        alt: 'Step 1 of 4, periods: a year ribbon split into Off-peak and Peak, with the start dates editable and the end dates filled in automatically.' },
+      { code: 'F1', title: 'Intro', image: 'assets/offpeak/f1.png',
+        alt: 'The intro screen: “Charge when electricity is cheapest”, a 24-hour price bar, the three questions the flow will ask, and a Start button.' },
+      { code: 'F4', title: 'Days as two groups', image: 'assets/offpeak/f4.png',
+        alt: 'Step 2 of 4, days: Monday to Thursday in group 1 and Friday to Sunday in group 2, one tap to move a day between groups.' },
     ],
 
+    /* Around the screens, a day of smart charging plays out on the tariff
+       from F1's bar: cheap nights, a mid-price day, an evening peak. The
+       car is out between `away` hours and gets home at `low` battery. */
+    heroCharging: {
+      slots: [
+        { from: 0, to: 6, price: 24 },
+        { from: 6, to: 18, price: 31 },
+        { from: 18, to: 22, price: 41 },
+        { from: 22, to: 24, price: 24 },
+      ],
+      away: [7, 18],
+      low: 35,
+    },
+
+    /* ---------------- 2. Introduction ---------------- */
     overview: `EV owners save real money by charging when electricity is cheap, but
       only if the app knows their tariff. I designed the flow that gets a
       time-of-use tariff off a paper contract and into a smart wallbox: up to
       sixteen prices that, between them, have to cover every minute of the year.`,
 
+    /* ---------------- 3. Problem statement ---------------- */
     problem: {
       copy: `On paper it looks like a form. In practice it's a transcription job.
         People sit with the contract open on a laptop, phone in hand, copying
@@ -150,282 +171,45 @@ window.CASE_STUDIES = {
       ],
     },
 
-    framing: {
-      modelNote: 'Max 2 × 2 × 4 = 16 prices · both sample tariffs use 10',
-      model: [
-        { title: 'Tariff', desc: 'One per wallbox, named by the user, e.g. “MyEnergy L”.' },
-        { title: 'Period', desc: '1–2 per year, each with a start and end date. Together: all 365 or 366 days.' },
-        { title: 'Week section', desc: '1–2 per period, any mix of weekdays. Together: all 7 days.' },
-        { title: 'Time slot', desc: '1–4 per section, in 15-minute steps. Together: all 24 hours.' },
-        { title: 'Price', desc: 'ct/kWh or €/kWh, one per slot.' },
-      ],
-      insight: {
-        title: '“Every minute covered” means each level is a partition, not a list of ranges.',
-        desc: `If the UI only ever lets people split a whole, gaps and overlaps can’t
-          happen. Two periods become two start dates, and the ends work themselves
-          out. Week sections become “which group is this day in?”. Time slots become
-          lines you move on a 24-hour bar. Nobody types a from/to time again.`,
-      },
-      edgeCasesLabel: 'Six edge cases hiding in the two sample tariffs',
-      edgeCases: [
-        'Slots that cross midnight, like 22:00–06:00.',
-        'A period that crosses New Year and ends on 29 February, so leap years matter.',
-        'Week sections that aren’t consecutive: “Mon, Fri, Sat”.',
-        'Sections with different slot counts: one 00–24 slot sitting next to three.',
-        'Mixed units and formats: “24 Cent/kWh” next to “0,22 €/kWh”, decimal comma and all.',
-        'A word clash: “off-peak” the season vs. off-peak the hours. So people name their own periods.',
+    /* ---------------- 4. A few screens, as a ticker ---------------- */
+    ticker: {
+      screens: [
+        { code: 'F1', title: 'Intro', image: 'assets/offpeak/f1.png',
+          alt: 'The intro screen: “Charge when electricity is cheapest”, a 24-hour price bar, the three questions the flow will ask, and a Start button.' },
+        { code: 'F2', title: 'Does your price change during the year?', image: 'assets/offpeak/f2.png',
+          alt: 'Step 1 of 4, periods: a yes/no choice between one set of prices all year and two periods, Peak and Off-peak.' },
+        { code: 'F3', title: 'Two start dates split the year', image: 'assets/offpeak/f3.png',
+          alt: 'Step 1 of 4, periods: a year ribbon split into Off-peak and Peak, with the start dates editable and the end dates filled in automatically.' },
+        { code: 'F4', title: 'Days as two groups', image: 'assets/offpeak/f4.png',
+          alt: 'Step 2 of 4, days: Monday to Thursday in group 1 and Friday to Sunday in group 2, one tap to move a day between groups.' },
       ],
     },
 
-    approach: [
-      { code: 'P1', title: 'Mirror the bill', desc: 'Same order and same words as the contract: period, then days, then times, then price. Copying is faster when the screen follows the paper.' },
-      { code: 'P2', title: 'Make errors impossible, not just detectable', desc: 'Partition, don’t list. The best error message is one the design never has to show.' },
-      { code: 'P3', title: 'Ask only what’s needed', desc: 'A flat tariff is one screen. Complexity only shows up when the tariff really has it.' },
-      { code: 'P4', title: 'See while you enter', desc: 'The input control is the visualization. There’s no separate preview to go and check.' },
-      { code: 'P5', title: 'Answer the real question', desc: 'People don’t want a dataset. They want to know when it’s cheap and what their car is going to do about it.' },
-    ],
-
-    research: {
-      patterns: [
-        { title: 'Interview, not form', seenIn: 'Tax-filing interviews, GOV.UK “one thing per page”',
-          desc: 'Ask a simple yes/no before asking for detail, so complexity only appears when it’s real.',
-          applied: '“Does your price change during the year?” comes first. A flat tariff is done in one screen.' },
-        { title: 'Prevent errors by construction', seenIn: 'Nielsen heuristic #5, poka-yoke',
-          desc: 'Constrain the input so invalid states can’t be expressed in the first place.',
-          applied: 'Two start dates, days assigned to groups, boundaries on a bar. No gaps, no overlaps.' },
-        { title: 'Direct manipulation with snapping', seenIn: 'iOS sleep schedule, thermostat schedules, calendar drag-to-resize',
-          desc: 'Dragging a boundary on a timeline beats typing two times, as long as it snaps to a grid.',
-          applied: 'Handles on a 24 h bar that snap to 15 min, with 44 pt hit areas.' },
-        { title: 'Duplicate, then adjust', seenIn: 'Thermostat “copy to other days”, spreadsheet fill-down',
-          desc: 'Real schedules repeat. Copying a finished block and editing the difference beats starting blank.',
-          applied: 'Both sample tariffs reuse their time splits, so the next section starts pre-split.' },
-        { title: 'Week × hour heatmap', seenIn: 'Energy dashboards, contribution calendars',
-          desc: '7 × 24 cells show a whole period at once. “Nights are cheap” jumps out before you read a number.',
-          applied: 'The main view on the review screen, one per period.' },
-        { title: 'Answer the question', seenIn: 'Navigation and banking insights',
-          desc: 'People want the conclusion, not the dataset. Lead with the insight and let the chart back it up.',
-          applied: '“Your car will charge from 22:00, at 27 ct/kWh.”' },
-      ],
-      chartTable: {
-        title: 'Which chart for which job',
-        head: ['Chart', 'Best for', 'Weak at', 'Where it lives'],
-        rows: [
-          ['Linear 24 h bar', 'Editing slots, seeing one day’s split', 'Comparing many days', 'Time & price editor'],
-          ['Week × hour heatmap', 'A whole period’s pattern at a glance', 'Reading exact values', 'Review, one per period'],
-          ['Step / bar chart', 'Today’s prices, “now”, the charging window', 'Weekly overview', 'After saving, home widget'],
-          ['Year ribbon', 'Season boundaries, the New Year wrap', 'Anything within a day', 'Period step, review header'],
-          ['Table', 'Exact values, screen readers, checking against the bill', 'Patterns', 'Review “Table” view'],
-          ['Radial clock', 'The 24 h cycle metaphor', 'Labels, precise edits, comparison', 'Explored, parked'],
-        ],
-        note: `Design tradeoff: The radial clock was tempting. A 24-hour ring shows the wrap past midnight
-          beautifully, but it’s hard to label, hard to compare and fiddly to edit with a
-          thumb. A plain linear bar with an explicit “crosses midnight” marker won.`,
-      },
-    },
-
-    directions: [
-      { letter: 'A', title: 'Step-by-step wizard',
-        summary: 'A classic linear form, one level of the tariff per step. The times-and-prices step loops for every week section, and you only see the result at the very end.',
-        strengths: 'Familiar and predictable. The cheapest to build. Very accessible, since it’s native inputs only. Works well for simple tariffs.',
-        weaknesses: 'About 32 values to type for the sample tariff. Gaps and overlaps are possible and only caught by validation. Step 3 loops up to four times and people lose their place. The chart arrives too late to help.',
-        board: { label: 'Variant A · low-fi screens' } },
-      { letter: 'B', title: 'Overview builder',
-        summary: 'A non-linear “tariff tree” that mirrors the table on the bill. Periods and sections get added and edited in any order through sheets, with the chart on its own tab.',
-        strengths: 'Mirrors the bill one to one. Excellent for returning users and small edits. Clear status for every section.',
-        weaknesses: 'A blank page on first use: you need to understand the model before you can start. Deep hierarchy on a phone. The same gap and overlap risk as A. Input and chart live on different tabs.',
-        board: { label: 'Variant B · low-fi screens' } },
-      { letter: 'C', title: 'Guided visual timeline', chosen: true,
-        summary: 'A few simple questions decide how much structure is needed, then each level is edited as a partition you split: a year ribbon, two day groups, a 24 h bar. The input is the visualization.',
-        strengths: 'Coverage errors are impossible by construction. About 18 values for the sample tariff, thanks to copying and derived dates. Constant visual feedback. Handles every edge case we found.',
-        weaknesses: 'Drag precision on small screens. Needs a non-drag alternative for accessibility. Custom components mean more to build and test.',
-        board: { label: 'Variant C · low-fi screens' } },
-    ],
-
-    /* Weighted totals are calculated from these rows, not typed in. */
-    decision: {
-      options: ['A · Wizard', 'B · Builder', 'C · Timeline'],
-      criteria: [
-        { name: 'Error prevention', detail: 'Full coverage, no overlaps', weight: 25, scores: [2, 2, 5] },
-        { name: 'Efficiency', detail: 'Values to enter for the sample tariff (≈32 / ≈32 / ≈18)', weight: 20, scores: [2, 3, 4] },
-        { name: 'Learnability', detail: 'First-time user, no prior model', weight: 15, scores: [4, 2, 4] },
-        { name: 'Visualization', detail: 'Built into the input, gives insight', weight: 15, scores: [2, 3, 5] },
-        { name: 'Mobile ergonomics', detail: 'Thumb reach, screen density', weight: 10, scores: [3, 3, 4] },
-        { name: 'Accessibility', detail: 'Before mitigations', weight: 10, scores: [5, 4, 3] },
-        { name: 'Build effort', detail: '5 = cheapest', weight: 5, scores: [5, 4, 3] },
-      ],
-      verdict: {
-        title: 'Variant C, the guided visual timeline, with the best parts of A and B folded in.',
-        borrowed: [
-          { tag: '+A', text: 'Linear steps and a visible progress bar, so first-time setup keeps the calm, predictable feel of a wizard.' },
-          { tag: '+B', text: 'The tariff tree comes back as the “edit later” overview for returning users.' },
-        ],
-      },
-      risksLabel: 'C’s weak spots, and what I did about them',
-      risks: [
-        { code: 'R1', title: 'Drag precision.', desc: '15-minute snapping, 44 pt handles and a live time label while dragging.' },
-        { code: 'R2', title: 'Accessibility.', desc: 'Every slot can be edited by tapping, through a stepper sheet (WCAG 2.5.7). The review has a table view for screen readers.' },
-        { code: 'R3', title: 'Unfamiliar control.', desc: 'Sensible defaults (one price, 00–24), a one-line hint, and “copy times” from the previous section.' },
-        { code: 'R4', title: 'Build effort.', desc: 'One timeline component, reused in the editor, the review and on the home screen. Build once, use three times.' },
+    /* ---------------- 5. Under NDA ---------------- */
+    nda: {
+      eyebrow: 'Under NDA',
+      title: 'The rest of this one is best told in person.',
+      intro: `This project is under NDA, so the page stops at the brief and a few
+        screens. I’d love to walk you through the full process on a call.`,
+      cta: 'Let’s set up a call',
+      url: 'mailto:hello@nitesh.design?subject=Tariff%20Based%20EV%20Charging%20case%20study',
+      points: [
+        { title: 'The framing', desc: 'How the problem was broken down, and the idea that shaped every screen.' },
+        { title: 'The directions', desc: 'The concepts I explored, and how I chose between them.' },
+        { title: 'The full flow', desc: 'Every screen end to end, including the edge cases and how each one is handled.' },
+        { title: 'The handover', desc: 'The custom components, their states and how they were specced for build.' },
       ],
     },
 
-    flowChapters: [
-      {
-        eyebrow: 'Part 1 of 3',
-        title: 'Set the frame: intro, periods and days',
-        intro: `The first four screens are an interview. Each asks one question in the
-          bill’s own words, and every answer takes work away from the next step.`,
-        screens: [
-          { code: 'F1', title: 'Intro', desc: 'Sets expectations up front: three questions, and have your bill ready. The bar at the top previews the goal. Flat tariffs get an exit right here: “My price never changes”.', image: 'assets/offpeak/f1.png' },
-          { code: 'F2', title: 'Does your price change during the year?', desc: 'A yes/no question instead of an empty form. Answer “No” and the next screen disappears.', image: 'assets/offpeak/f2.png' },
-          { code: 'F3', title: 'Two start dates split the year', desc: 'Only the start dates are editable, as day and month. The ends fill themselves in, New Year wrap and 29 February included. Period names are editable too.', image: 'assets/offpeak/f3.png' },
-          { code: 'F4', title: 'Days as two groups', desc: 'One tap moves a day between groups, and every day always belongs to exactly one. “Mon, Fri, Sat” works as well as “Mon – Thu”.', image: 'assets/offpeak/f4.png' },
-        ],
-      },
-      {
-        eyebrow: 'Part 2 of 3',
-        title: 'Split the day: times and prices on a 24 h bar',
-        intro: `The heart of the flow. The bar always covers 24 hours, and the only thing
-          you can do is move the lines inside it.`,
-        screens: [
-          { code: 'F5', title: 'The 24 h bar editor', desc: 'Starts as one slot, 00–24. “Add split” halves the widest slot. Handles snap to 15 min with a live time label. If the first and last slot share a price, they merge into one slot across midnight.' },
-          { code: 'F6', title: 'Slot sheet', desc: 'Tap a slot or a handle for the same control without dragging: ±15 min steppers (WCAG 2.5.7), a decimal keypad and a ct/€ switch. Neighboring slots adjust on their own.' },
-          { code: 'F7', title: 'Copy times, fill prices', desc: 'In both sample tariffs the times repeat and only the prices change, so the next section starts pre-split. The bar fills with color as prices arrive.' },
-          { code: 'F8', title: 'Checkpoint between periods', desc: 'The finished period as a heatmap: a small reward and an early error check. Then a choice for the next period: copy and change what differs, or start fresh.' },
-        ],
-      },
-      {
-        eyebrow: 'Part 3 of 3',
-        title: 'See the whole year, save, and live with it',
-        intro: `Review, save, and the screen people will actually come back to.`,
-        screens: [
-          { code: 'F9', title: 'Review as heatmap', desc: 'Insight first (“Cheapest: 24 ct/kWh, Fri – Sun, 22:00 – 06:00”), then a 7 × 24 heatmap per period on one fixed color scale. Every section is one tap from editing, and there’s no error list, because there’s nothing to list.' },
-          { code: 'F10', title: 'Table view', desc: 'The same data laid out like the bill, for a line-by-line cross-check. It doubles as the screen-reader equivalent of the chart (WCAG 1.1.1) and remembers which view you picked.' },
-          { code: 'F11', title: 'Saved: answer the real question', desc: 'Leads with what the car will do: “Your car will charge from 22:00, at 27 ct/kWh.” Step bars, a now-marker and the planned window in teal. The same component later lives on the home screen.' },
-          { code: 'F12', title: 'Edit later', desc: 'Borrowed from B. Returning users land on an overview: the year ribbon plus small multiples of every section, all on one scale. “Edit” jumps straight into that period.' },
-        ],
-      },
-    ],
-
-    states: [
-      { code: 'S1', title: 'Missing price', desc: 'The only error left by design. It shows on the slot itself (bar, row and message) and focus jumps to the field. The button stays enabled, so people learn why instead of staring at a grey button.' },
-      { code: 'S2', title: 'Unit plausibility check', desc: 'Bills mix “Cent/kWh” and “€/kWh”. Type 24 with € selected and you get a one-tap fix, not a blocking error. “0,24” and “0.24” both work.' },
-      { code: 'S3', title: 'Limits reached', desc: 'Different prices at 00:00 and 24:00 stay two separate slots, using all four. “Add split” disables with a reason, never silently.' },
-      { code: 'S4', title: 'Flat tariff fast path', desc: 'From “My price never changes” on F1. It’s honest about the consequence: with one price there’s no cheap window, so charging starts when you plug in.' },
-    ],
-
-    system: {
-      components: [
-        { title: 'Timeline bar', usedIn: 'F1, F5, F7, F12, S1–S4',
-          desc: 'Each segment is a time slot: width is duration, fill is price level, the label is the price, and a tap opens the slot sheet. Handles snap to 15 min with a 44 × 80 pt hit area, a live tooltip and a haptic tick per step. States: empty (hatched), error, selected, and disabled at four slots.',
-          board: { label: 'Timeline bar · anatomy', ratio: '16 / 7' } },
-        { title: 'Price scale',
-          desc: 'Teal for cheap to rust for expensive, distinguishable with the common color-vision deficiencies and always paired with the printed value. In production the five steps come from the user’s own min and max, fixed across the whole tariff.',
-          scale: [
-            { token: 'price/1', range: '≤25 ct', hex: '#0F6B5F' },
-            { token: 'price/2', range: '26–30', hex: '#5FA394' },
-            { token: 'price/3', range: '31–35', hex: '#E4DCC8' },
-            { token: 'price/4', range: '36–40', hex: '#E7A36B' },
-            { token: 'price/5', range: '>40 ct', hex: '#B5461F' },
-          ] },
-        { title: 'Day group toggle',
-          desc: 'A two-state toggle exposed as a pressed button, with the group in its label (“Friday, group 2”). Group shows as fill and number, never color alone. A group can’t be emptied: the last day shows a hint instead of moving.' },
-        { title: 'Year ribbon',
-          desc: 'Two start dates split a Jan–Dec strip, and a period can wrap past New Year. End dates are derived as “start of the other period, minus one day”, which is how 29 February sorts itself out.' },
-        { title: 'Week heatmap & step chart',
-          desc: '7 rows × 24 hourly cells (96 × 15 min in the data model), ticks every 6 h. The step chart has 24 bars, a now-marker and the planned window in teal. Both have a table equivalent for assistive tech.' },
-      ],
-      note: 'Type: IBM Plex Sans, 26/32 for titles and 15/22 for body. IBM Plex Mono for every number, so prices and times line up in columns.',
-    },
-
-    impact: [
-      { value: 18, suffix: '', decimals: 0, label: 'Values to type for the sample tariff, down from about 32 in a classic form' },
-      { value: 0, suffix: '', decimals: 0, label: 'Ways to leave a minute uncovered. Gaps and overlaps can’t be expressed' },
-      { value: 4.25, suffix: '/5', decimals: 2, label: 'Weighted score for the timeline, against 2.85 and 2.75' },
-      { value: 3, suffix: '×', decimals: 0, label: 'Reuse of one timeline component: editor, review and home' },
-    ],
-
-    closing: `Most of the screens came late. What made them work was one reframe early
-      on: treat every level as a whole you split, never a list you fill in, and most
-      of the error messages never have to be written.`,
-
-    nextSteps: [
-      { title: 'Validate', items: [
-        'A quick prototype test with 5–6 EV owners, contract in hand.',
-        'Track completion rate, time on task, error count and a confidence rating.',
-        'End each session with one question: “When is charging cheapest for you?” If people can answer it, the review screen did its job.',
-      ] },
-      { title: 'Assumptions', items: [
-        'Prices are entered gross, incl. VAT, exactly as printed. The base fee doesn’t matter for scheduling.',
-        'Fixed time-of-use tariffs only. Dynamic and hourly spot tariffs wait for v2.',
-        'Times are local wallbox time. Daylight saving is handled by the system clock.',
-        'Where the feature lives in the app was out of scope, per the brief.',
-      ] },
-      { title: 'Open question & v2', items: [
-        'Can we get provider plan data or bill scans? The answer decides the v2 entry point.',
-        'The fastest input is none at all: scan the bill or pick provider and plan, then land in the same review screen to check and correct.',
-      ] },
-    ],
-
-    /* Per-section label overrides and headings, keyed by section id. */
     sections: {
-      problem: { label: 'The Brief' },
-      framing: {
-        title: 'Sixteen prices that have to fit together perfectly',
-        intro: `I started with the data model, because it explains most of what makes
-          this hard. Every level has to add up to a whole: periods to a year, week
-          sections to seven days, slots to 24 hours.`,
+      overview: { label: 'Introduction' },
+      problem: { label: 'Problem Statement' },
+      screens: {
+        label: 'Screens',
+        title: 'A few screens from the flow',
+        intro: 'Select any screen to open it at full resolution.',
       },
-      approach: {
-        label: 'Principles',
-        title: 'Five rules every screen had to pass',
-        intro: 'They came straight out of the framing, and they made a lot of later decisions easy.',
-      },
-      research: {
-        title: 'Borrowing from products that already solved pieces of this',
-        intro: `Two questions. How do good products let people enter structured,
-          rule-bound data on a phone? And how do you show 16 prices across 8,760
-          hours on a 390 px screen? I went through Apple’s HIG, Material, GOV.UK,
-          NN/g, Baymard and WCAG 2.2, then tore down thermostat schedules, sleep apps,
-          calendars and home-energy apps. Eighteen patterns made the long list. These
-          six did most of the work.`,
-      },
-      directions: {
-        title: 'Three directions, taken to low-fi',
-        intro: `Same brief, same sample tariff, three different mental models. Each one had
-          to be good enough that choosing between them was a real decision.`,
-      },
-      decision: {
-        title: 'Scoring against the brief, not against my taste',
-        intro: `“Every minute must be covered” is a hard rule, so error prevention carries
-          the most weight. The scores are expert judgment for now. A quick prototype
-          test with 5–6 people is the next step, to confirm them or prove me wrong.`,
-      },
-      flow: {
-        label: 'The Final Flow',
-        title: 'Twelve screens, in three parts',
-        intro: `Mid-fi wireframes. The step-by-step pacing and progress bar come from the
-          wizard; the editing model is pure timeline.`,
-      },
-      states: {
-        title: 'What can still go wrong, and how the design catches it',
-        intro: `Partitions take coverage errors off the table. A few things can still go
-          wrong, and each gets a specific, calm response instead of a generic error.`,
-      },
-      system: {
-        title: 'Five custom components carry the whole flow',
-        intro: `Handed over in Figma with anatomy, states and tokens. The timeline bar
-          appears in the editor, the review, the saved screen and every edge state, so
-          it got the most detailed spec.`,
-      },
-      impact: {
-        label: 'Outcome',
-        title: 'What the design changes',
-        intro: 'These are design outcomes, measured against the brief’s sample tariff. Usability numbers come after testing.',
-      },
-      'whats-next': {
-        title: 'What I’d test next, and what’s still open',
-      },
+      nda: { label: 'The Full Story' },
     },
 
     next: 'codeflow',

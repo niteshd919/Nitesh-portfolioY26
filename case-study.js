@@ -132,7 +132,8 @@
       </figcaption>`;
     const classes = ['screen-slot', opts.className, screen.full && 'is-full'].filter(Boolean).join(' ');
     const frameStyle = screen.ratio ? ` style="aspect-ratio:${screen.ratio};"` : '';
-    return `<figure class="${classes}"><div class="screen-slot-frame${screen.image ? '' : ' is-empty'}"${frameStyle}>${media}</div>${caption}</figure>`;
+    const hidden = opts.hidden ? ' aria-hidden="true"' : '';
+    return `<figure class="${classes}"${hidden}><div class="screen-slot-frame${screen.image ? '' : ' is-empty'}"${frameStyle}>${media}</div>${caption}</figure>`;
   }
 
   function boardSlotHTML(board) {
@@ -144,6 +145,161 @@
   }
 
   const pad = (n) => String(n).padStart(2, '0');
+
+  /* ---- EV-charging cover — a day of smart charging plays out around
+     the hero screens. A playhead runs the clock across the tariff; the
+     car waits through the peak, charges only in the cheap window and
+     drives off in the morning, and the status card, battery, energy
+     streaks and the glow on the centre screen all follow along. ---- */
+  function chargingScene(cfg) {
+    const media = document.getElementById('caseHeroMedia');
+    const slots = cfg.slots;
+    const cheapest = Math.min(...slots.map((s) => s.price));
+    const priciest = Math.max(...slots.map((s) => s.price));
+    const isCheap = (s) => s.price === cheapest;
+    const slotAt = (t) => slots.find((s) => t >= s.from && t < s.to) || slots[slots.length - 1];
+    const [leave, home] = cfg.away;
+    const isAway = (t) => t >= leave && t < home;
+    const hh = (t) => {
+      const m = Math.round((((t % 24) + 24) % 24) * 60);
+      return `${pad(Math.floor(m / 60) % 24)}:${pad(m % 60)}`;
+    };
+
+    // The cheap window, joined across midnight (e.g. 22:00 → 06:00).
+    const n = slots.length;
+    const cheapIdx = slots.map((s, i) => (isCheap(s) ? i : -1)).filter((i) => i >= 0);
+    const winStart = slots[cheapIdx.find((i) => !isCheap(slots[(i - 1 + n) % n]))].from;
+    const winEnd = slots[cheapIdx.find((i) => !isCheap(slots[(i + 1) % n]))].to;
+
+    // Battery over the day in 15-minute steps: home at `low`, full by the
+    // end of the cheap window, back down to `low` after the drive.
+    const steps = 96;
+    let chargeSteps = 0;
+    let awaySteps = 0;
+    for (let i = 0; i < steps; i++) {
+      const t = i / 4;
+      if (isAway(t)) awaySteps++;
+      else if (isCheap(slotAt(t))) chargeSteps++;
+    }
+    const levels = [];
+    let b = cfg.low;
+    for (let k = 0; k < steps; k++) {
+      const i = (home * 4 + k) % steps;
+      levels[i] = b;
+      const t = i / 4;
+      if (isAway(t)) b -= (100 - cfg.low) / awaySteps;
+      else if (isCheap(slotAt(t))) b = Math.min(100, b + (100 - cfg.low) / chargeSteps);
+    }
+    const battery = (t) => {
+      const i = Math.floor(t * 4) % steps;
+      return levels[i] + (levels[(i + 1) % steps] - levels[i]) * (t * 4 - Math.floor(t * 4));
+    };
+    const stateAt = (t) => {
+      if (isAway(t)) return 'away';
+      if (battery(t) >= 99.5) return 'full';
+      return isCheap(slotAt(t)) ? 'charging' : 'waiting';
+    };
+    const copy = {
+      waiting: (s) => ['Waiting', `${s.price} ct/kWh now · charges from ${hh(winStart)}`],
+      charging: (s) => ['Charging', `${s.price} ct/kWh · cheapest rate`],
+      full: () => ['Charged', `Ready by ${hh(leave)}`],
+      away: () => ['Unplugged', 'Out on the road'],
+    };
+
+    const bolt = '<svg viewBox="0 0 24 24" width="12" height="12"><path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="currentColor" /></svg>';
+    const lanes = [[22, 2.1, 0.2], [36, 1.7, 1.1], [50, 2.4, 0.6], [64, 1.9, 1.5], [78, 2.2, 0.9]]
+      .map(([top, dur, delay], i) => ['is-left', 'is-right']
+        .map((side, j) => `<span class="charge-lane ${side}" style="top:${top + j * 6}%;--d:${dur + j * 0.3}s;--delay:-${delay + i * 0.37 + j * 0.8}s;"><i></i></span>`)
+        .join(''))
+      .join('');
+    const tone = (s) => (isCheap(s) ? 'is-cheap' : s.price === priciest ? 'is-peak' : 'is-mid');
+
+    media.classList.add('is-charging');
+    media.insertAdjacentHTML('afterbegin', `
+      <div class="charge-scene" aria-hidden="true">
+        <span class="charge-glow"></span>
+        <div class="charge-lanes">${lanes}</div>
+      </div>`);
+    media.insertAdjacentHTML('beforeend', `
+      <div class="charge-hud charge-status" aria-hidden="true">
+        <span class="charge-pill">${bolt}<span class="charge-state"></span></span>
+        <span class="charge-level"><span class="charge-pct"></span><small>%</small></span>
+        <span class="charge-battery"><i></i></span>
+        <span class="charge-sub"></span>
+      </div>
+      <div class="charge-hud charge-plan" aria-hidden="true">
+        <span class="charge-eyebrow">Smart schedule</span>
+        <strong>${hh(winStart)} <span>&rarr;</span> ${hh(winEnd)}</strong>
+        <span class="charge-sub">${cheapest} ct/kWh · ready by ${hh(leave)}</span>
+      </div>
+      <div class="charge-timeline" aria-hidden="true">
+        <div class="charge-bar">
+          ${slots.map((s) => `<span class="charge-seg ${tone(s)}" style="flex:${s.to - s.from};"><em>${s.price} ct</em></span>`).join('')}
+          <span class="charge-head"><b></b></span>
+        </div>
+        <div class="charge-ticks">${[0, 6, 12, 18, 24].map((h) => `<span style="left:${(h / 24) * 100}%;">${pad(h)}</span>`).join('')}</div>
+      </div>`);
+
+    const q = (sel) => media.querySelector(sel);
+    const head = q('.charge-head');
+    const headLabel = q('.charge-head b');
+    const pctEl = q('.charge-pct');
+    const fill = q('.charge-battery i');
+    const stateEl = q('.charge-state');
+    const subEl = q('.charge-status .charge-sub');
+    const last = {};
+
+    function render(t) {
+      const level = battery(t);
+      const quarter = Math.floor(t * 4) / 4;
+      head.style.left = `${(t / 24) * 100}%`;
+      fill.style.width = `${level}%`;
+      if (quarter !== last.quarter) { headLabel.textContent = hh(quarter); last.quarter = quarter; }
+      if (Math.round(level) !== last.pct) { last.pct = Math.round(level); pctEl.textContent = last.pct; }
+      const state = stateAt(t);
+      const slot = slotAt(t);
+      if (state + slot.price !== last.key) {
+        last.key = state + slot.price;
+        media.dataset.charge = state;
+        [stateEl.textContent, subEl.textContent] = copy[state](slot);
+      }
+    }
+
+    // Hours pass at different speeds: slower while something happens,
+    // quick on the road. The clock starts as the car gets home.
+    function play() {
+      gsap.fromTo(q('.charge-scene'), { opacity: 0 }, { opacity: 1, duration: 1.4, ease: 'power2.out' });
+      gsap.fromTo(media.querySelectorAll('.charge-seg'), { scaleX: 0 }, {
+        scaleX: 1, transformOrigin: 'left center', duration: 0.7, stagger: 0.1, delay: 0.5, ease: 'power3.out',
+      });
+      gsap.fromTo(media.querySelectorAll('.charge-hud'), { opacity: 0, y: 20 }, {
+        opacity: 1, y: 0, duration: 0.8, stagger: 0.12, delay: 0.7, ease: 'power3.out',
+      });
+
+      const clock = { t: home };
+      const tick = () => render(clock.t % 24);
+      const day = gsap.timeline({ repeat: -1, delay: 1.2 });
+      [[home, winStart, 0.75], [winStart, winEnd, 0.8], [winEnd, leave, 1.2], [leave, home, 0.33]]
+        .forEach(([from, to, secondsPerHour]) => {
+          const hours = (to - from + 24) % 24;
+          day.to(clock, { t: `+=${hours}`, duration: hours * secondsPerHour, ease: 'none', onUpdate: tick });
+        });
+
+      // Only run the day while the cover is on screen.
+      ScrollTrigger.create({
+        trigger: media,
+        start: 'top bottom',
+        end: 'bottom top',
+        onToggle: (self) => (self.isActive ? day.resume() : day.pause()),
+      });
+    }
+
+    render(home);
+    // Without motion, one still frame mid-charge tells the same story.
+    return { render, play, still: winStart + 1.5 };
+  }
+
+  const charge = data.heroScreens && data.heroCharging ? chargingScene(data.heroCharging) : null;
 
   /* ----------------------------------------------------------------
      3. Overview / Problem
@@ -578,6 +734,23 @@
       ${s.note ? `<p class="case-note reveal-text">${s.note}</p>` : ''}`;
   }
 
+  // An endless reel of screens. The list repeats until one set is wider
+  // than a big monitor, then the set is doubled so the loop's halfway
+  // point is a seamless join, like the homepage marquee. Repeats are
+  // hidden from screen readers, so each screen is announced once.
+  function tickerHTML(t) {
+    const set = [];
+    while (set.length < Math.max(t.screens.length, 10)) set.push(...t.screens);
+    const slots = (from) => set.map((s, i) => screenSlotHTML(s, { hidden: i >= from })).join('');
+    return `
+      <div class="case-ticker case-reveal" style="--ticker-duration:${set.length * 5}s;">
+        <div class="case-ticker-track">
+          <div class="case-ticker-set">${slots(t.screens.length)}</div>
+          <div class="case-ticker-set" aria-hidden="true">${slots(set.length)}</div>
+        </div>
+      </div>`;
+  }
+
   function nextStepsHTML(groups) {
     return `
       <div class="case-panel-grid" style="--cols:${groups.length};">
@@ -597,6 +770,7 @@
   if (data.research) fillSection('research', researchHTML(data.research));
   if (data.directions) fillSection('directions', directionsHTML(data.directions));
   if (data.decision) fillSection('decision', decisionHTML(data.decision));
+  if (data.ticker) fillSection('screens', tickerHTML(data.ticker));
   if (data.states) fillSection('states', `<div class="screen-grid">${data.states.map((s) => screenSlotHTML(s)).join('')}</div>`);
   if (data.system) fillSection('system', systemHTML(data.system));
   if (data.nextSteps) fillSection('whats-next', nextStepsHTML(data.nextSteps));
@@ -627,6 +801,20 @@
     document.getElementById('playgroundImg').setAttribute('src', p.image);
     document.getElementById('playgroundBadge').textContent = p.badge;
     document.getElementById('playground').hidden = false;
+  }
+
+  // Closing card for work under NDA: the rest of the story is told on a call.
+  if (data.nda) {
+    const n = data.nda;
+    document.getElementById('ndaEyebrow').textContent = n.eyebrow;
+    document.getElementById('ndaTitle').textContent = n.title;
+    document.getElementById('ndaIntro').textContent = n.intro;
+    document.getElementById('ndaCtaLabel').textContent = n.cta;
+    document.getElementById('ndaCta').setAttribute('href', n.url);
+    document.getElementById('ndaList').innerHTML = n.points
+      .map((r, i) => `<li><span>${pad(i + 1)}</span><div><strong>${r.title}</strong><p>${r.desc}</p></div></li>`)
+      .join('');
+    document.getElementById('nda').hidden = false;
   }
 
   /* ----------------------------------------------------------------
@@ -766,7 +954,10 @@
   ---------------------------------------------------------------- */
   const heroIntervals = [];
   function animateHeroScreen() {
-    if (reducedMotion) return;
+    if (reducedMotion) {
+      if (charge) charge.render(charge.still);
+      return;
+    }
 
     if (data.heroImage && data.heroImage.hotspots) {
       const tilt = document.querySelector('.case-hero-tilt');
@@ -811,6 +1002,7 @@
       gsap.fromTo('.case-hero-screens .screen-slot', { opacity: 0, y: 40 }, {
         opacity: 1, y: 0, duration: 0.9, stagger: 0.12, delay: 0.2, ease: 'power3.out',
       });
+      if (charge) charge.play();
       return;
     }
 
