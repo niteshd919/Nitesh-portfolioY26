@@ -192,7 +192,7 @@ window.CASE_STUDIES = {
       intro: `This project is under NDA, so the page stops at the brief and a few
         screens. I’d love to walk you through the full process on a call.`,
       cta: 'Let’s set up a call',
-      url: 'mailto:hello@nitesh.design?subject=Tariff%20Based%20EV%20Charging%20case%20study',
+      url: 'mailto:sayhi@niteshdixit.in?subject=Tariff%20Based%20EV%20Charging%20case%20study',
       points: [
         { title: 'The framing', desc: 'How the problem was broken down, and the idea that shaped every screen.' },
         { title: 'The directions', desc: 'The concepts I explored, and how I chose between them.' },
