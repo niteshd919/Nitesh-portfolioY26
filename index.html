@@ -3,480 +3,734 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nitesh Dixit — Product Designer</title>
-  <meta name="description" content="Nitesh — Product, Design and Branding. Portfolio 202." />
+  <title>Nitesh Dixit — HMI &amp; Product Designer</title>
+  <meta name="description" content="Nitesh Dixit — HMI and product designer. Cockpit, in-vehicle and digital product experiences. Portfolio 2026." />
+  <meta name="theme-color" content="#0a0a0b" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230a0a0b'/%3E%3Cpath d='M13 45a21 21 0 1 1 38 0' fill='none' stroke='%23ece9e2' stroke-width='3'/%3E%3Cpath d='M32 41 45 24' stroke='%23ff3b1d' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <script>
+    // Before first paint: mark JS, and if we're arriving back from a case
+    // study keep the shutter closed (transition.js opens it).
+    document.documentElement.classList.add('js');
+    try {
+      if (sessionStorage.getItem('skipPreloader') === '1') {
+        document.documentElement.classList.add('is-returning');
+        sessionStorage.removeItem('skipPreloader');
+      }
+    } catch (err) { /* private mode */ }
+  </script>
 
   <!-- ============================================================
        FONTS
-       Clash Display (headings) + Neue Montreal (body) via Fontshare
+       Archivo (variable width + weight: Expanded for display, Normal
+       for text) + Martian Mono for instrument readouts.
   ============================================================ -->
-  <link rel="preconnect" href="https://api.fontshare.com" />
-  <link
-    href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=general-sans@400,500,600&display=swap"
-    rel="stylesheet"
-  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Martian+Mono:wdth,wght@75..112.5,100..800&display=swap" rel="stylesheet" />
 
   <!-- ============================================================
-       STYLES
+       STYLES — shared system first, then one sheet per home section.
   ============================================================ -->
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="home-hero.css" />
+  <link rel="stylesheet" href="home-showroom.css" />
+  <link rel="stylesheet" href="home-sections.css" />
+  <link rel="stylesheet" href="contact.css" />
 </head>
-<body>
+<body class="page-home">
+
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- ============================================================
-       CUSTOM CURSOR
+       CURSOR — precision reticle (core.js)
   ============================================================ -->
-  <div class="cursor" id="cursor">
-    <span class="cursor-label" id="cursorLabel"></span>
-  </div>
-
-
-  <!-- ============================================================
-       PRELOADER
-  ============================================================ -->
-  <div class="preloader" id="preloader">
-    <div class="preloader-top">
-      <span class="preloader-tag">PORTFOLIO 2026</span>
-    </div>
-    <div class="preloader-count">
-      <span id="preloaderNum">0</span><span class="pct">%</span>
-    </div>
-    <div class="preloader-name">
-      <div class="preloader-mask"><span>Hi</span></div>
-        <div class="preloader-mask"><span class="line">I am <em>Nitesh</em></span></div>
-    </div>
-    <div class="preloader-bar-wrap">
-      <div class="preloader-bar" id="preloaderBar"></div>
-    </div>
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <span class="cursor-dot"></span>
+    <span class="cursor-follow">
+      <span class="cursor-ring"></span>
+      <span class="cursor-label" id="cursorLabel"></span>
+    </span>
   </div>
 
   <!-- ============================================================
-       GRAIN / NOISE OVERLAY
+       PAGE TRANSITION — active grille shutter (transition.js)
   ============================================================ -->
-  <div class="grain"></div>
-
-  <!-- ============================================================
-       PAGE TRANSITION OVERLAY (cross-page wipe, see transition.js)
-  ============================================================ -->
-  <div class="page-transition" id="pageTransition">
-    <span class="page-transition-label"></span>
+  <div class="pt" id="pageTransition" aria-hidden="true">
+    <div class="pt-slats">
+      <i class="pt-slat"></i><i class="pt-slat"></i><i class="pt-slat"></i>
+      <i class="pt-slat"></i><i class="pt-slat"></i><i class="pt-slat"></i>
+      <i class="pt-slat"></i><i class="pt-slat"></i><i class="pt-slat"></i>
+    </div>
+    <div class="pt-label">
+      <span class="pt-mask"><span class="pt-title">Nitesh Dixit</span></span>
+      <span class="pt-mask"><span class="pt-eyebrow">Returning to the index</span></span>
+    </div>
+    <span class="pt-light"></span>
   </div>
+  <script>
+    // Keep the words the last page closed the shutter on (transition.js).
+    try { const ptl = JSON.parse(sessionStorage.getItem('nd:pt')); sessionStorage.removeItem('nd:pt'); if (ptl) { document.querySelector('#pageTransition .pt-title').textContent = ptl.title; document.querySelector('#pageTransition .pt-eyebrow').textContent = ptl.eyebrow; } } catch (err) {}
+  </script>
+
+  <!-- region:preloader ============================================ -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="pre-half pre-half--top">
+      <p class="pre-corner pre-corner--tl">N/D — Portfolio MMXXVI</p>
+      <p class="pre-corner pre-corner--tr"><i class="pre-led"></i><span class="pre-status"><span>Ignition</span></span></p>
+    </div>
+    <div class="pre-half pre-half--bottom">
+      <p class="pre-corner pre-corner--bl">Self-test <span class="pre-count">0/4</span></p>
+      <p class="pre-corner pre-corner--br"><span data-clock>--:--</span>&nbsp;IST</p>
+    </div>
+    <div class="pre-cluster">
+      <svg class="pre-dial" viewBox="-220 -220 440 440" focusable="false"></svg>
+      <div class="pre-readout">
+        <span class="pre-speed">000</span>
+        <span class="pre-unit">km/h</span>
+      </div>
+      <p class="pre-timer">0–100 km/h · <span class="pre-time">0.0</span> s</p>
+    </div>
+    <div class="pre-drl"><i class="pre-drl-bloom"></i><span class="pre-drl-segs"></span><i class="pre-drl-core"></i></div>
+  </div>
+  <!-- /region:preloader =========================================== -->
 
   <!-- ============================================================
-       NAV
+       NAV — wordmark · section readout · menu
   ============================================================ -->
   <header class="nav" id="nav">
-    <div class="nav-left">
-      <a href="#top" class="nav-mark magnetic">N.</a>
+    <a href="#top" class="nav-mark" aria-label="Nitesh Dixit, back to top">Nitesh Dixit</a>
+    <div class="nav-readout" aria-hidden="true">
+      <span class="nav-readout-gauge"><i></i></span>
+      <span class="nav-readout-index">00</span>
+      <span class="nav-readout-name"><span>Ignition</span></span>
     </div>
-    <div class="nav-right">
-      <button class="menu-btn magnetic" id="menuBtn" aria-label="Toggle menu">
-        <span>Menu</span>
-        <div class="menu-icon"><i></i><i></i></div>
-      </button>
-    </div>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu">
+      <span class="menu-btn-label"><span>Menu</span><span>Close</span></span>
+      <span class="menu-btn-icon" aria-hidden="true"><i></i><i></i></span>
+    </button>
   </header>
 
   <!-- ============================================================
-       FULLSCREEN MENU OVERLAY
+       MENU — the index, behind a closing grille
   ============================================================ -->
-  <nav class="menu-overlay" id="menuOverlay">
-    <div class="menu-overlay-inner">
-      <ol class="menu-list">
-        <li><a href="#work" class="menu-link magnetic-lg"><span>Work</span></a></li>
-        <li><a href="#about" class="menu-link magnetic-lg"><span>Introduction</span></a></li>
-        <li><a href="#journey" class="menu-link magnetic-lg"><span>Journey</span></a></li>
-        <!--
-        <li><a href="#testimonials" class="menu-link magnetic-lg"><span>Testimonials</span><small>04</small></a></li>
-      -->
-        <li><a href="mailto:sayhi@niteshdixit.in" class="menu-link magnetic-lg"><span>Write Me</span></a></li>
-      </ol>
-      <div class="menu-footer">
-        <div class="menu-footer-col">
-          <p>Wanna Connect Elsewhere!</p>
-          <a href="https://www.instagram.com/pixelandgear/" class="magnetic">Instagram</a>
-          <a href="https://www.linkedin.com/in/niteshdixit/" class="magnetic">LinkedIn</a>
-          <a href="https://www.behance.net/niteshdixit2" class="magnetic">Behance</a>
-        </div>
+  <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Site index">
+    <div class="menu-slats" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="menu-inner">
+      <div class="rule menu-rule">
+        <span class="rule-index">§</span>
+        <span class="rule-title">Index</span>
+        <span class="rule-line" aria-hidden="true"></span>
+        <span class="rule-meta">04 Destinations</span>
       </div>
+      <ol class="menu-list">
+        <li><a href="#work" class="menu-link" data-cursor="Go"><span class="menu-num">01</span><span class="menu-name"><span>Work</span></span><span class="menu-dim" aria-hidden="true"></span><span class="menu-meta">04 Projects</span></a></li>
+        <li><a href="#about" class="menu-link" data-cursor="Go"><span class="menu-num">02</span><span class="menu-name"><span>About</span></span><span class="menu-dim" aria-hidden="true"></span><span class="menu-meta">Spec sheet</span></a></li>
+        <li><a href="#journey" class="menu-link" data-cursor="Go"><span class="menu-num">03</span><span class="menu-name"><span>Journey</span></span><span class="menu-dim" aria-hidden="true"></span><span class="menu-meta">Telemetry</span></a></li>
+        <li><a href="#contact" class="menu-link" data-cursor="Go"><span class="menu-num">04</span><span class="menu-name"><span>Contact</span></span><span class="menu-dim" aria-hidden="true"></span><span class="menu-meta">Say hi</span></a></li>
+      </ol>
+      <dl class="spec menu-spec">
+        <div class="spec-row"><dt>Write</dt><dd><a href="mailto:sayhi@niteshdixit.in" class="link">sayhi@niteshdixit.in</a></dd></div>
+        <div class="spec-row"><dt>Elsewhere</dt><dd><a href="https://www.instagram.com/pixelandgear/" class="link" target="_blank" rel="noopener">Instagram</a><a href="https://www.linkedin.com/in/niteshdixit/" class="link" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.behance.net/niteshdixit2" class="link" target="_blank" rel="noopener">Behance</a></dd></div>
+        <div class="spec-row"><dt>Based in</dt><dd>India — working globally</dd></div>
+        <div class="spec-row"><dt>Local time</dt><dd><span data-clock>--:--</span> IST</dd></div>
+      </dl>
     </div>
-  </nav>
-
-  <!-- ============================================================
-       MAIN SCROLL CONTAINER (Lenis target)
-  ============================================================ -->
-  <div id="smooth-wrapper">
-    <main id="smooth-content">
-
-      <!-- ==========================================================
-           HERO
-      ========================================================== -->
-      <section class="hero" id="top">
-        <div class="hero-bg-text" aria-hidden="true">
-          <span>DESIGN</span>
-        </div>
-
-        <div class="hero-inner">
-          <div class="hero-tag-row">
-            <div class="hero-tag-mask"><p class="hero-tag">Product, Design &amp; Branding</p></div>
-          </div>
-
-          <h1 class="hero-title">
-            <div class="line-mask"><span class="line">I DESIGN</span></div>
-            <div class="line-mask"><span class="line"><em>MEMORABLE</em></span></div>
-            <div class="line-mask"><span class="line">EXPERIENCEs.</span></div>
-          </h1>
-
-          <div class="hero-bottom">
-            <div class="hero-bottom-left">
-              <div class="hero-tag-mask"><p class="hero-scroll-label">Scroll to explore</p></div>
-            </div>
-            <div class="hero-bottom-center">
-              <div class="hero-tag-mask">
-                <div class="hero-meta">
-                  <p class="hero-meta-line"><span class="hero-meta-dot" aria-hidden="true"></span>Stays in India, Work Globally</p>
-                  <!-- <p class="hero-meta-line hero-meta-focus">AI Product Design — Branding — Brand Identity</p> -->
-                </div>
-              </div>
-            </div>
-            <div class="hero-bottom-right">
-              <div class="hero-tag-mask"><p class="hero-name">Portfolio 2026</p></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="hero-scroll-indicator">
-          <span class="scroll-line"></span>
-        </div>
-      </section>
-
-      <!-- ==========================================================
-           MARQUEE STRIP
-      ========================================================== -->
-      <section class="marquee-strip" aria-hidden="true">
-        <div class="marquee-track"></div>
-      </section>
-
-      <!-- ==========================================================
-           SELECTED WORK
-      ========================================================== -->
-      <section class="work" id="work">
-        <div class="section-index">
-          <span>01</span>
-          <span class="section-index-label">Go Ahead, Have a Quick Peek</span>
-        </div>
-
-        <div class="work-list">
-
-          <a href="case-study.html?p=suspension" class="work-item magnetic-block" data-cursor="View" data-transition data-transition-label="Suspension Diagnostics">
-            <div class="work-item-top">
-              <h3 class="work-title">Sensor based suspension diagnostic system on IVI</h3>
-              <span class="work-year">2025</span>
-            </div>
-            <div class="work-item-media" style="--work-accent:#2ef2d0;">
-              <div class="work-item-details">
-                <div class="work-item-details-copy">
-                  <span class="work-item-details-label">Details</span>
-                  <p>An IVI concept that shows drivers what the suspension senses on the terrain ahead, how it will respond, whether it has adjusted, and when the vehicle needs attention.</p>
-                </div>
-                <div class="work-item-details-impact">
-                  <span class="work-item-details-label">Journey</span>
-                  <div class="work-item-impact-grid">
-                    <div class="work-item-impact-stat"><strong>3</strong><span>Moments: before, during, after</span></div>
-                    <div class="work-item-impact-stat"><strong>3D</strong><span>Live vehicle visualization</span></div>
-                    <div class="work-item-impact-stat"><strong>1</strong><span>Glance to read it while driving</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="work-item-bottom">
-              <span class="work-tag">HMI</span>
-              <span class="work-tag">Automotive</span>
-              <span class="work-tag">Diagnostics</span>
-            </div>
-          </a>
-
-          <a href="case-study.html?p=offpeak" class="work-item magnetic-block" data-cursor="View" data-transition data-transition-label="Tariff Based EV Charging">
-            <div class="work-item-top">
-              <h3 class="work-title">Tariff Based EV Charging</h3>
-              <span class="work-year">2023</span>
-            </div>
-            <div class="work-item-media" style="--work-accent:#35e0a8;">
-              <div class="work-item-details">
-                <div class="work-item-details-copy">
-                  <span class="work-item-details-label">Details</span>
-                  <p>A mobile flow that turns a paper electricity tariff into a smart-charging schedule, with gaps and overlaps ruled out by design.</p>
-                </div>
-                <div class="work-item-details-impact">
-                  <span class="work-item-details-label">Outcome</span>
-                  <div class="work-item-impact-grid">
-                    <div class="work-item-impact-stat"><strong>18</strong><span>Values to type, down from 32</span></div>
-                    <div class="work-item-impact-stat"><strong>0</strong><span>Coverage gaps possible</span></div>
-                    <div class="work-item-impact-stat"><strong>4.25</strong><span>Score vs 2.85 and 2.75</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="work-item-bottom">
-              <span class="work-tag">UX Research</span>
-              <span class="work-tag">Data Viz</span>
-              <span class="work-tag">Mobile</span>
-            </div>
-          </a>
-
-          <a href="case-study.html?p=codeflow" class="work-item magnetic-block" data-cursor="View" data-transition data-transition-label="Codeflow">
-            <div class="work-item-top">
-              <h3 class="work-title">Codeflow &mdash; Daily Coding Challenge</h3>
-              <span class="work-year">2026</span>
-            </div>
-            <div class="work-item-media" style="--work-accent:#ff7a3d;">
-              <div class="work-item-details">
-                <div class="work-item-details-copy">
-                  <span class="work-item-details-label">Details</span>
-                  <p>Codeflow is the daily coding challenge on a college learning portal: one problem picked for you, a streak you can&rsquo;t miss, and a designed answer for the day a student misses it.</p>
-                </div>
-                <div class="work-item-details-impact">
-                  <span class="work-item-details-label">Outcome</span>
-                  <div class="work-item-impact-grid">
-                    <div class="work-item-impact-stat"><strong>1</strong><span>Tap from home to the editor</span></div>
-                    <div class="work-item-impact-stat"><strong>0</strong><span>Streaks broken by an outage</span></div>
-                    <div class="work-item-impact-stat"><strong>7</strong><span>Ways back after a missed day</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="work-item-bottom">
-              <span class="work-tag">UX Research</span>
-              <span class="work-tag">Gamification</span>
-              <span class="work-tag">Web</span>
-            </div>
-          </a>
-
-          <a href="case-study.html?p=hmi" class="work-item magnetic-block" data-cursor="View" data-transition data-transition-label="HMI">
-            <div class="work-item-top">
-              <h3 class="work-title">HMI &mdash; Cockpit experience</h3>
-              <span class="work-year">2024</span>
-            </div>
-            <div class="work-item-media" style="--work-accent:#4ba82e;">
-              <div class="work-item-details">
-                <div class="work-item-details-copy">
-                  <span class="work-item-details-label">Details</span>
-                  <p>A unified in-car HMI concept for &Scaron;koda that treats four surfaces as one system: the Virtual Cockpit, an AR Head-Up Display, the 13&Prime; infotainment screen and Laura, the voice assistant.</p>
-                </div>
-                <div class="work-item-details-impact">
-                  <span class="work-item-details-label">Surfaces</span>
-                  <div class="work-item-impact-grid">
-                    <div class="work-item-impact-stat"><strong>4</strong><span>Surfaces, one system</span></div>
-                    <div class="work-item-impact-stat"><strong>13&Prime;</strong><span>Infotainment screen</span></div>
-                    <div class="work-item-impact-stat"><strong>AR</strong><span>Head-Up Display</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="work-item-bottom">
-              <span class="work-tag">HMI</span>
-              <span class="work-tag">Automotive</span>
-              <span class="work-tag">Voice</span>
-            </div>
-          </a>
-
-        </div>
-      </section>
-
-        <!-- ==========================================================
-           ABOUT / INTRODUCTION
-      ========================================================== -->
-      <section class="about" id="about">
-        <div class="section-index">
-          <span>02</span>
-          <span class="section-index-label">Now a Little About Myself</span>
-        </div>
-
-        <div class="about-grid">
-          <p class="about-copy reveal-text">
-            One half of me sees stories in <em>shadows</em>, rhythm in <em>routine</em>,
-            and beauty in the blink of a moment. Translating life's fleeting sparks
-            into <em>compelling designs.</em>
-          </p>
-        </div>
-      </section>
-      
-      <!-- ==========================================================
-           JOURNEY
-      ========================================================== -->
-      <section class="journey" id="journey">
-        <div class="section-index">
-          <span>03</span>
-          <span class="section-index-label">Journey So Far</span>
-        </div>
-
-        <div class="journey-grid">
-          <h2 class="journey-heading reveal-text">
-            I have been fortunate to collaborate and build products with
-            inspiring and creative teams across <em>global brands.</em>
-          </h2>
-
-          <div class="journey-stats">
-            <div class="journey-stat">
-              <span class="journey-stat-num" data-count="6">0</span>
-              <span class="journey-stat-plus">+</span>
-              <p>Years of craft</p>
-            </div>
-            <div class="journey-stat">
-              <span class="journey-stat-num" data-count="30">0</span>
-              <span class="journey-stat-plus">+</span>
-              <p>Products shipped</p>
-            </div>
-            <div class="journey-stat">
-              <span class="journey-stat-num" data-count="7">0</span>
-              <span class="journey-stat-plus">+</span>
-              <p>Global brands</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="brand-wall">
-          <div class="brand-wall-head">
-            <span>Brands &amp; Products</span>
-            <span class="brand-wall-count">09</span>
-          </div>
-          <div class="brand-grid">
-            <div class="brand-cell" data-cursor="Audi">
-              <img src="assets/logos/audi.svg" alt="Audi" loading="lazy" decoding="async">
-            </div>
-            <div class="brand-cell" data-cursor="Porsche">
-              <img src="assets/logos/porsche.svg" alt="Porsche" loading="lazy" decoding="async">
-            </div>
-            <div class="brand-cell" data-cursor="Volkswagen">
-              <img src="assets/logos/vw.svg" alt="Volkswagen" loading="lazy" decoding="async">
-            </div>
-            <div class="brand-cell" data-cursor="Edwisely">
-              <img src="assets/logos/edwisely.svg" alt="Edwisely" loading="lazy" decoding="async">
-            </div>
-            <div class="brand-cell brand-cell--lg" data-cursor="ELEXtensions">
-              <img src="assets/logos/elextensions.svg" alt="ELEXtensions" loading="lazy" decoding="async">
-            </div>
-            <div class="brand-cell brand-cell--lg" data-cursor="ReachShip">
-              <img src="assets/logos/reachship.svg" alt="ReachShip" loading="lazy" decoding="async">
-            </div>
-            <div class="brand-cell" data-cursor="Candescent">
-              <img src="assets/logos/candescent.svg" alt="Candescent" loading="lazy" decoding="async">
-            </div>
-            <div class="brand-cell" data-cursor="LearnWoo">
-              <img src="assets/logos/learnwoo.svg" alt="LearnWoo" loading="lazy" decoding="async">
-            </div>
-            <div class="brand-cell" data-cursor="Zervise">
-              <img src="assets/logos/zervise.png" alt="Zervise" loading="lazy" decoding="async">
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==========================================================
-           TESTIMONIALS
-           One quote at a time, no card chrome — vertical scroll pins
-           the section and pans a full-width quote track horizontally,
-           snapping to the nearest slide when scrolling settles (GSAP
-           ScrollTrigger pin + scrub + snap). Falls back to a native
-           one-at-a-time swipe strip on touch devices — see
-           initTestimonials() in script.js.
-      ========================================================== -->
-      <!-- 
-      <section class="testimonials" id="testimonials">
-        <div class="section-index">
-          <span>04</span>
-          <span class="section-index-label">Don't Just Take My Word For It</span>
-        </div>
-
-        <div class="testimonials-pin" data-cursor="Scroll">
-          <div class="testimonials-track">
-
-            <article class="testimonial-slide">
-              <div class="testimonial-content">
-                <span class="testimonial-num">01 — 03</span>
-                <p class="testimonial-quote">&ldquo;Working with Nitesh on our Suspension Management System project was a great experience. He has demonstrated an exceptional ability to translate intricate mechanical and sensor data into clear, actionable visual experiences for our engineering and testing teams. His design decisions not only improved usability but also helped reduce decision errors and scale our product to more test benchmarks across our test environments. What stood out most was his eagerness to learn more and consistent engagement with cross functional team to ensure that every design decision aligned with both functional requirements and user needs.&rdquo;</p>
-                <div class="testimonial-author">
-                  <span class="testimonial-name">Sebastian Niemann</span>
-                  <span class="testimonial-role">Product Owner, VW Group Engineering</span>
-                </div>
-              </div>
-            </article>
-
-            <article class="testimonial-slide">
-              <div class="testimonial-content">
-                <span class="testimonial-num">02 — 03</span>
-                <p class="testimonial-quote">&ldquo;Nitesh is a dedicated product designer who brings a blend of creativity and strategic thinking to every project. During his tenure at Elula, he has delivered exceptional design work and taken ownership of our portfolio, which spans over 50 successful products across ELEXtensions and ReachShip. His ability to translate user needs into clear, impactful design decisions has helped accelerate development, enhance user satisfaction, and drive measurable business outcomes.&rdquo;</p>
-                <div class="testimonial-author">
-                  <span class="testimonial-name">Vijay Chellakat</span>
-                  <span class="testimonial-role">Founder and CEO, Elula Tech</span>
-                </div>
-              </div>
-            </article>
-
-            <article class="testimonial-slide">
-              <div class="testimonial-content">
-                <span class="testimonial-num">03 — 03</span>
-                <p class="testimonial-quote">&ldquo;We were stuck in a project then I met Nitesh by coincidence and ended up completing it with him. He is very calm, patient and passionate about his work. I have never witnessed designers break things but this one does. The first thing he did after onboard was to segregate each and every module and aspects to find the problem and then redesigned the whole new flow for the application that was more robust and sensible.&rdquo;</p>
-                <div class="testimonial-author">
-                  <span class="testimonial-name">Rahul Agrawal</span>
-                  <span class="testimonial-role">Product Manager, VW Group Digital Solutions</span>
-                </div>
-              </div>
-            </article>
-
-          </div>
-
-          <div class="testimonials-progress">
-            <span class="testimonials-progress-label">Scroll to browse</span>
-            <div class="testimonials-steps" id="testimonialsSteps">
-              <span class="testimonials-step is-active"></span>
-              <span class="testimonials-step"></span>
-              <span class="testimonials-step"></span>
-            </div>
-          </div>
-        </div>
-      </section>
-        -- >
-      <!-- ==========================================================
-           CONTACT / CTA
-      ========================================================== -->
-      <section class="contact" id="contact">
-        <div class="contact-inner">
-          <p class="contact-eyebrow reveal-text">Have a project in mind?</p>
-          <a href="mailto:sayhi@niteshdixit.in" class="contact-cta magnetic-lg" data-cursor="Say Hi">
-            <span class="line-mask"><span class="line">Let's talk</span></span>
-          </a>
-        </div>
-
-        <footer class="footer">
-          <div class="footer-col">
-            <span class="nav-mark">N.</span>
-            <p>Product, Design &amp; Branding</p>
-          </div>
-          <div class="footer-col">
-          
-            <p>&copy; <span id="year"></span> Nitesh Dixit. All rights reserved.</p>
-          </div>
-          <div class="footer-col footer-social">
-            <a href="https://www.instagram.com/pixelandgear/" class="magnetic">Instagram</a>
-            <a href="https://www.linkedin.com/in/niteshdixit/" class="magnetic">LinkedIn</a>
-            <a href="https://www.behance.net/niteshdixit2" class="magnetic">Behance</a>
-          </div>
-        </footer>
-      </section>
-
-    </main>
   </div>
 
+  <main id="main">
+
+    <!-- region:hero ================================================= -->
+    <section class="hero" id="top" data-section="Ignition" data-index="00" aria-label="Introduction">
+      <div class="hero-head">
+        <p class="hero-eyebrow label"><span>HMI · Product · Brand</span><span class="hero-eyebrow-rule" aria-hidden="true"></span><span><span class="sr-only">— </span>Portfolio MMXXVI</span></p>
+        <h1 class="hero-title h-display">
+          <span class="line-mask"><span class="line">I design</span></span>
+          <span class="line-mask"><span class="line"><em>experiences</em></span></span>
+          <span class="line-mask"><span class="line">that move.</span></span>
+        </h1>
+        <p class="hero-intro lead">Interfaces for the cockpit, the road and everything in between — from in-vehicle diagnostics and cockpit HMI to EV charging and everyday digital products.</p>
+      </div>
+
+      <div class="hero-stage">
+        <figure class="hero-fig" role="img" aria-label="Technical line drawing of a grand-tourer coupé, annotated with four disciplines: 01 Interface at the headlight, 02 HMI at the cockpit, 03 Research at the wheel and 04 Brand at the tail light. A dimension line along the car reads 6+ years and 30+ products.">
+          <svg class="hero-car" viewBox="0 0 1200 420" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="hcShoulder" gradientUnits="userSpaceOnUse" x1="828" y1="0" x2="200" y2="0">
+                <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+                <stop offset="0.22" stop-color="currentColor" stop-opacity="0.45"/>
+                <stop offset="0.72" stop-color="currentColor" stop-opacity="0.8"/>
+                <stop offset="1" stop-color="currentColor" stop-opacity="0.25"/>
+              </linearGradient>
+              <linearGradient id="hcSill" gradientUnits="userSpaceOnUse" x1="806" y1="0" x2="394" y2="0">
+                <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+                <stop offset="0.45" stop-color="currentColor" stop-opacity="0.45"/>
+                <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="hcBodyFill" gradientUnits="userSpaceOnUse" x1="0" y1="134" x2="0" y2="334">
+                <stop offset="0" stop-color="currentColor" stop-opacity="0.07"/>
+                <stop offset="0.45" stop-color="currentColor" stop-opacity="0.025"/>
+                <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="hcGlass" gradientUnits="userSpaceOnUse" x1="380" y1="140" x2="560" y2="200">
+                <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+                <stop offset="0.48" stop-color="currentColor" stop-opacity="0"/>
+                <stop offset="0.5" stop-color="currentColor" stop-opacity="0.1"/>
+                <stop offset="0.62" stop-color="currentColor" stop-opacity="0.02"/>
+                <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+              </linearGradient>
+              <radialGradient id="hcPool" gradientUnits="userSpaceOnUse" cx="600" cy="360" r="600" gradientTransform="matrix(1 0 0 0.12 0 316.8)">
+                <stop offset="0" stop-color="currentColor" stop-opacity="0.085"/>
+                <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="hcShadow" gradientUnits="userSpaceOnUse" cx="596" cy="360" r="430" gradientTransform="matrix(1 0 0 0.06 0 338.4)">
+                <stop offset="0" stop-color="#000" stop-opacity="0.9"/>
+                <stop offset="1" stop-color="#000" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="hcBeam" gradientUnits="userSpaceOnUse" cx="1052" cy="258" r="640" gradientTransform="translate(1052 258) rotate(7) scale(1 0.11) translate(-1052 -258)">
+                <stop offset="0" style="stop-color:var(--c-light);stop-opacity:0.46"/>
+                <stop offset="0.12" style="stop-color:var(--c-light);stop-opacity:0.2"/>
+                <stop offset="0.4" style="stop-color:var(--c-light);stop-opacity:0.06"/>
+                <stop offset="1" style="stop-color:var(--c-light);stop-opacity:0"/>
+              </radialGradient>
+              <linearGradient id="hcBeamFade" gradientUnits="userSpaceOnUse" x1="1046" y1="0" x2="1110" y2="0">
+                <stop offset="0" stop-color="#000"/>
+                <stop offset="1" stop-color="#fff"/>
+              </linearGradient>
+              <mask id="hcBeamMask" maskUnits="userSpaceOnUse" x="1040" y="100" width="940" height="300">
+                <rect x="1040" y="100" width="940" height="300" fill="url(#hcBeamFade)"/>
+              </mask>
+              <radialGradient id="hcBeamPool" gradientUnits="userSpaceOnUse" cx="1290" cy="360" r="300" gradientTransform="matrix(1 0 0 0.05 0 342)">
+                <stop offset="0" style="stop-color:var(--c-light);stop-opacity:0.18"/>
+                <stop offset="1" style="stop-color:var(--c-light);stop-opacity:0"/>
+              </radialGradient>
+              <radialGradient id="hcTailPool" gradientUnits="userSpaceOnUse" cx="80" cy="360" r="150" gradientTransform="matrix(1 0 0 0.06 0 338.4)">
+                <stop offset="0" style="stop-color:var(--c-signal);stop-opacity:0.3"/>
+                <stop offset="1" style="stop-color:var(--c-signal);stop-opacity:0"/>
+              </radialGradient>
+              <linearGradient id="hcSweep" gradientUnits="userSpaceOnUse" x1="-420" y1="0" x2="-140" y2="0">
+                <stop offset="0" style="stop-color:var(--c-light);stop-opacity:0"/>
+                <stop offset="0.5" style="stop-color:var(--c-light);stop-opacity:1"/>
+                <stop offset="1" style="stop-color:var(--c-light);stop-opacity:0"/>
+              </linearGradient>
+            </defs>
+
+            <rect class="hc-pool" x="-200" y="280" width="1600" height="160" fill="url(#hcPool)"/>
+
+            <g class="hc-road">
+              <line class="hc-ground" x1="-2400" y1="360" x2="3600" y2="360"/>
+              <line class="hc-lane" x1="-2400" y1="378" x2="3600" y2="378"/>
+            </g>
+
+            <g class="hc-drive">
+              <rect class="hc-shadow" x="120" y="330" width="960" height="60" fill="url(#hcShadow)"/>
+              <g class="hc-beam">
+                <rect x="1046" y="120" width="920" height="260" fill="url(#hcBeam)" mask="url(#hcBeamMask)"/>
+                <rect x="900" y="336" width="780" height="48" fill="url(#hcBeamPool)"/>
+              </g>
+              <g class="hc-tailglow">
+                <rect x="-120" y="344" width="400" height="32" fill="url(#hcTailPool)"/>
+              </g>
+              <path class="hc-center" d="M200 283 H408 M304 179 V404 M784 283 H992 M888 179 V404"/>
+              <path class="hc-ext" d="M98 300 V412 M1066 300 V412"/>
+              <g class="hc-car">
+                <path class="hc-fill" d="M957.2 334 L1034 334 C1046 334 1056 328 1060 316 C1064 302 1066 286 1066 272 C1066 256 1060 246 1044 240 C1000 224 950 194 888 182 C816 177 730 176 672 177 C650 163 618 147 590 141 C566 136 520 133 470 137 C380 145 290 163 220 178 C176 186 136 189 112 188 C106 187.5 101 186 98 184 C99 190 102 194 105 198 C103 214 103 236 105 256 C108 280 115 300 128 314 C136 326 150 333 172 334 L234.8 334 A86 86 0 1 1 373.2 334 L818.8 334 A86 86 0 1 1 957.2 334 Z"/>
+                <path class="hc-glassfill" d="M656 182 C636 170 612 156 588 149 C562 144 512 142 470 145 C430 149 392 158 362 170 C354 174 354 177.5 362 178 C452 179.5 560 181 656 182 Z"/>
+                <path class="hc-body" data-draw="body" d="M957.2 334 L1034 334 C1046 334 1056 328 1060 316 C1064 302 1066 286 1066 272 C1066 256 1060 246 1044 240 C1000 224 950 194 888 182 C816 177 730 176 672 177 C650 163 618 147 590 141 C566 136 520 133 470 137 C380 145 290 163 220 178 C176 186 136 189 112 188 C106 187.5 101 186 98 184 C99 190 102 194 105 198 C103 214 103 236 105 256 C108 280 115 300 128 314 C136 326 150 333 172 334 L234.8 334 A86 86 0 1 1 373.2 334 L818.8 334 A86 86 0 1 1 957.2 334 Z"/>
+                <path class="hc-glass" data-draw="glass" d="M656 182 C636 170 612 156 588 149 C562 144 512 142 470 145 C430 149 392 158 362 170 C354 174 354 177.5 362 178 C452 179.5 560 181 656 182 Z"/>
+                <path class="hc-line is-glass" data-draw="detail" d="M470 145.2 C468 157 466 168 464 179.3"/>
+                <path class="hc-line is-mirror" data-draw="detail" d="M620 177 C620 170 630 166.5 644 166.5 C657 166.5 666 169.5 668 173.5 C669 178 662 181 648 181 C633 181 620 180.5 620 177 Z"/>
+                <path class="hc-line" data-draw="detail" d="M652 181 L660 188"/>
+                <path class="hc-line is-shoulder" data-draw="detail" d="M824 216 C730 213 600 210 500 207 C430 205 380 199 344 190 C312 182 262 183 200 194"/>
+                <path class="hc-line is-sill" data-draw="detail" d="M806 318 C700 316 540 312 394 300"/>
+                <path class="hc-line is-faint" data-draw="detail" d="M686 186 C692 228 694 278 690 330"/>
+                <path class="hc-line is-faint" data-draw="detail" d="M464 184 C456 228 456 280 462 331"/>
+                <path class="hc-line" data-draw="detail" d="M488 201 C500 198.5 518 198.5 530 200.5"/>
+                <path class="hc-line is-faint" data-draw="detail" d="M220 245.6 A92 92 0 0 1 388 245.6"/>
+                <path class="hc-line is-faint" data-draw="detail" d="M804 245.6 A92 92 0 0 1 972 245.6"/>
+                <path class="hc-line" data-draw="detail" d="M1058 254 C1036 245 1006 231 980 220 C1002 234 1030 249 1052 262 C1057 261 1060 257 1058 254 Z"/>
+                <path class="hc-line is-faint" data-draw="detail" d="M1044 266 C1051 282 1052 300 1046 318"/>
+                <path class="hc-line is-faint" data-draw="detail" d="M1061 306 C1040 304 1016 308 1000 318 C1016 320 1040 320 1059 320"/>
+                <path class="hc-line is-faint" data-draw="detail" d="M978 328 L1044 328"/>
+                <path class="hc-line" data-draw="detail" d="M104 196 C132 197.5 164 199.5 194 202 C164 203.5 132 203 105 202 Z"/>
+                <path class="hc-line is-faint" data-draw="detail" d="M124 202 C116 236 118 276 134 308"/>
+                <path class="hc-line is-faint" data-draw="detail" d="M104 258 C130 260 160 262 196 264"/>
+                <path class="hc-line is-faint" data-draw="detail" d="M124 310 C140 316 164 321 200 323"/>
+                <path class="hc-line is-faint" data-draw="detail" d="M140 316 L144 333 M158 319 L161 333 M176 321 L178 333"/>
+                <path class="hc-sweep" d="M957.2 334 L1034 334 C1046 334 1056 328 1060 316 C1064 302 1066 286 1066 272 C1066 256 1060 246 1044 240 C1000 224 950 194 888 182 C816 177 730 176 672 177 C650 163 618 147 590 141 C566 136 520 133 470 137 C380 145 290 163 220 178 C176 186 136 189 112 188 C106 187.5 101 186 98 184 C99 190 102 194 105 198 C103 214 103 236 105 256 C108 280 115 300 128 314 C136 326 150 333 172 334 L234.8 334 A86 86 0 1 1 373.2 334 L818.8 334 A86 86 0 1 1 957.2 334 Z"/>
+                <g class="hc-light hc-drl">
+                  <path class="hc-glow-3" d="M1054 257 C1030 247 1004 234 984 224"/>
+                  <path class="hc-glow-2" d="M1054 257 C1030 247 1004 234 984 224"/>
+                  <path class="hc-glow-1" d="M1054 257 C1030 247 1004 234 984 224"/>
+                </g>
+                <g class="hc-light hc-tail">
+                  <path class="hc-glow-3" d="M107 199 C136 200 166 201.5 192 202.5"/>
+                  <path class="hc-glow-2" d="M107 199 C136 200 166 201.5 192 202.5"/>
+                  <path class="hc-glow-1" d="M107 199 C136 200 166 201.5 192 202.5"/>
+                </g>
+                <g class="hc-wheel" data-wheel="rear">
+                  <circle class="hc-tyre" data-draw="wheel" cx="304" cy="283" r="77"/>
+                  <circle class="is-faint" data-draw="wheel" cx="304" cy="283" r="69.5"/>
+                  <circle class="hc-rimlip" data-draw="wheel" cx="304" cy="283" r="59.5"/>
+                  <g class="hc-rim" data-cx="304" data-cy="283">
+                    <circle class="is-faint" data-draw="wheel" cx="304" cy="283" r="55.5"/>
+                    <circle class="hc-disc" cx="304" cy="283" r="41"/>
+                    <path class="hc-spokes" data-draw="wheel" d="M302.3 267.1 L301 228.1 M305.7 267.1 L307 228.1 M312 269.1 L333.9 236.8 M314.7 271.1 L338.7 240.3 M318.6 276.5 L355.3 263.2 M319.7 279.7 L357.2 268.9 M319.7 286.3 L357.2 297.1 M318.6 289.5 L355.3 302.8 M314.7 294.9 L338.7 325.7 M312 296.9 L333.9 329.2 M305.7 298.9 L307 337.9 M302.3 298.9 L301 337.9 M296 296.9 L274.1 329.2 M293.3 294.9 L269.3 325.7 M289.4 289.5 L252.7 302.8 M288.3 286.3 L250.8 297.1 M288.3 279.7 L250.8 268.9 M289.4 276.5 L252.7 263.2 M293.3 271.1 L269.3 240.3 M296 269.1 L274.1 236.8"/>
+                    <circle class="hc-rimlip" data-draw="wheel" cx="304" cy="283" r="16"/>
+                    <circle class="is-faint" data-draw="wheel" cx="304" cy="283" r="9"/>
+                    <circle class="hc-cap" cx="304" cy="283" r="3.2"/>
+                  </g>
+                </g>
+                <g class="hc-wheel" data-wheel="front">
+                  <circle class="hc-tyre" data-draw="wheel" cx="888" cy="283" r="77"/>
+                  <circle class="is-faint" data-draw="wheel" cx="888" cy="283" r="69.5"/>
+                  <circle class="hc-rimlip" data-draw="wheel" cx="888" cy="283" r="59.5"/>
+                  <g class="hc-rim" data-cx="888" data-cy="283">
+                    <circle class="is-faint" data-draw="wheel" cx="888" cy="283" r="55.5"/>
+                    <circle class="hc-disc" cx="888" cy="283" r="41"/>
+                    <path class="hc-spokes" data-draw="wheel" d="M886.3 267.1 L885 228.1 M889.7 267.1 L891 228.1 M896 269.1 L917.9 236.8 M898.7 271.1 L922.7 240.3 M902.6 276.5 L939.3 263.2 M903.7 279.7 L941.2 268.9 M903.7 286.3 L941.2 297.1 M902.6 289.5 L939.3 302.8 M898.7 294.9 L922.7 325.7 M896 296.9 L917.9 329.2 M889.7 298.9 L891 337.9 M886.3 298.9 L885 337.9 M880 296.9 L858.1 329.2 M877.3 294.9 L853.3 325.7 M873.4 289.5 L836.7 302.8 M872.3 286.3 L834.8 297.1 M872.3 279.7 L834.8 268.9 M873.4 276.5 L836.7 263.2 M877.3 271.1 L853.3 240.3 M880 269.1 L858.1 236.8"/>
+                    <circle class="hc-rimlip" data-draw="wheel" cx="888" cy="283" r="16"/>
+                    <circle class="is-faint" data-draw="wheel" cx="888" cy="283" r="9"/>
+                    <circle class="hc-cap" cx="888" cy="283" r="3.2"/>
+                  </g>
+                </g>
+              </g>
+            </g>
+
+            <g class="hc-notes">
+              <g class="hc-note" data-note="01">
+                <path class="hc-leader" data-draw="note" d="M150 199 V74"/>
+                <circle class="hc-dot" cx="150" cy="199" r="2.6"/>
+              </g>
+              <g class="hc-note" data-note="02">
+                <path class="hc-leader" data-draw="note" d="M560 163 V74"/>
+                <circle class="hc-dot" cx="560" cy="163" r="2.6"/>
+              </g>
+              <g class="hc-note" data-note="03">
+                <path class="hc-leader" data-draw="note" d="M888 223.5 V74"/>
+                <circle class="hc-dot" cx="888" cy="223.5" r="2.6"/>
+              </g>
+              <g class="hc-note" data-note="04">
+                <path class="hc-leader" data-draw="note" d="M1018 240 V74"/>
+                <circle class="hc-dot" cx="1018" cy="240" r="2.6"/>
+              </g>
+            </g>
+          </svg>
+          <div class="hero-notes" aria-hidden="true">
+            <p class="hero-note is-left" data-note="01" style="--x: 150; --y: 74"><span class="hero-note-i">01</span>Brand</p>
+            <p class="hero-note" data-note="02" style="--x: 560; --y: 74"><span class="hero-note-i">02</span>HMI</p>
+            <p class="hero-note is-left" data-note="03" style="--x: 888; --y: 74"><span class="hero-note-i">03</span>Research</p>
+            <p class="hero-note" data-note="04" style="--x: 1018; --y: 74"><span class="hero-note-i">04</span>Interface</p>
+            <p class="hero-dim dim"><b>6+</b>&nbsp;years · <b>30+</b>&nbsp;products</p>
+          </div>
+        </figure>
+      </div>
+
+      <div class="hero-foot">
+        <span class="hero-ruler ticks" aria-hidden="true"></span>
+        <a class="hero-foot-scroll label" href="#work" data-cursor="Drive">Scroll to drive <span class="hero-foot-arrow" aria-hidden="true">↓</span></a>
+        <p class="hero-meta label"><i class="hero-led" aria-hidden="true"></i>Based in India — working globally</p>
+        <p class="hero-foot-no label">N° 2026</p>
+      </div>
+    </section>
+    <!-- /region:hero ================================================ -->
+
+    <!-- region:work ================================================= -->
+    <!--
+      SHOWROOM — four bays on one track (home-showroom.css / .js).
+      Wide screens: a sticky stage pans the track as the page scrolls.
+      Narrow screens: a native swipe strip. Without JS: stacked bays.
+    -->
+    <section class="showroom" id="work" data-section="Selected Work" data-index="01" aria-labelledby="showroom-title">
+      <h2 class="sr-only" id="showroom-title">Selected work</h2>
+      <div class="showroom-stage">
+
+        <header class="rule showroom-rule" data-rule data-rule-progress="manual">
+          <span class="rule-index">01</span>
+          <span class="rule-title">Selected Work</span>
+          <span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span>
+          <span class="rule-meta">04 Cases</span>
+        </header>
+
+        <ol class="showroom-track" data-lenis-prevent-horizontal>
+
+          <!-- Bay 01 · Suspension Diagnostics -->
+          <li class="bay" data-short="Suspension">
+            <article class="bay-body" aria-labelledby="bay-suspension">
+              <div class="bay-details">
+                <p class="bay-meta"><span class="bay-case">Case 01 / 04</span><span class="bay-meta-tick" aria-hidden="true"></span><span>Model year 2025</span></p>
+                <h3 class="bay-title" id="bay-suspension">Suspension Diagnostics</h3>
+                <p class="bay-sub">Sensor based suspension diagnostic system on IVI</p>
+                <p class="bay-desc">An IVI concept that shows drivers what the suspension senses on the terrain ahead, how it will respond, whether it has adjusted, and when the vehicle needs attention.</p>
+                <div class="bay-specs">
+                  <p class="bay-spec-head">Journey</p>
+                  <dl class="bay-spec">
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">3</dt><dd class="bay-spec-label">Moments: before, during, after</dd></div>
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">3D</dt><dd class="bay-spec-label">Live vehicle visualization</dd></div>
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">1</dt><dd class="bay-spec-label">Glance to read it while driving</dd></div>
+                  </dl>
+                </div>
+                <div class="bay-foot">
+                  <a class="bay-cta" href="case-study.html?p=suspension" data-transition data-transition-label="Suspension Diagnostics" data-transition-eyebrow="Case 01 / 04" data-cursor="View">
+                    <span class="bay-cta-text">View case study</span>
+                    <span class="bay-cta-dim" aria-hidden="true"><i></i></span>
+                  </a>
+                  <p class="bay-tags">HMI · Automotive · Diagnostics</p>
+                </div>
+              </div>
+              <figure class="bay-media media-suspension" data-cursor="View">
+                <div class="bay-stage">
+                  <div class="sus-plate">
+                    <div class="sus-zoom">
+                      <img src="assets/suspension/cover.png" width="1912" height="931" alt="The suspension diagnostics screen, parked: a wireframe 3D SUV with all four wheels highlighted, per-corner readouts for air pressure, spring life, damper life and temperature, and a suspension health score of 97." loading="lazy" decoding="async" />
+                      <span class="sus-ping" style="--x: 38%; --y: 54%" aria-hidden="true"><i></i><i></i></span>
+                      <span class="sus-ping" style="--x: 44.7%; --y: 51.1%" aria-hidden="true"><i></i><i></i></span>
+                      <span class="sus-ping" style="--x: 50.2%; --y: 60.1%" aria-hidden="true"><i></i><i></i></span>
+                      <span class="sus-ping" style="--x: 57.5%; --y: 55.9%" aria-hidden="true"><i></i><i></i></span>
+                    </div>
+                  </div>
+                </div>
+                <span class="bay-sweep" aria-hidden="true"><i></i></span>
+                <span class="bay-scanline" aria-hidden="true"></span>
+                <figcaption class="bay-cap">Fig. 01 — Parked · Centre display</figcaption>
+              </figure>
+              <span class="bay-split" aria-hidden="true"></span>
+            </article>
+          </li>
+
+          <!-- Bay 02 · HMI — Cockpit Experience -->
+          <li class="bay" data-short="Cockpit HMI">
+            <article class="bay-body" aria-labelledby="bay-hmi">
+              <div class="bay-details">
+                <p class="bay-meta"><span class="bay-case">Case 02 / 04</span><span class="bay-meta-tick" aria-hidden="true"></span><span>Model year 2024</span></p>
+                <h3 class="bay-title" id="bay-hmi">Cockpit Experience</h3>
+                <p class="bay-sub">Škoda in-car HMI</p>
+                <p class="bay-desc">A unified in-car HMI concept for Škoda that treats four surfaces as one system: the Virtual Cockpit, an AR Head-Up Display, the 13″ infotainment screen and Laura, the voice assistant.</p>
+                <div class="bay-specs">
+                  <p class="bay-spec-head">Surfaces</p>
+                  <dl class="bay-spec">
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">4</dt><dd class="bay-spec-label">Surfaces, one system</dd></div>
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">13″</dt><dd class="bay-spec-label">Infotainment screen</dd></div>
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">AR</dt><dd class="bay-spec-label">Head-Up Display</dd></div>
+                  </dl>
+                </div>
+                <div class="bay-foot">
+                  <a class="bay-cta" href="case-study.html?p=hmi" data-transition data-transition-label="HMI — Cockpit Experience" data-transition-eyebrow="Case 02 / 04" data-cursor="View">
+                    <span class="bay-cta-text">View case study</span>
+                    <span class="bay-cta-dim" aria-hidden="true"><i></i></span>
+                  </a>
+                  <p class="bay-tags">HMI · Automotive · Voice</p>
+                </div>
+              </div>
+              <figure class="bay-media media-hmi" data-cursor="View">
+                <div class="bay-stage">
+                  <div class="hmi-cockpit">
+                    <span class="hmi-glass" aria-hidden="true"></span>
+                    <div class="hmi-layer hmi-hud bay-depth"><div class="hmi-rise"><img src="assets/hmi/hud-driving.png" width="1920" height="640" alt="AR Head-Up Display while driving: 48 km/h, a right turn in 300 m and adaptive cruise control set to 50." loading="lazy" decoding="async" /></div></div>
+                    <div class="hmi-layer hmi-ic bay-depth"><div class="hmi-rise"><div class="hmi-screen"><img src="assets/hmi/ic-parked.png" width="2560" height="960" alt="Virtual Cockpit, parked and ready: READY in large type, with the prompt to press brake and select D." loading="lazy" decoding="async" /></div></div></div>
+                    <div class="hmi-layer hmi-ivi bay-depth"><div class="hmi-rise"><div class="hmi-screen"><img src="assets/hmi/ivi-parked.png" width="2560" height="1440" alt="13-inch infotainment screen, parked: a media player, eight shortcut tiles and an energy card." loading="lazy" decoding="async" /></div></div></div>
+                    <div class="hmi-layer hmi-laura bay-depth"><div class="hmi-rise"><div class="hmi-screen"><img src="assets/hmi/laura-parked.png" width="776" height="152" alt="Laura, the voice assistant: “Hi Petr — home, or the office?”" loading="lazy" decoding="async" /></div></div></div>
+                    <span class="hmi-tag hmi-tag--hud" aria-hidden="true">AR Head-up display</span>
+                    <span class="hmi-tag hmi-tag--ic" aria-hidden="true">Virtual Cockpit</span>
+                    <span class="hmi-tag hmi-tag--ivi" aria-hidden="true">13″ Infotainment</span>
+                    <span class="hmi-tag hmi-tag--laura" aria-hidden="true">Laura · Voice</span>
+                  </div>
+                </div>
+                <span class="bay-sweep" aria-hidden="true"><i></i></span>
+                <span class="bay-scanline" aria-hidden="true"></span>
+                <figcaption class="bay-cap">Fig. 02 — Four surfaces · One system</figcaption>
+              </figure>
+              <span class="bay-split" aria-hidden="true"></span>
+            </article>
+          </li>
+
+          <!-- Bay 03 · Tariff Based EV Charging -->
+          <li class="bay" data-short="EV Charging">
+            <article class="bay-body" aria-labelledby="bay-offpeak">
+              <div class="bay-details">
+                <p class="bay-meta"><span class="bay-case">Case 03 / 04</span><span class="bay-meta-tick" aria-hidden="true"></span><span>Model year 2023</span></p>
+                <h3 class="bay-title" id="bay-offpeak">Tariff Based EV Charging</h3>
+                <p class="bay-sub">EV tariff input</p>
+                <p class="bay-desc">A mobile flow that turns a paper electricity tariff into a smart-charging schedule, with gaps and overlaps ruled out by design.</p>
+                <div class="bay-specs">
+                  <p class="bay-spec-head">Outcome</p>
+                  <dl class="bay-spec">
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">18</dt><dd class="bay-spec-label">Values to type, down from 32</dd></div>
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">0</dt><dd class="bay-spec-label">Coverage gaps possible</dd></div>
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">4.25</dt><dd class="bay-spec-label">Score vs 2.85 and 2.75</dd></div>
+                  </dl>
+                </div>
+                <div class="bay-foot">
+                  <a class="bay-cta" href="case-study.html?p=offpeak" data-transition data-transition-label="Tariff Based EV Charging" data-transition-eyebrow="Case 03 / 04" data-cursor="View">
+                    <span class="bay-cta-text">View case study</span>
+                    <span class="bay-cta-dim" aria-hidden="true"><i></i></span>
+                  </a>
+                  <p class="bay-tags">UX Research · Data Viz · Mobile</p>
+                </div>
+              </div>
+              <figure class="bay-media media-offpeak" data-cursor="View">
+                <div class="bay-stage">
+                  <span class="ev-floor" aria-hidden="true"></span>
+                  <div class="ev-fan">
+                    <div class="ev-phone ev-phone--c bay-depth"><div class="ev-phone-body"><img src="assets/offpeak/f1.png" width="394" height="853" alt="The intro screen: “Charge when electricity is cheapest”, a 24-hour price bar, the three questions the flow will ask, and a Start button." loading="lazy" decoding="async" /></div></div>
+                    <div class="ev-phone ev-phone--l bay-depth"><div class="ev-phone-body"><img src="assets/offpeak/f3.png" width="394" height="853" alt="Step 1 of 4, periods: a year ribbon split into Off-peak and Peak, with the start dates editable and the end dates filled in automatically." loading="lazy" decoding="async" /></div></div>
+                    <div class="ev-phone ev-phone--r bay-depth"><div class="ev-phone-body"><img src="assets/offpeak/f4.png" width="394" height="853" alt="Step 2 of 4, days: Monday to Thursday in group 1 and Friday to Sunday in group 2." loading="lazy" decoding="async" /></div></div>
+                  </div>
+                  <div class="ev-port" aria-hidden="true">
+                    <span>Smart charging<br />Off-peak</span>
+                    <svg viewBox="0 0 64 84" focusable="false">
+                      <circle class="ev-port-led" cx="32" cy="30" r="28.5" />
+                      <path class="ev-port-body" d="M16.1 12 A24 24 0 1 0 47.9 12 Z" />
+                      <circle class="ev-port-pin" cx="26.5" cy="16.5" r="2.2" />
+                      <circle class="ev-port-pin" cx="37.5" cy="16.5" r="2.2" />
+                      <circle class="ev-port-pin" cx="20.5" cy="28" r="3.7" />
+                      <circle class="ev-port-pin" cx="32" cy="28" r="3.7" />
+                      <circle class="ev-port-pin" cx="43.5" cy="28" r="3.7" />
+                      <circle class="ev-port-pin" cx="25.5" cy="40" r="3.7" />
+                      <circle class="ev-port-pin" cx="38.5" cy="40" r="3.7" />
+                      <path class="ev-port-body" d="M15 66 A17 12 0 0 0 49 66 A17 12 0 0 0 15 66 Z" />
+                      <circle class="ev-port-pin" cx="24.5" cy="66" r="5.6" />
+                      <circle class="ev-port-pin" cx="39.5" cy="66" r="5.6" />
+                    </svg>
+                  </div>
+                </div>
+                <span class="bay-sweep" aria-hidden="true"><i></i></span>
+                <span class="bay-scanline" aria-hidden="true"></span>
+                <figcaption class="bay-cap">Fig. 03 — F3 · F1 · F4 · Tariff input</figcaption>
+              </figure>
+              <span class="bay-split" aria-hidden="true"></span>
+            </article>
+          </li>
+
+          <!-- Bay 04 · Codeflow — Daily Coding Challenge -->
+          <li class="bay" data-short="Codeflow">
+            <article class="bay-body" aria-labelledby="bay-codeflow">
+              <div class="bay-details">
+                <p class="bay-meta"><span class="bay-case">Case 04 / 04</span><span class="bay-meta-tick" aria-hidden="true"></span><span>Model year 2026</span></p>
+                <h3 class="bay-title" id="bay-codeflow">Codeflow</h3>
+                <p class="bay-sub">Daily coding challenge for Edwisely</p>
+                <p class="bay-desc">Codeflow is the daily coding challenge on a college learning portal: one problem picked for you, a streak you can’t miss, and a designed answer for the day a student misses it.</p>
+                <div class="bay-specs">
+                  <p class="bay-spec-head">Outcome</p>
+                  <dl class="bay-spec">
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">1</dt><dd class="bay-spec-label">Tap from home to the editor</dd></div>
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">0</dt><dd class="bay-spec-label">Streaks broken by an outage</dd></div>
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">7</dt><dd class="bay-spec-label">Ways back after a missed day</dd></div>
+                  </dl>
+                </div>
+                <div class="bay-foot">
+                  <a class="bay-cta" href="case-study.html?p=codeflow" data-transition data-transition-label="Codeflow — Daily Coding Challenge" data-transition-eyebrow="Case 04 / 04" data-cursor="View">
+                    <span class="bay-cta-text">View case study</span>
+                    <span class="bay-cta-dim" aria-hidden="true"><i></i></span>
+                  </a>
+                  <p class="bay-tags">UX Research · Gamification · Web</p>
+                </div>
+              </div>
+              <figure class="bay-media media-codeflow" data-cursor="View">
+                <div class="bay-stage">
+                  <div class="cf-plate bay-depth">
+                    <img src="assets/codeflow/cover.png" width="3840" height="2160" alt="Codeflow’s daily challenge card, “Longest Quiet Stretch”, beside a 13-day streak and the class leaderboard." loading="lazy" decoding="async" />
+                  </div>
+                </div>
+                <span class="bay-sweep" aria-hidden="true"><i></i></span>
+                <span class="bay-scanline" aria-hidden="true"></span>
+                <figcaption class="bay-cap">Fig. 04 — Daily challenge · Desktop</figcaption>
+              </figure>
+              <span class="bay-split" aria-hidden="true"></span>
+            </article>
+          </li>
+
+        </ol>
+
+        <div class="showroom-selector" role="group" aria-label="Cases">
+          <ol class="showroom-seg-list">
+            <li><button class="showroom-seg" type="button" data-showroom-go="0"><span class="sr-only">Show case </span><span class="showroom-seg-num">01</span> <span class="showroom-seg-name">Suspension</span></button></li>
+            <li><button class="showroom-seg" type="button" data-showroom-go="1"><span class="sr-only">Show case </span><span class="showroom-seg-num">02</span> <span class="showroom-seg-name">Cockpit HMI</span></button></li>
+            <li><button class="showroom-seg" type="button" data-showroom-go="2"><span class="sr-only">Show case </span><span class="showroom-seg-num">03</span> <span class="showroom-seg-name">EV Charging</span></button></li>
+            <li><button class="showroom-seg" type="button" data-showroom-go="3"><span class="sr-only">Show case </span><span class="showroom-seg-num">04</span> <span class="showroom-seg-name">Codeflow</span></button></li>
+          </ol>
+          <span class="showroom-scale" aria-hidden="true"><i class="showroom-needle"></i></span>
+          <p class="showroom-hint" aria-hidden="true">Swipe for the next case</p>
+        </div>
+
+      </div>
+    </section>
+    <!-- /region:work ================================================ -->
+
+    <!-- region:about ================================================ -->
+    <section class="about" id="about" data-section="The Designer" data-index="02" data-theme="paper" aria-labelledby="about-title">
+      <header class="rule" data-rule>
+        <span class="rule-index">02</span>
+        <span class="rule-title">The Designer</span>
+        <span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span>
+        <span class="rule-meta">Spec sheet</span>
+      </header>
+      <h2 class="sr-only" id="about-title">About Nitesh Dixit</h2>
+
+      <div class="about-body">
+        <p class="about-copy">One half of me sees stories in <em>shadows</em>, rhythm in <em>routine</em>, and beauty in the blink of a moment. Translating life’s fleeting sparks into <em>compelling designs.</em></p>
+
+        <!-- The sill plate: brushed steel, engraved, four screws. -->
+        <figure class="about-plate">
+          <div class="plate" role="img" aria-label="Build plate: Coachbuilt by Nitesh Dixit — Product, HMI, Brand — India — Nº 2026">
+            <i class="plate-screw" aria-hidden="true"></i><i class="plate-screw" aria-hidden="true"></i><i class="plate-screw" aria-hidden="true"></i><i class="plate-screw" aria-hidden="true"></i>
+            <span class="plate-row plate-row--top" aria-hidden="true"><span>Coachbuilt by</span><span>Nº 2026</span></span>
+            <span class="plate-name" aria-hidden="true">Nitesh Dixit</span>
+            <span class="plate-cut" aria-hidden="true"></span>
+            <span class="plate-row plate-row--foot" aria-hidden="true"><span>Product · HMI · Brand</span><span>India</span></span>
+            <span class="plate-sheen" aria-hidden="true"></span>
+          </div>
+          <figcaption class="about-plate-dim dim">Sill plate · Scale 1:1</figcaption>
+        </figure>
+      </div>
+
+      <!-- Capabilities: a coded spec table, C.01 – C.09. -->
+      <div class="about-caps">
+        <p class="about-caps-head"><span>Capabilities</span><span class="about-caps-ticks" aria-hidden="true"></span><span>09 Items</span></p>
+        <ol class="about-caps-list">
+          <li class="cap"><span class="cap-code">C.01</span><span class="cap-name">User Research</span></li>
+          <li class="cap"><span class="cap-code">C.02</span><span class="cap-name">Experience &amp; Interface Design</span></li>
+          <li class="cap"><span class="cap-code">C.03</span><span class="cap-name">AI Product Design</span></li>
+          <li class="cap"><span class="cap-code">C.04</span><span class="cap-name">Wireframing</span></li>
+          <li class="cap"><span class="cap-code">C.05</span><span class="cap-name">Advanced Prototyping</span></li>
+          <li class="cap"><span class="cap-code">C.06</span><span class="cap-name">Brand &amp; Identity</span></li>
+          <li class="cap"><span class="cap-code">C.07</span><span class="cap-name">HMI</span></li>
+          <li class="cap"><span class="cap-code">C.08</span><span class="cap-name">Collaboration</span></li>
+          <li class="cap"><span class="cap-code">C.09</span><span class="cap-name">Workshops</span></li>
+        </ol>
+      </div>
+    </section>
+    <!-- /region:about =============================================== -->
+
+    <!-- region:journey ============================================== -->
+    <section class="journey" id="journey" data-section="Journey" data-index="03" aria-labelledby="journey-title">
+      <header class="rule" data-rule>
+        <span class="rule-index">03</span>
+        <span class="rule-title">Journey So Far</span>
+        <span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span>
+        <span class="rule-meta">Telemetry</span>
+      </header>
+      <h2 class="journey-heading" id="journey-title" data-reveal="lines">I have been fortunate to collaborate and build products with inspiring and creative teams across <em>global brands.</em></h2>
+
+      <!-- Instrument cluster: dials are drawn by home-sections.js from data-*. -->
+      <dl class="cluster">
+        <div class="gauge" data-value="6" data-max="10" data-minor="0.5" data-major="2" data-red="8.5" data-unit="Yrs">
+          <dt class="gauge-label"><span class="gauge-code" aria-hidden="true">T.01</span>Years of craft</dt>
+          <dd class="gauge-body">
+            <svg class="gauge-dial" viewBox="-160 -160 320 320" aria-hidden="true" focusable="false"></svg>
+            <span class="gauge-read">6+</span>
+          </dd>
+        </div>
+        <div class="gauge gauge--main" data-value="30" data-max="50" data-minor="1" data-major="10" data-red="42.5" data-unit="Products">
+          <dt class="gauge-label"><span class="gauge-code" aria-hidden="true">T.02</span>Products shipped</dt>
+          <dd class="gauge-body">
+            <svg class="gauge-dial" viewBox="-160 -160 320 320" aria-hidden="true" focusable="false"></svg>
+            <span class="gauge-read">30+</span>
+          </dd>
+        </div>
+        <div class="gauge" data-value="7" data-max="10" data-minor="0.5" data-major="2" data-red="8.5" data-unit="Brands">
+          <dt class="gauge-label"><span class="gauge-code" aria-hidden="true">T.03</span>Global brands</dt>
+          <dd class="gauge-body">
+            <svg class="gauge-dial" viewBox="-160 -160 320 320" aria-hidden="true" focusable="false"></svg>
+            <span class="gauge-read">7+</span>
+          </dd>
+        </div>
+      </dl>
+
+      <!-- Brand wall: nine panels behind fine panel gaps, automotive first. -->
+      <div class="brand-wall" id="brands">
+        <header class="rule brands-rule" data-rule data-rule-track="#brands">
+          <span class="rule-index">§</span>
+          <span class="rule-title">Brands &amp; Products</span>
+          <span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span>
+          <span class="rule-meta">09</span>
+        </header>
+        <ul class="brand-grid" data-reveal="scan">
+          <li class="brand-cell" data-brand="audi" data-cursor="Audi"><span class="brand-no" aria-hidden="true">01</span><img class="brand-logo" src="assets/logos/audi.svg" width="64" height="36" alt="Audi" loading="lazy" decoding="async"></li>
+          <li class="brand-cell" data-brand="porsche" data-cursor="Porsche"><span class="brand-no" aria-hidden="true">02</span><img class="brand-logo" src="assets/logos/porsche.svg" width="63" height="36" alt="Porsche" loading="lazy" decoding="async"></li>
+          <li class="brand-cell" data-brand="vw" data-cursor="Volkswagen"><span class="brand-no" aria-hidden="true">03</span><img class="brand-logo" src="assets/logos/vw.svg" width="63" height="36" alt="Volkswagen" loading="lazy" decoding="async"></li>
+          <li class="brand-cell" data-brand="edwisely" data-cursor="Edwisely"><span class="brand-no" aria-hidden="true">04</span><img class="brand-logo" src="assets/logos/edwisely.svg" width="634" height="265" alt="Edwisely" loading="lazy" decoding="async"></li>
+          <li class="brand-cell" data-brand="elextensions" data-cursor="ELEXtensions"><span class="brand-no" aria-hidden="true">05</span><img class="brand-logo" src="assets/logos/elextensions.svg" width="375" height="375" alt="ELEXtensions" loading="lazy" decoding="async"></li>
+          <li class="brand-cell" data-brand="reachship" data-cursor="ReachShip"><span class="brand-no" aria-hidden="true">06</span><img class="brand-logo" src="assets/logos/reachship.svg" width="500" height="500" alt="ReachShip" loading="lazy" decoding="async"></li>
+          <li class="brand-cell" data-brand="candescent" data-cursor="Candescent"><span class="brand-no" aria-hidden="true">07</span><img class="brand-logo" src="assets/logos/candescent.svg" width="224" height="58" alt="Candescent" loading="lazy" decoding="async"></li>
+          <li class="brand-cell" data-brand="learnwoo" data-cursor="LearnWoo"><span class="brand-no" aria-hidden="true">08</span><img class="brand-logo" src="assets/logos/learnwoo.svg" width="160" height="40" alt="LearnWoo" loading="lazy" decoding="async"></li>
+          <li class="brand-cell" data-brand="zervise" data-cursor="Zervise"><span class="brand-no" aria-hidden="true">09</span><img class="brand-logo" src="assets/logos/zervise.png" width="136" height="67" alt="Zervise" loading="lazy" decoding="async"></li>
+        </ul>
+      </div>
+    </section>
+    <!-- /region:journey ============================================= -->
+
+    <!--
+      TESTIMONIALS — switched off. The markup is kept here so the quotes
+      aren't lost; it has no styles or script in this redesign.
+
+      Sebastian Niemann — Product Owner, VW Group Engineering:
+      "Working with Nitesh on our Suspension Management System project was a great experience. He has demonstrated an exceptional ability to translate intricate mechanical and sensor data into clear, actionable visual experiences for our engineering and testing teams. His design decisions not only improved usability but also helped reduce decision errors and scale our product to more test benchmarks across our test environments. What stood out most was his eagerness to learn more and consistent engagement with cross functional team to ensure that every design decision aligned with both functional requirements and user needs."
+
+      Vijay Chellakat — Founder and CEO, Elula Tech:
+      "Nitesh is a dedicated product designer who brings a blend of creativity and strategic thinking to every project. During his tenure at Elula, he has delivered exceptional design work and taken ownership of our portfolio, which spans over 50 successful products across ELEXtensions and ReachShip. His ability to translate user needs into clear, impactful design decisions has helped accelerate development, enhance user satisfaction, and drive measurable business outcomes."
+
+      Rahul Agrawal — Product Manager, VW Group Digital Solutions:
+      "We were stuck in a project then I met Nitesh by coincidence and ended up completing it with him. He is very calm, patient and passionate about his work. I have never witnessed designers break things but this one does. The first thing he did after onboard was to segregate each and every module and aspects to find the problem and then redesigned the whole new flow for the application that was more robust and sensible."
+    -->
+
+    <!-- region:contact ============================================== -->
+    <section class="contact" id="contact" data-section="Contact" data-index="04" aria-labelledby="contact-title">
+      <div class="contact-copy">
+        <p class="contact-eyebrow label" data-reveal="fade">Have a project in mind?</p>
+        <h2 class="contact-title" id="contact-title" data-reveal="lines">Let’s talk.</h2>
+        <p class="contact-write" data-reveal="up" data-reveal-delay="250"><span class="label">Write to</span><a href="mailto:sayhi@niteshdixit.in" class="contact-email link" data-cursor="Write">sayhi@niteshdixit.in</a></p>
+      </div>
+      <div class="contact-ignition">
+        <a href="mailto:sayhi@niteshdixit.in" class="ignition" aria-label="Let’s talk — email sayhi@niteshdixit.in" data-cursor="Say hi">
+          <svg class="ignition-scale" viewBox="-100 -100 200 200" aria-hidden="true" focusable="false"><circle class="is-rim" r="97" /><circle class="is-minor" r="88" pathLength="360" /><circle class="is-major" r="89" pathLength="360" /></svg>
+          <svg class="ignition-scale ignition-scale--lit" viewBox="-100 -100 200 200" aria-hidden="true" focusable="false"><circle class="is-minor" r="88" pathLength="360" /><circle class="is-major" r="89" pathLength="360" /></svg>
+          <span class="ignition-ring" aria-hidden="true"></span>
+          <span class="ignition-led" aria-hidden="true"></span>
+          <span class="ignition-face" aria-hidden="true"><span class="ignition-engine">Engine</span><span class="ignition-start">Start</span><span class="ignition-stop">Stop</span></span>
+        </a>
+        <p class="contact-dim dim" aria-hidden="true" data-reveal="fade" data-reveal-delay="500">Push to start</p>
+      </div>
+    </section>
+    <!-- /region:contact ============================================= -->
+
+  </main>
+
   <!-- ============================================================
-       SCRIPTS
-       GSAP core + ScrollTrigger + Lenis smooth scroll
+       FOOTER — the spec sheet sign-off (shared chrome)
   ============================================================ -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <footer class="footer" data-section="Sign-off" data-index="05">
+    <div class="rule footer-rule" data-rule>
+      <span class="rule-index">05</span>
+      <span class="rule-title">End of line</span>
+      <span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span>
+      <a href="#top" class="rule-meta footer-top" data-cursor="Top">Back to top ↑</a>
+    </div>
+    <dl class="spec footer-spec">
+      <div class="spec-row"><dt>Designer</dt><dd>Nitesh Dixit</dd></div>
+      <div class="spec-row"><dt>Discipline</dt><dd>HMI · Product · Brand</dd></div>
+      <div class="spec-row"><dt>Based in</dt><dd>India — working globally</dd></div>
+      <div class="spec-row"><dt>Write</dt><dd><a href="mailto:sayhi@niteshdixit.in" class="link">sayhi@niteshdixit.in</a></dd></div>
+      <div class="spec-row"><dt>Elsewhere</dt><dd class="footer-social"><a href="https://www.instagram.com/pixelandgear/" class="link" target="_blank" rel="noopener">Instagram</a><a href="https://www.linkedin.com/in/niteshdixit/" class="link" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.behance.net/niteshdixit2" class="link" target="_blank" rel="noopener">Behance</a></dd></div>
+      <div class="spec-row"><dt>Local time</dt><dd><span data-clock>--:--</span> IST</dd></div>
+    </dl>
+    <div class="footer-mark" data-fit aria-hidden="true">Nitesh Dixit</div>
+    <div class="footer-base">
+      <span>&copy; <span id="year">2026</span> Nitesh Dixit. All rights reserved.</span>
+      <span>Coachbuilt in India · MMXXVI</span>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       SCRIPTS — Anime.js v4 + Lenis, the shared core, then one file
+       per home section.
+  ============================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/animejs@4.5.0/dist/bundles/anime.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
   <script src="core.js"></script>
   <script src="transition.js"></script>
-  <script src="script.js"></script>
+  <script src="home-hero.js"></script>
+  <script src="home-showroom.js"></script>
+  <script src="home-sections.js"></script>
+  <script src="contact.js"></script>
 </body>
 </html>

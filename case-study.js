@@ -1,60 +1,106 @@
 /* ==================================================================
-   NITESH — PORTFOLIO 2025
-   Case study template: reads ?p=<slug> from case-study-data.js and
-   renders the page, then runs the same reveal / scroll-trigger
-   motion language used on the homepage.
+   NITESH DIXIT — PORTFOLIO 2026 · case study
+   One template for every project: reads ?p=<slug> from
+   case-study-data.js and renders the page behind the closed shutter,
+   then opens it and brings the hero up. Motion runs on Anime.js v4
+   through the shared runtime (window.Site — core.js, transition.js).
 
-   The six core sections (overview → impact) render for every
-   project. Framing, research, directions, decision, states, system
-   and what's-next are opt-in: they stay hidden unless the data has
-   them, and section numbers + background rhythm are worked out after
-   render so any combination still reads in order.
+   The core sections (overview → impact) render for every project.
+   Framing, research, directions, decision, states, system and
+   what's-next are opt-in: they stay hidden unless the data has them,
+   and section numbers, rule readouts and background rhythm are worked
+   out after render, so any combination still reads in order.
+
+   Arrival   cover label → render → hidden states → fonts + hero images
+             → Site.transition.reveal() → hero entrance → 'intro:done'
+   Motion    hero lines rise out of their masks; the media opens like a
+             shutter from its centre seam; a live cover boots with a
+             scan and tilts toward the cursor; the EV cover runs a day
+             of smart charging (paused off-screen); copy, cards and
+             screens reveal on arrival; impact figures roll on drums.
+   Reduced   final states everywhere, one still frame for the EV day.
    ================================================================== */
 
 (function () {
   const params = new URLSearchParams(window.location.search);
-  const requested = params.get('p');
   const store = window.CASE_STUDIES || {};
-  const data = store[requested] || store.suspension;
+  const slug = store[params.get('p')] ? params.get('p') : 'suspension';
+  const data = store[slug];
 
   if (!data) {
     window.location.href = 'index.html';
     return;
   }
 
+  const Site = window.Site;
+  const A = Site && Site.anime;
+  const { animate, createTimeline, createAnimatable, stagger, utils } = A || {};
+  const ease = A ? Site.motion.ease : {};
+  const reduced = !A || Site.reduced;
+  const root = document.documentElement;
+  const pad = (n) => String(n).padStart(2, '0');
+  const byId = (id) => document.getElementById(id);
+
   /* ----------------------------------------------------------------
-     0. Per-project accent tint — reuses the exact colors already
-        present on the homepage's work tiles, just scoped to this page.
+     0. Case number + shutter label. The projects form one loop
+        through `next`, led by the automotive study, so "Case 03 / 04"
+        matches the order of the bays on the home page. Single-word
+        titles carry their subtitle on the shutter, as the home page's
+        labels do ("HMI — Cockpit experience").
   ---------------------------------------------------------------- */
-  document.documentElement.style.setProperty('--case-accent', data.accent);
+  const sequence = [];
+  for (let s = store.suspension ? 'suspension' : slug; store[s] && !sequence.includes(s); s = store[s].next) {
+    sequence.push(s);
+  }
+  Object.keys(store).forEach((s) => { if (!sequence.includes(s)) sequence.push(s); });
+  const caseNo = (s) => `Case ${pad(sequence.indexOf(s) + 1)} / ${pad(sequence.length)}`;
+  const fullName = (d) => (/\s/.test(d.title.trim()) ? d.title : `${d.title} — ${d.subtitle}`);
+
+  if (Site && Site.transition) Site.transition.setLabel(fullName(data), caseNo(slug));
+
+  /* ----------------------------------------------------------------
+     1. Accent + meta. The project colours are exposed as custom
+        properties, so case-study.css decides where they show.
+  ---------------------------------------------------------------- */
+  const gradientColors = data.gradient.match(/#[0-9a-fA-F]{3,6}/g) || ['#c8ff4d', '#1a1a1a'];
+  root.style.setProperty('--case-accent', data.accent);
+  root.style.setProperty('--case-gradient', data.gradient);
+  root.style.setProperty('--case-g1', gradientColors[0]);
+  root.style.setProperty('--case-g2', gradientColors[1] || gradientColors[0]);
 
   /* Screen slots are phone-proportioned by default. Desktop products
      opt into wider frames and a 2-up grid with `wideScreens: true`. */
   if (data.wideScreens) document.body.classList.add('case-wide-screens');
 
-  /* ----------------------------------------------------------------
-     1. Meta
-  ---------------------------------------------------------------- */
-  document.title = `${data.title} — ${data.subtitle} — Nitesh`;
-  const descEl = document.getElementById('pageDescription');
+  document.title = `${data.title} — ${data.subtitle} — Nitesh Dixit`;
+  const descEl = byId('pageDescription');
   if (descEl) descEl.setAttribute('content', `${data.title} — ${data.tagline}`);
-
-  const transitionLabel = document.querySelector('#pageTransition .page-transition-label');
-  if (transitionLabel) transitionLabel.textContent = data.title;
 
   /* ----------------------------------------------------------------
      2. Hero
   ---------------------------------------------------------------- */
-  document.getElementById('caseSubtitle').textContent = data.subtitle;
-  document.getElementById('caseTitle').textContent = data.title;
-  document.getElementById('caseTagline').textContent = data.tagline;
-  document.getElementById('caseHeroMedia').style.background = data.gradient;
+  const media = byId('caseHeroMedia');
+  const heroSection = document.querySelector('.case-hero');
 
-  const tagsWrap = document.getElementById('caseTags');
-  tagsWrap.innerHTML = [`<span class="work-tag">${data.year}</span>`]
-    .concat(data.tags.map((t) => `<span class="work-tag">${t}</span>`))
-    .join('');
+  byId('caseSubtitle').textContent = data.subtitle;
+  byId('caseTitle').textContent = data.title;
+  byId('caseTagline').textContent = data.tagline;
 
+  const tagsWrap = byId('caseTags');
+  tagsWrap.innerHTML = data.tags.map((t) => `<span class="work-tag">${t}</span>`).join('');
+
+  // The badge line: case number and model year, as on the showroom bay,
+  // and the series ruler with this study's stretch in redline.
+  const caseIndex = sequence.indexOf(slug);
+  const caseNoEl = byId('caseNo');
+  if (caseNoEl) caseNoEl.innerHTML = `<b>${caseNo(slug)}</b><i aria-hidden="true"></i><span>Model year ${data.year}</span>`;
+  const heroRuler = document.querySelector('.case-hero-ruler');
+  if (heroRuler) {
+    heroRuler.style.setProperty('--case-i', caseIndex);
+    heroRuler.style.setProperty('--case-n', sequence.length);
+  }
+
+  // The spec sheet: .spec rows (style.css), each opened by a tick.
   const metaFields = [
     ['Role', data.role],
     ['Timeline', data.timeline],
@@ -63,10 +109,14 @@
     ['Team', data.team],
     ['Tools', data.tools],
   ];
-  document.getElementById('caseMetaBar').innerHTML = metaFields
+  byId('caseMetaBar').innerHTML = metaFields
     .filter(([, value]) => value)
-    .map(([label, value]) => `<div class="case-meta-item"><h4>${label}</h4><p>${value}</p></div>`)
+    .map(([label, value]) => `<div class="case-meta-item spec-row"><dt>${label}</dt><dd>${value}</dd></div>`)
     .join('');
+
+  // Figure caption up the margin of the display bay.
+  const heroCap = media.querySelector('.case-hero-cap');
+  if (heroCap) heroCap.textContent = `Fig. ${pad(caseIndex + 1)}${data.platform ? ` — ${data.platform}` : ''}`;
 
   /* ---- device-frame hero screen — an abstracted, wireframe view of
      the product itself, not a stock image, so the case study shows
@@ -75,7 +125,14 @@
     if (type === 'phone') return `<div class="device-chrome"><span class="device-notch"></span></div>`;
     return `<div class="device-chrome"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url"></span></div>`;
   }
-  const heroDevice = document.getElementById('caseHeroDevice');
+
+  // Which hero this project has: a live cover, a plain cover, a row of
+  // phone screens, or the wireframe device.
+  const heroKind = data.heroImage
+    ? (data.heroImage.hotspots ? 'live' : 'cover')
+    : data.heroScreens ? 'screens' : data.heroScreen ? 'device' : null;
+
+  const heroDevice = byId('caseHeroDevice');
   if (data.heroImage) {
     // A single exported cover, shown at its real proportions.
     const wrap = document.querySelector('.case-hero-device-wrap');
@@ -106,7 +163,7 @@
     const center = Math.floor(data.heroScreens.length / 2);
     wrap.classList.add('is-row');
     wrap.innerHTML = `<div class="case-hero-screens">${data.heroScreens
-      .map((screen, i) => screenSlotHTML(screen, { caption: false, className: i === center ? 'is-center' : '' }))
+      .map((screen, i) => screenSlotHTML(screen, { caption: false, eager: true, className: i === center ? 'is-center' : '' }))
       .join('')}</div>`;
   } else if (heroDevice && data.heroScreen) {
     heroDevice.className = `device-frame ${data.heroScreen.device === 'phone' ? 'is-phone' : 'is-browser'}`;
@@ -118,7 +175,7 @@
      code, so the layout is final before the visuals are. ---- */
   function screenSlotHTML(screen, opts = {}) {
     const media = screen.image
-      ? `<img src="${screen.image}" alt="${screen.alt || screen.title}" loading="lazy" data-zoom />`
+      ? `<img src="${screen.image}" alt="${screen.alt || screen.title}" loading="${opts.eager ? 'eager' : 'lazy'}" data-zoom />`
       : `<div class="slot-empty">
            <span class="slot-code">${screen.code}</span>
            ${opts.caption === false ? `<span class="slot-name">${screen.title}</span>` : ''}
@@ -144,15 +201,12 @@
     return `<div class="board-slot${board.image ? '' : ' is-empty'}" style="aspect-ratio:${board.ratio || '16 / 10'};">${media}</div>`;
   }
 
-  const pad = (n) => String(n).padStart(2, '0');
-
   /* ---- EV-charging cover — a day of smart charging plays out around
      the hero screens. A playhead runs the clock across the tariff; the
      car waits through the peak, charges only in the cheap window and
      drives off in the morning, and the status card, battery, energy
      streaks and the glow on the centre screen all follow along. ---- */
   function chargingScene(cfg) {
-    const media = document.getElementById('caseHeroMedia');
     const slots = cfg.slots;
     const cheapest = Math.min(...slots.map((s) => s.price));
     const priciest = Math.max(...slots.map((s) => s.price));
@@ -265,38 +319,58 @@
       }
     }
 
-    // Hours pass at different speeds: slower while something happens,
-    // quick on the road. The clock starts as the car gets home.
-    function play() {
-      gsap.fromTo(q('.charge-scene'), { opacity: 0 }, { opacity: 1, duration: 1.4, ease: 'power2.out' });
-      gsap.fromTo(media.querySelectorAll('.charge-seg'), { scaleX: 0 }, {
-        scaleX: 1, transformOrigin: 'left center', duration: 0.7, stagger: 0.1, delay: 0.5, ease: 'power3.out',
-      });
-      gsap.fromTo(media.querySelectorAll('.charge-hud'), { opacity: 0, y: 20 }, {
-        opacity: 1, y: 0, duration: 0.8, stagger: 0.12, delay: 0.7, ease: 'power3.out',
-      });
+    // ---- motion (only called when the runtime is there) ----
+    const scene = q('.charge-scene');
+    const segs = media.querySelectorAll('.charge-seg');
+    const huds = media.querySelectorAll('.charge-hud');
+    const dial = [head, q('.charge-ticks')];
+    let day = null;
+    let onScreen = true;
 
+    function prepare() {
+      utils.set(scene, { opacity: 0 });
+      utils.set(segs, { scaleX: 0, transformOrigin: '0% 50%' });
+      utils.set(dial, { opacity: 0 });
+      utils.set(huds, { opacity: 0, translateY: 20 });
+    }
+
+    // Hours pass at different speeds: slower while something happens,
+    // quick on the road. The clock starts as the car gets home, and the
+    // day loops for as long as the cover is on screen.
+    function runDay() {
       const clock = { t: home };
       const tick = () => render(clock.t % 24);
-      const day = gsap.timeline({ repeat: -1, delay: 1.2 });
-      [[home, winStart, 0.75], [winStart, winEnd, 0.8], [winEnd, leave, 1.2], [leave, home, 0.33]]
-        .forEach(([from, to, secondsPerHour]) => {
+      day = createTimeline({ loop: true, autoplay: false, defaults: { ease: 'linear' } });
+      let at = home;
+      [[home, winStart, 750], [winStart, winEnd, 800], [winEnd, leave, 1200], [leave, home, 330]]
+        .forEach(([from, to, msPerHour]) => {
           const hours = (to - from + 24) % 24;
-          day.to(clock, { t: `+=${hours}`, duration: hours * secondsPerHour, ease: 'none', onUpdate: tick });
+          if (!hours) return;
+          day.add(clock, { t: [at, at + hours], duration: hours * msPerHour, onUpdate: tick });
+          at += hours;
         });
+      if (onScreen) day.play();
+    }
 
-      // Only run the day while the cover is on screen.
-      ScrollTrigger.create({
-        trigger: media,
-        start: 'top bottom',
-        end: 'bottom top',
-        onToggle: (self) => (self.isActive ? day.resume() : day.pause()),
-      });
+    function play(delay) {
+      createTimeline({ delay, defaults: { ease: ease.out } })
+        .add(scene, { opacity: [0, 1], duration: 1400, ease: 'out(2)' }, 0)
+        .add(segs, { scaleX: [0, 1], duration: 1000, ease: ease.inOut, delay: stagger(90) }, 400)
+        .add(huds, { opacity: [0, 1], translateY: [20, 0], duration: 1100, delay: stagger(120) }, 600)
+        .add(dial, { opacity: [0, 1], duration: 700, ease: 'out(2)' }, 1000)
+        .call(runDay, 1200);
+    }
+
+    function setVisible(on) {
+      onScreen = on;
+      if (!day) return;
+      if (on) day.play();
+      else day.pause();
     }
 
     render(home);
     // Without motion, one still frame mid-charge tells the same story.
-    return { render, play, still: winStart + 1.5 };
+    return { render, prepare, play, setVisible, still: winStart + 1.5 };
   }
 
   const charge = data.heroScreens && data.heroCharging ? chargingScene(data.heroCharging) : null;
@@ -304,18 +378,18 @@
   /* ----------------------------------------------------------------
      3. Overview / Problem
   ---------------------------------------------------------------- */
-  document.getElementById('caseOverview').textContent = data.overview;
+  byId('caseOverview').textContent = data.overview;
   // Longer overviews: the first paragraph leads, the rest follow in body size.
   if (data.overviewMore) {
-    document.getElementById('caseOverview').insertAdjacentHTML('afterend', `
+    byId('caseOverview').insertAdjacentHTML('afterend', `
       <div class="case-overview-more">
         ${data.overviewMore.map((p) => `<p class="case-copy reveal-text">${p}</p>`).join('')}
       </div>`);
   }
-  document.getElementById('caseProblem').textContent = data.problem.copy;
+  byId('caseProblem').textContent = data.problem.copy;
   if (data.problem.quote) {
-    document.getElementById('caseQuoteText').textContent = data.problem.quote;
-    document.getElementById('caseQuoteAttribution').textContent = data.problem.attribution;
+    byId('caseQuoteText').textContent = data.problem.quote;
+    byId('caseQuoteAttribution').textContent = data.problem.attribution;
   } else {
     document.querySelector('#problem .case-quote').remove();
   }
@@ -352,13 +426,13 @@
         <div class="case-jobs-list">${problem.jobs.map((job, i) => `<span class="case-job"><small>${pad(i + 1)}</small>${job}</span>`).join('')}</div>
       </div>`);
   }
-  document.getElementById('caseProblemContext').innerHTML = problemExtras.join('');
+  byId('caseProblemContext').innerHTML = problemExtras.join('');
 
   /* ----------------------------------------------------------------
      4. Approach — optional; a project can drop it entirely.
   ---------------------------------------------------------------- */
   if (data.approach) {
-    document.getElementById('caseApproachGrid').innerHTML = data.approach
+    byId('caseApproachGrid').innerHTML = data.approach
       .map((item, i) => `
         <div class="case-approach-card">
           <span class="case-approach-index">${item.code || pad(i + 1)}</span>
@@ -367,20 +441,20 @@
         </div>
       `).join('');
   } else {
-    document.getElementById('approach').hidden = true;
+    byId('approach').hidden = true;
   }
 
   /* ----------------------------------------------------------------
-     5. The Flow — alternating text/media, gradient angle varies per
-        step so the repeated brand colors don't feel static.
+     5. The Flow — alternating text/media; the gradient angle varies
+        per step (--flow-angle) so the repeated brand colours don't
+        feel static.
   ---------------------------------------------------------------- */
-  const gradientColors = data.gradient.match(/#[0-9a-fA-F]{3,6}/g) || ['#c8ff4d', '#1a1a1a'];
   const flowAngles = [135, 45, 160, 20, 100];
 
   // Longer flows come in chapters: a short intro, then a row of screens.
-  const flowList = document.getElementById('caseFlowList');
+  const flowList = byId('caseFlowList');
   if (!data.flowChapters && !data.flow) {
-    document.getElementById('flow').hidden = true;
+    byId('flow').hidden = true;
   } else if (data.flowChapters) {
     flowList.innerHTML = data.flowChapters
       .map((chapter) => `
@@ -405,7 +479,7 @@
             <p>${step.desc}</p>
           </div>
           <div class="case-flow-media${step.image ? ' has-image' : ''}"${step.image && step.ratio ? ` style="aspect-ratio:${step.ratio};"` : ''}>
-            <div class="case-flow-media-img" style="background: linear-gradient(${flowAngles[i % flowAngles.length]}deg, ${gradientColors[0]}, ${gradientColors[1] || gradientColors[0]});"></div>
+            <div class="case-flow-media-img" style="--flow-angle:${flowAngles[i % flowAngles.length]}deg;"></div>
             ${step.image
               ? `<img class="case-flow-shot${step.inset ? ' is-inset' : ''}" src="${step.image}" alt="${step.alt || step.title}" loading="lazy" data-zoom />`
               : step.screen ? `<div class="case-flow-chip">${step.screen}</div>` : ''}
@@ -418,7 +492,7 @@
      6. Testing & Learnings
   ---------------------------------------------------------------- */
   if (data.testing) {
-    document.getElementById('caseTestingGrid').innerHTML = data.testing
+    byId('caseTestingGrid').innerHTML = data.testing
       .map((item, i) => `
         <div class="case-testing-card">
           <span class="case-testing-index">${pad(i + 1)} / Finding</span>
@@ -427,25 +501,26 @@
         </div>
       `).join('');
   } else {
-    document.getElementById('testing').hidden = true;
+    byId('testing').hidden = true;
   }
 
   /* ----------------------------------------------------------------
-     7. Impact
+     7. Impact — the figure is written out in full (readable without
+        motion); section 13 rolls it on odometer drums.
   ---------------------------------------------------------------- */
   if (data.impact) {
-    document.getElementById('caseImpactGrid').innerHTML = data.impact
+    byId('caseImpactGrid').innerHTML = data.impact
       .map((stat) => `
         <div class="case-impact-stat">
           <div class="case-impact-num-row">
-            <span class="case-impact-num" data-count="${stat.value}" data-decimals="${stat.decimals || 0}">0</span><span class="case-impact-suffix">${stat.suffix || ''}</span>
+            <span class="case-impact-num" data-count="${stat.value}" data-decimals="${stat.decimals || 0}">${Number(stat.value).toFixed(stat.decimals || 0)}</span><span class="case-impact-suffix">${stat.suffix || ''}</span>
           </div>
           <p>${stat.label}</p>
         </div>
       `).join('');
-    document.getElementById('caseClosing').textContent = data.closing;
+    byId('caseClosing').textContent = data.closing;
   } else {
-    document.getElementById('impact').hidden = true;
+    byId('impact').hidden = true;
   }
 
   /* ----------------------------------------------------------------
@@ -453,7 +528,7 @@
          fillSection() un-hides the section only when there's data.
   ---------------------------------------------------------------- */
   function fillSection(id, html) {
-    const section = document.getElementById(id);
+    const section = byId(id);
     if (!section || !html) return;
     section.querySelector('.case-section-body').innerHTML = html;
     section.hidden = false;
@@ -734,21 +809,10 @@
       ${s.note ? `<p class="case-note reveal-text">${s.note}</p>` : ''}`;
   }
 
-  // An endless reel of screens. The list repeats until one set is wider
-  // than a big monitor, then the set is doubled so the loop's halfway
-  // point is a seamless join, like the homepage marquee. Repeats are
-  // hidden from screen readers, so each screen is announced once.
+  // The project's screens as a line-up, side by side like cars on a
+  // showroom floor — each one once, each one opens full size.
   function tickerHTML(t) {
-    const set = [];
-    while (set.length < Math.max(t.screens.length, 10)) set.push(...t.screens);
-    const slots = (from) => set.map((s, i) => screenSlotHTML(s, { hidden: i >= from })).join('');
-    return `
-      <div class="case-ticker case-reveal" style="--ticker-duration:${set.length * 5}s;">
-        <div class="case-ticker-track">
-          <div class="case-ticker-set">${slots(t.screens.length)}</div>
-          <div class="case-ticker-set" aria-hidden="true">${slots(set.length)}</div>
-        </div>
-      </div>`;
+    return `<div class="screen-grid case-lineup">${t.screens.map((s) => screenSlotHTML(s)).join('')}</div>`;
   }
 
   function nextStepsHTML(groups) {
@@ -778,52 +842,58 @@
   // Closing card that points to the source Figma file.
   if (data.figma) {
     const f = data.figma;
-    document.getElementById('figmaEyebrow').textContent = f.eyebrow;
-    document.getElementById('figmaTitle').textContent = f.title;
-    document.getElementById('figmaIntro').textContent = f.intro;
-    document.getElementById('figmaCtaLabel').textContent = f.cta;
-    document.getElementById('figmaCta').setAttribute('href', f.url);
-    document.getElementById('figmaList').innerHTML = f.reasons
+    byId('figmaEyebrow').textContent = f.eyebrow;
+    byId('figmaTitle').textContent = f.title;
+    byId('figmaIntro').textContent = f.intro;
+    byId('figmaCtaLabel').textContent = f.cta;
+    byId('figmaCta').setAttribute('href', f.url);
+    byId('figmaList').innerHTML = f.reasons
       .map((r, i) => `<li><span>${pad(i + 1)}</span><div><strong>${r.title}</strong><p>${r.desc}</p></div></li>`)
       .join('');
-    document.getElementById('figma-file').hidden = false;
+    byId('figma-file').hidden = false;
   }
 
   // Closing card that invites the viewer to try the live prototype.
   if (data.playground) {
     const p = data.playground;
-    document.getElementById('playgroundEyebrow').textContent = p.eyebrow;
-    document.getElementById('playgroundTitle').textContent = p.title;
-    document.getElementById('playgroundIntro').textContent = p.intro;
-    document.getElementById('playgroundCtaLabel').textContent = p.cta;
-    document.getElementById('playgroundCta').setAttribute('href', p.url);
-    document.getElementById('playgroundPreview').setAttribute('href', p.url);
-    document.getElementById('playgroundImg').setAttribute('src', p.image);
-    document.getElementById('playgroundBadge').textContent = p.badge;
-    document.getElementById('playground').hidden = false;
+    byId('playgroundEyebrow').textContent = p.eyebrow;
+    byId('playgroundTitle').textContent = p.title;
+    byId('playgroundIntro').textContent = p.intro;
+    byId('playgroundCtaLabel').textContent = p.cta;
+    byId('playgroundCta').setAttribute('href', p.url);
+    byId('playgroundPreview').setAttribute('href', p.url);
+    byId('playgroundImg').setAttribute('src', p.image);
+    byId('playgroundBadge').textContent = p.badge;
+    byId('playground').hidden = false;
   }
 
   // Closing card for work under NDA: the rest of the story is told on a call.
   if (data.nda) {
     const n = data.nda;
-    document.getElementById('ndaEyebrow').textContent = n.eyebrow;
-    document.getElementById('ndaTitle').textContent = n.title;
-    document.getElementById('ndaIntro').textContent = n.intro;
-    document.getElementById('ndaCtaLabel').textContent = n.cta;
-    document.getElementById('ndaCta').setAttribute('href', n.url);
-    document.getElementById('ndaList').innerHTML = n.points
+    byId('ndaEyebrow').textContent = n.eyebrow;
+    byId('ndaTitle').textContent = n.title;
+    byId('ndaIntro').textContent = n.intro;
+    byId('ndaCtaLabel').textContent = n.cta;
+    byId('ndaCta').setAttribute('href', n.url);
+    byId('ndaList').innerHTML = n.points
       .map((r, i) => `<li><span>${pad(i + 1)}</span><div><strong>${r.title}</strong><p>${r.desc}</p></div></li>`)
       .join('');
-    document.getElementById('nda').hidden = false;
+    byId('nda').hidden = false;
   }
 
   /* ----------------------------------------------------------------
      7c. Section labels + headings per project, then number the
-         visible sections in order and alternate their backgrounds.
-         Impact always stays on the base background, as before.
+         visible sections in order and alternate their backgrounds
+         (Impact always stays on the base background). Each rule's
+         meta reads the section's place in the story ("03 / 09"), and
+         each section hands the nav readout its name and number.
   ---------------------------------------------------------------- */
+  // The template's chapter names — short enough for the nav readout.
+  const chapterNames = new Map(Array.from(document.querySelectorAll('.case-section'))
+    .map((section) => [section, section.querySelector('.section-index-label').textContent.trim()]));
+
   Object.entries(data.sections || {}).forEach(([id, meta]) => {
-    const section = document.getElementById(id);
+    const section = byId(id);
     if (!section) return;
     const index = section.querySelector('.section-index');
     if (meta.label) index.querySelector('.section-index-label').textContent = meta.label;
@@ -841,210 +911,319 @@
   if (data.order) {
     const anchor = document.querySelector('.case-next');
     data.order.forEach((id) => {
-      const section = document.getElementById(id);
+      const section = byId(id);
       if (section) anchor.parentNode.insertBefore(section, anchor);
     });
   }
 
+  const shownSections = Array.from(document.querySelectorAll('.case-section')).filter((section) => !section.hidden);
   let prevAlt = true;
-  Array.from(document.querySelectorAll('.case-section'))
-    .filter((section) => !section.hidden)
-    .forEach((section, i) => {
-      section.querySelector('.section-index > span:first-child').textContent = pad(i + 1);
-      const alt = section.classList.contains('case-impact') ? false : !prevAlt;
-      section.classList.toggle('case-section-alt', alt);
-      prevAlt = alt;
+  shownSections.forEach((section, i) => {
+    const rule = section.querySelector('.section-index');
+    const meta = rule.querySelector('.rule-meta');
+    rule.querySelector('.rule-index').textContent = pad(i + 1);
+    if (meta) meta.textContent = `${pad(i + 1)} / ${pad(shownSections.length)}`;
+    section.dataset.index = pad(i + 1);
+
+    const alt = section.classList.contains('case-impact') ? false : !prevAlt;
+    section.classList.toggle('case-section-alt', alt);
+    prevAlt = alt;
+  });
+
+  // The nav readout is a fixed-width window: a name that doesn't fit it
+  // falls back to the chapter's short name (or, for the hero, the case
+  // number). Measured in the readout itself, so it follows its styling.
+  function fitsReadout(text) {
+    const box = document.querySelector('.nav-readout-name');
+    if (!box || !box.clientWidth) return text.length <= 18;
+    const probe = document.createElement('span');
+    probe.style.visibility = 'hidden';
+    probe.textContent = text;
+    box.appendChild(probe);
+    const fits = probe.offsetWidth <= box.clientWidth;
+    probe.remove();
+    return fits;
+  }
+  function nameSections() {
+    if (heroSection) heroSection.dataset.section = fitsReadout(data.title) ? data.title : caseNo(slug);
+    shownSections.forEach((section) => {
+      const label = section.querySelector('.section-index-label').textContent.trim();
+      section.dataset.section = fitsReadout(label) ? label : chapterNames.get(section) || label;
     });
+  }
+  nameSections();
 
   /* ----------------------------------------------------------------
-     8. Next project
+     8. Next project — the shutter carries its name and case number.
   ---------------------------------------------------------------- */
   const nextData = store[data.next];
-  const nextLink = document.getElementById('caseNextLink');
+  const nextLink = byId('caseNextLink');
   if (nextData && nextLink) {
-    nextLink.setAttribute('href', `case-study.html?p=${nextData.slug}`);
-    nextLink.setAttribute('data-transition-label', nextData.title);
-    document.getElementById('caseNextTitle').textContent = nextData.title;
+    const nextSlug = nextData.slug || data.next;
+    nextLink.setAttribute('href', `case-study.html?p=${nextSlug}`);
+    nextLink.setAttribute('data-transition-label', fullName(nextData));
+    nextLink.setAttribute('data-transition-eyebrow', `Next · ${caseNo(data.next)}`);
+    nextLink.setAttribute('aria-label', `Next project: ${fullName(nextData)}`);
+    byId('caseNextTitle').textContent = nextData.title;
+    const nextEyebrow = document.querySelector('.case-next-eyebrow');
+    if (nextEyebrow) nextEyebrow.textContent = `Next project · ${caseNo(data.next)}`;
   }
 
   /* ----------------------------------------------------------------
-     9. Entrance — wipe the cover away, then unmask hero copy exactly
-        like the homepage's heroEntrance(), then arm scroll reveals.
+     9. MOTION — everything below runs on the shared runtime. Without
+        it (a library failed to load) the page is simply shown.
+  ---------------------------------------------------------------- */
+  if (!A) {
+    const pt = byId('pageTransition');
+    if (pt) pt.style.display = 'none';
+    root.classList.remove('is-transitioning');
+    return;
+  }
+
+  // Run fn once el is on screen. If it is there as the hero lands, the
+  // choreography's delay is kept; scrolled to later, it plays at once.
+  function whenInView(el, delay, fn) {
+    if (!el) return;
+    const t0 = performance.now();
+    Site.observe(el, () => fn(Math.max(0, delay - (performance.now() - t0))));
+  }
+
+  // Perpetual CSS motion rests while its block is off-screen
+  // (.is-offscreen in case-study.css); fn hears about it too.
+  function restOffscreen(el, fn) {
+    if (!el) return;
+    new IntersectionObserver(([entry]) => {
+      el.classList.toggle('is-offscreen', !entry.isIntersecting);
+      if (fn) fn(entry.isIntersecting);
+    }).observe(el);
+  }
+
+  // Items sharing a row step in left to right, `step` ms apart.
+  function rowDelays(items, step) {
+    let top = null;
+    let col = 0;
+    return items.map((el) => {
+      const y = Math.round(el.getBoundingClientRect().top);
+      col = y === top ? col + 1 : 0;
+      top = y;
+      return [el, col * step];
+    });
+  }
+
+  const hero = {
+    top: [document.querySelector('.case-back-link'), caseNoEl].filter(Boolean),
+    ruler: heroRuler,
+    tags: [...tagsWrap.children],
+    copy: [byId('caseSubtitle'), byId('caseTitle'), byId('caseTagline')],
+    lines: [],
+    meta: byId('caseMetaBar'),
+    metaItems: byId('caseMetaBar').children,
+    cover: media.querySelector('.case-hero-cover'),
+  };
+
+  /* ----------------------------------------------------------------
+     10. HERO, BEFORE THE SHUTTER OPENS — hidden states are set here,
+         never by CSS alone, so the page still reads without motion.
+  ---------------------------------------------------------------- */
+  function prepareHero() {
+    // The hero's images load first: the shutter waits for them.
+    media.querySelectorAll('img').forEach((img) => { img.loading = 'eager'; });
+    if (reduced) return;
+
+    utils.set(hero.top, { opacity: 0 });
+    utils.set(hero.tags, { opacity: 0 });
+    if (hero.ruler) utils.set(hero.ruler, { scaleX: 0 });
+    // Each block stays dark until its lines exist, then they wait in their masks.
+    hero.lines = hero.copy.map((el) => {
+      const lines = Site.splitLines(el);
+      utils.set(el, { opacity: 0 });
+      lines.ready.then(() => utils.set(el, { opacity: 1 }));
+      return lines;
+    });
+    utils.set(media, { clipPath: 'inset(50% 0% 50% 0%)' });
+    utils.set(hero.meta, { opacity: 0 });
+    utils.set(hero.metaItems, { opacity: 0, translateY: 14 });
+
+    if (heroKind === 'live') {
+      const tilt = hero.cover.querySelector('.case-hero-tilt');
+      utils.set(hero.cover, { opacity: 0, translateY: 30 });
+      utils.set(tilt.querySelector('img'), { clipPath: 'inset(0% 100% 0% 0%)' });
+      utils.set(tilt.querySelector('.case-hero-scan'), { left: '0%', opacity: 1 });
+      utils.set(tilt.querySelectorAll('.case-hotspot'), { scale: 0, opacity: 0 });
+    } else if (heroKind === 'cover') {
+      // The shared scan primitive (style.css): a line of light leaves the
+      // cover behind it. Marked ready so core.js leaves it to us.
+      hero.cover.setAttribute('data-reveal', 'scan');
+      hero.cover.setAttribute('data-reveal-ready', '');
+      utils.set(hero.cover, { '--scan': 0, translateY: 24 });
+    } else if (heroKind === 'screens') {
+      utils.set(media.querySelectorAll('.case-hero-screens .screen-slot'), { opacity: 0, translateY: 40 });
+      if (charge) charge.prepare();
+    } else if (heroKind === 'device') {
+      utils.set(media.querySelectorAll('.wf-fill span'), { scaleX: 0, transformOrigin: '0% 50%' });
+    }
+  }
+
+  /* ----------------------------------------------------------------
+     11. HERO ENTRANCE — the badge line comes up and its ruler draws
+         on, then the subtitle, title and tagline rise line by line out
+         of their masks and the disciplines follow; the spec sheet
+         comes in once it is on screen.
   ---------------------------------------------------------------- */
   function heroEntrance() {
-    const tl = gsap.timeline({ delay: 0.1 });
-    tl.to('.case-hero-top', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0)
-      .to('.case-hero .hero-tag', { y: '0%', duration: 1, ease: 'power4.out' }, 0.1)
-      .to('.case-hero-title .line', { y: '0%', duration: 1.1, ease: 'power4.out' }, 0.2)
-      .to('.case-tagline', { opacity: 1, y: 0, duration: 0.9, ease: 'power4.out' }, 0.45)
-      .to('.case-hero-media', { opacity: 1, scale: 1, duration: 1, ease: 'power4.out' }, 0.55)
-      .to('.case-meta-bar', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.75);
-  }
+    if (reduced) return;
+    const [subtitle, title, tagline] = hero.lines;
+    const tl = createTimeline({ defaults: { ease: ease.out } })
+      .add(hero.top, { opacity: [0, 1], translateY: [10, 0], duration: 900, delay: stagger(90) }, 0)
+      .call(() => subtitle.play({ duration: 1100 }), 80)
+      .call(() => title.play({ duration: 1500, stagger: 120 }), 160)
+      .call(() => tagline.play({ duration: 1200, stagger: 90 }), 560)
+      .add(hero.tags, { opacity: [0, 1], translateY: [10, 0], duration: 900, delay: stagger(70) }, 900);
+    if (hero.ruler) tl.add(hero.ruler, { scaleX: [0, 1], duration: 1700, ease: ease.inOut }, 60);
 
-  function initCaseReveals() {
-    gsap.utils.toArray('.reveal-text').forEach((el) => {
-      gsap.fromTo(el, { y: 60, skewY: 3, opacity: 0 }, {
-        y: 0, skewY: 0, opacity: 1, duration: 1, ease: 'power4.out',
-        scrollTrigger: { trigger: el, start: 'top 88%' },
-      });
-    });
-
-    gsap.utils.toArray('.section-index').forEach((el) => {
-      gsap.fromTo(el, { opacity: 0, y: 20 }, {
-        opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 92%' },
-      });
-    });
-
-    gsap.utils.toArray('.case-approach-card').forEach((el, i) => {
-      gsap.fromTo(el, { opacity: 0, y: 40 }, {
-        opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: (i % 2) * 0.1,
-        scrollTrigger: { trigger: el, start: 'top 92%' },
-      });
-    });
-
-    gsap.utils.toArray('.case-flow-item').forEach((el) => {
-      gsap.fromTo(el, { opacity: 0, y: 60 }, {
-        opacity: 1, y: 0, duration: 1, ease: 'power4.out',
-        scrollTrigger: { trigger: el, start: 'top 88%' },
-      });
-    });
-
-    gsap.utils.toArray('.case-testing-card').forEach((el, i) => {
-      gsap.fromTo(el, { opacity: 0, y: 40 }, {
-        opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: (i % 3) * 0.08,
-        scrollTrigger: { trigger: el, start: 'top 92%' },
-      });
-    });
-
-    gsap.utils.toArray('.case-reveal').forEach((el) => {
-      gsap.fromTo(el, { opacity: 0, y: 40 }, {
-        opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 92%' },
-      });
-    });
-
-    gsap.utils.toArray('.screen-grid .screen-slot').forEach((el, i) => {
-      gsap.fromTo(el, { opacity: 0, y: 50 }, {
-        opacity: 1, y: 0, duration: 0.9, ease: 'power4.out', delay: (i % 4) * 0.08,
-        scrollTrigger: { trigger: el, start: 'top 92%' },
-      });
-    });
-
-    gsap.fromTo('.case-impact-stat', { opacity: 0, y: 30 }, {
-      opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.12,
-      scrollTrigger: { trigger: '.case-impact-grid', start: 'top 88%' },
-    });
-
-    gsap.fromTo('.case-next-link .line', { y: '110%' }, {
-      y: '0%', duration: 1, ease: 'power4.out',
-      scrollTrigger: { trigger: '.case-next-link', start: 'top 92%' },
-    });
-
-    gsap.fromTo('.contact-cta .line', { y: '110%' }, {
-      y: '0%', duration: 1, ease: 'power4.out',
-      scrollTrigger: { trigger: '.contact-cta', start: 'top 90%' },
+    whenInView(hero.meta, 1000, (delay) => {
+      createTimeline({ delay, defaults: { ease: ease.out } })
+        .add(hero.meta, { opacity: [0, 1], duration: 700, ease: 'out(2)' }, 0)
+        .add(hero.metaItems, { opacity: [0, 1], translateY: [14, 0], duration: 1000, delay: stagger(80) }, 100);
     });
   }
 
   /* ----------------------------------------------------------------
-     9b. Signature hero-screen animation — each project's device
-     mockup demonstrates its own core idea instead of sitting static:
-     the wireframe meters visibly fill to their level.
+     12. SIGNATURE HERO SCREEN — the media opens like a shutter from
+         its centre seam, then each cover shows its own idea: the IVI
+         screen boots with a scan and its wheel sensors ping; a plain
+         cover is crossed by studio light; the EV cover runs a day of
+         smart charging.
   ---------------------------------------------------------------- */
-  const heroIntervals = [];
   function animateHeroScreen() {
-    if (reducedMotion) {
+    if (reduced) {
       if (charge) charge.render(charge.still);
       return;
     }
+    restOffscreen(media, (on) => { if (charge) charge.setVisible(on); });
+    if (heroKind === 'live') armTilt();
 
-    if (data.heroImage && data.heroImage.hotspots) {
-      const tilt = document.querySelector('.case-hero-tilt');
-      const shot = tilt.querySelector('img');
-      const spots = gsap.utils.toArray('.case-hotspot');
+    whenInView(media, 420, (delay) => {
+      animate(media, {
+        clipPath: ['inset(50% 0% 50% 0%)', 'inset(0% 0% 0% 0%)'],
+        duration: 1400,
+        delay,
+        ease: ease.inOut,
+        onComplete: () => { media.style.clipPath = ''; },
+      });
+      const at = delay + 380;
 
-      gsap.set(shot, { clipPath: 'inset(0 100% 0 0)' });
-      gsap.set('.case-hero-scan', { left: '0%', opacity: 1 });
-      gsap.set(spots, { scale: 0, opacity: 0 });
-
-      gsap.timeline({ delay: 0.3 })
-        .fromTo('.case-hero-cover', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0)
-        .to(shot, { clipPath: 'inset(0 0% 0 0)', duration: 2, ease: 'power2.inOut' }, 0.3)
-        .to('.case-hero-scan', { left: '100%', duration: 2, ease: 'power2.inOut' }, 0.3)
-        .to('.case-hero-scan', { opacity: 0, duration: 0.3 }, 2.3)
-        .to(spots, { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(2.2)', stagger: 0.15 }, 1.1);
-
-      // Tilt toward the cursor, the way a screen angled in a dashboard would.
-      if (!isTouch) {
-        const rotX = gsap.quickTo(tilt, 'rotationX', { duration: 0.8, ease: 'power3.out' });
-        const rotY = gsap.quickTo(tilt, 'rotationY', { duration: 0.8, ease: 'power3.out' });
-        gsap.set(tilt, { transformPerspective: 1400 });
-        const media = document.getElementById('caseHeroMedia');
-        media.addEventListener('pointermove', (e) => {
-          const r = media.getBoundingClientRect();
-          rotY(((e.clientX - r.left) / r.width - 0.5) * 9);
-          rotX(-((e.clientY - r.top) / r.height - 0.5) * 6);
+      if (heroKind === 'live') {
+        const tilt = hero.cover.querySelector('.case-hero-tilt');
+        const scan = tilt.querySelector('.case-hero-scan');
+        createTimeline({ delay: at })
+          .add(hero.cover, { opacity: [0, 1], translateY: [30, 0], duration: 1200, ease: ease.out }, 0)
+          .add(tilt.querySelector('img'), { clipPath: ['inset(0% 100% 0% 0%)', 'inset(0% 0% 0% 0%)'], duration: 2000, ease: ease.inOut }, 300)
+          .add(scan, { left: ['0%', '100%'], duration: 2000, ease: ease.inOut }, 300)
+          .add(scan, { opacity: [1, 0], duration: 400, ease: 'out(2)' }, 2250)
+          .add(tilt.querySelectorAll('.case-hotspot'), { scale: [0, 1], opacity: [0, 1], duration: 900, ease: ease.out, delay: stagger(150) }, 1100);
+      } else if (heroKind === 'cover') {
+        createTimeline({ delay: at, onComplete: () => hero.cover.removeAttribute('data-reveal') })
+          .add(hero.cover, { translateY: [24, 0], duration: 1600, ease: ease.out }, 0)
+          .add(hero.cover, { '--scan': [0, 1], duration: 1900, ease: ease.inOut }, 0);
+      } else if (heroKind === 'screens') {
+        animate(media.querySelectorAll('.case-hero-screens .screen-slot'), {
+          opacity: [0, 1],
+          translateY: [40, 0],
+          duration: 1300,
+          ease: ease.out,
+          delay: stagger(130, { from: 'center', start: at }),
         });
-        media.addEventListener('pointerleave', () => { rotX(0); rotY(0); });
+        if (charge) charge.play(Math.max(0, at - 200));
+      } else if (heroKind === 'device') {
+        animate(media.querySelectorAll('.wf-fill span'), { scaleX: [0, 1], duration: 1300, delay: at, ease: ease.out });
       }
-      return;
-    }
-
-    if (data.heroImage) {
-      gsap.fromTo('.case-hero-cover', { opacity: 0, y: 40 }, {
-        opacity: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out',
-      });
-      return;
-    }
-
-    if (data.heroScreens) {
-      gsap.fromTo('.case-hero-screens .screen-slot', { opacity: 0, y: 40 }, {
-        opacity: 1, y: 0, duration: 0.9, stagger: 0.12, delay: 0.2, ease: 'power3.out',
-      });
-      if (charge) charge.play();
-      return;
-    }
-
-    const root = document.getElementById('caseHeroDevice');
-    if (!root) return;
-
-    gsap.utils.toArray(root.querySelectorAll('.wf-fill span')).forEach((el) => {
-      const target = el.style.width;
-      gsap.fromTo(el, { width: '0%' }, { width: target, duration: 1.3, ease: 'power3.out', delay: 0.2 });
     });
   }
-  window.addEventListener('beforeunload', () => heroIntervals.forEach(clearInterval));
 
-  function initImpactCounters() {
+  // The live cover leans toward the cursor, like a screen angled in a dashboard.
+  function armTilt() {
+    const tilt = media.querySelector('.case-hero-tilt');
+    if (!tilt || Site.touch) return;
+    utils.set(tilt, { perspective: '1400px', rotateX: 0, rotateY: 0 });
+    const lean = createAnimatable(tilt, { rotateX: 900, rotateY: 900, ease: 'out(3)' });
+    media.addEventListener('pointermove', (e) => {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      const r = media.getBoundingClientRect();
+      lean.rotateY(((e.clientX - r.left) / r.width - 0.5) * 9);
+      lean.rotateX(-((e.clientY - r.top) / r.height - 0.5) * 6);
+    });
+    media.addEventListener('pointerleave', () => {
+      lean.rotateX(0);
+      lean.rotateY(0);
+    });
+  }
+
+  /* ----------------------------------------------------------------
+     13. SCROLL REVEALS — declared with data-reveal and armed by
+         core.js (Site.reveals). Display copy rises line by line, body
+         copy and blocks lift, flow media is crossed by a line of light,
+         grid tiles fill in, and items sharing a row step in left to
+         right. Impact figures roll on odometer drums; decimals keep
+         their point.
+  ---------------------------------------------------------------- */
+  const LINE_COPY = '.case-copy-lg, .case-section-title, .case-subtitle, .case-closing, .case-next-eyebrow, .case-chapter-head h3, .case-insight h3';
+  // Tiles of a hairline grid (1px gaps over a line-coloured ground) stay
+  // put and only their contents lift in, so the ground never shows
+  // through as a solid block while they arrive.
+  const TILES = '.case-approach-card, .case-testing-card, .case-panel, .case-direction';
+  const BLOCKS = `${TILES}, .case-impact-stat, .case-reveal, .screen-grid .screen-slot, .case-flow-text`;
+
+  function armReveals() {
+    const main = byId('main');
+    // Only the case template's own sections: hidden ones and the contact region are left alone.
+    const shown = (el) => !el.closest('[hidden], #contact');
+    const all = (sel) => [...main.querySelectorAll(sel)].filter(shown);
+    const mark = (el, type, delay) => {
+      if (!el || el.hasAttribute('data-reveal')) return;
+      el.setAttribute('data-reveal', type);
+      if (delay) el.setAttribute('data-reveal-delay', String(delay));
+    };
+
+    all('.reveal-text').forEach((el) => mark(el, el.matches(LINE_COPY) && !el.children.length ? 'lines' : 'up'));
+    rowDelays(all(BLOCKS), 90).forEach(([el, delay]) => mark(el, el.matches(TILES) ? 'stagger' : 'up', delay));
+    all('.case-flow-media').forEach((el) => mark(el, 'scan'));
+    mark(byId('caseNextTitle'), 'lines');
+
+    // core.js armed the page before this content existed.
+    main.querySelectorAll('.case-hero, .case-section, .case-next').forEach((section) => {
+      Site.reveals(section);
+      Site.rules(section);
+    });
+  }
+
+  function armCounters() {
     document.querySelectorAll('.case-impact-num').forEach((el) => {
-      const target = parseFloat(el.getAttribute('data-count'));
-      const decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
-      const counter = { val: 0 };
-      ScrollTrigger.create({
-        trigger: el,
-        start: 'top 90%',
-        once: true,
-        onEnter: () => {
-          gsap.to(counter, {
-            val: target,
-            duration: 1.6,
-            ease: 'power2.out',
-            onUpdate: () => {
-              el.textContent = decimals ? counter.val.toFixed(decimals) : Math.floor(counter.val);
-            },
-          });
-        },
+      const decimals = Number(el.dataset.decimals || 0);
+      const count = Number(el.dataset.count);
+      if (Number.isNaN(count)) return;
+      const value = count.toFixed(decimals);
+      el.textContent = value;
+      if (reduced || el.closest('[hidden]')) return;
+      const stat = el.closest('.case-impact-stat');
+      const delay = Number((stat && stat.dataset.revealDelay) || 0) + 150;
+      utils.set(el, { opacity: 0 });
+      Site.observe(el, () => {
+        utils.set(el, { opacity: 1 });
+        Site.odometer(el, { value, delay, duration: 1800, turns: 1 });
       });
     });
   }
 
   /* ----------------------------------------------------------------
-     9c. Zoom — exported screens are 2x, so any image tagged `data-zoom`
-     opens full-width in an overlay with its own scroll for tall ones.
+     14. ZOOM — exported screens are 2x, so any image tagged data-zoom
+         opens full width in an overlay with its own scroll. The
+         reticle reads "Zoom" over them. Escape, the close button or a
+         click outside the image closes it; focus returns to the image.
   ---------------------------------------------------------------- */
   function initZoom() {
-    if (!document.querySelector('img[data-zoom]')) return;
+    const zoomables = document.querySelectorAll('img[data-zoom]');
+    if (!zoomables.length) return;
 
     const box = document.createElement('div');
     box.className = 'zoom-overlay';
@@ -1057,98 +1236,108 @@
     document.body.appendChild(box);
 
     const img = box.querySelector('img');
+    const scroller = box.querySelector('.zoom-scroll');
     const closeBtn = box.querySelector('.zoom-close');
-    const cursor = document.getElementById('cursor');
-    const cursorLabel = document.getElementById('cursorLabel');
     let lastFocus = null;
+    let hideTimer = 0;
 
-    const resetCursor = () => {
-      if (!cursor || isTouch) return;
-      cursor.classList.remove('is-hover', 'is-label');
-      gsap.to(cursor, { width: 16, height: 16, duration: 0.35, ease: 'power3.out' });
-    };
+    // Keyboard: every export a reader can reach opens like a button.
+    zoomables.forEach((el) => {
+      if (el.closest('[aria-hidden="true"]')) return;
+      el.tabIndex = 0;
+      el.setAttribute('role', 'button');
+      el.setAttribute('aria-haspopup', 'dialog');
+      el.setAttribute('aria-label', `${el.alt || 'Image'} (open full size)`);
+    });
 
     function open(src, alt) {
+      clearTimeout(hideTimer);
       lastFocus = document.activeElement;
       img.src = src;
       img.alt = alt;
       box.hidden = false;
-      box.scrollTop = 0;
-      box.querySelector('.zoom-scroll').scrollTop = 0;
-      requestAnimationFrame(() => box.classList.add('is-open'));
-      if (typeof lenis !== 'undefined') lenis.stop();
-      resetCursor();
-      closeBtn.focus();
+      scroller.scrollTop = 0;
+      void box.offsetWidth; // commit the closed state so the fade runs
+      box.classList.add('is-open');
+      if (!reduced) animate(img, { opacity: [0, 1], translateY: [24, 0], duration: 900, ease: ease.out });
+      Site.scroll.stop();
+      Site.cursor.reset();
+      closeBtn.focus({ preventScroll: true });
     }
+
+    const isOpen = () => box.classList.contains('is-open');
 
     function close() {
+      if (!isOpen()) return;
       box.classList.remove('is-open');
-      setTimeout(() => { box.hidden = true; img.removeAttribute('src'); }, 250);
-      if (typeof lenis !== 'undefined') lenis.start();
-      if (lastFocus) lastFocus.focus({ preventScroll: true });
+      hideTimer = setTimeout(() => {
+        box.hidden = true;
+        img.removeAttribute('src');
+      }, 250);
+      Site.scroll.start();
+      if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
     }
 
-    document.addEventListener('click', (e) => {
-      const target = e.target.closest('img[data-zoom]');
-      if (target && !box.contains(target)) open(target.currentSrc || target.src, target.alt);
-    });
-    box.addEventListener('click', (e) => { if (e.target !== img) close(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !box.hidden) close(); });
-
-    if (!isTouch && cursor) {
-      document.addEventListener('mouseover', (e) => {
-        const target = e.target.closest && e.target.closest('img[data-zoom]');
-        if (!target || box.contains(target)) return;
-        cursorLabel.textContent = 'Zoom';
-        cursor.classList.add('is-hover', 'is-label');
-        gsap.to(cursor, { width: 90, height: 90, duration: 0.35, ease: 'power3.out' });
-      });
-      document.addEventListener('mouseout', (e) => {
-        const target = e.target.closest && e.target.closest('img[data-zoom]');
-        if (target && !box.contains(target)) resetCursor();
-      });
-    }
-  }
-
-  const reducedMotion = typeof isReducedMotion !== 'undefined' && isReducedMotion;
-
-  if (!reducedMotion) {
-    gsap.set('.case-hero-top', { opacity: 0, y: -10 });
-    gsap.set('.case-tagline', { opacity: 0, y: 20 });
-    gsap.set('.case-hero-media', { opacity: 0, scale: 1.06 });
-    gsap.set('.case-meta-bar', { opacity: 0, y: 20 });
-  }
-
-  function boot() {
-    initCaseReveals();
-    initImpactCounters();
-    initZoom();
-
-    const afterCover = () => {
-      if (!reducedMotion) heroEntrance();
-      animateHeroScreen();
-      ScrollTrigger.refresh();
+    const zoomTarget = (e) => {
+      const el = e.target.closest && e.target.closest('img[data-zoom]');
+      return el && !box.contains(el) ? el : null;
     };
 
-    if (window.revealPageTransition) {
-      window.revealPageTransition(afterCover);
-    } else {
-      afterCover();
-    }
+    document.addEventListener('click', (e) => {
+      const el = zoomTarget(e);
+      if (el) open(el.currentSrc || el.src, el.alt);
+    });
+    box.addEventListener('click', (e) => { if (e.target !== img) close(); });
+    document.addEventListener('keydown', (e) => {
+      if (isOpen()) {
+        if (e.key === 'Escape') close();
+        else if (e.key === 'Tab') {
+          e.preventDefault();
+          closeBtn.focus();
+        }
+        return;
+      }
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const el = zoomTarget(e);
+      if (!el) return;
+      e.preventDefault();
+      open(el.currentSrc || el.src, el.alt);
+    });
+    document.addEventListener('mouseover', (e) => { if (zoomTarget(e)) Site.cursor.set('Zoom'); });
+    document.addEventListener('mouseout', (e) => {
+      const el = zoomTarget(e);
+      if (el && !(e.relatedTarget && el.contains(e.relatedTarget))) Site.cursor.reset();
+    });
   }
 
-  if (document.readyState === 'complete') {
-    boot();
-  } else {
-    window.addEventListener('load', boot);
+  /* ----------------------------------------------------------------
+     15. BOOT — hidden states and reveals are armed behind the closed
+         shutter. It opens once the fonts and hero images are in (or
+         after 2.6 s at most), then the hero comes up.
+  ---------------------------------------------------------------- */
+  function ready() {
+    const waits = [...media.querySelectorAll('img')].map((img) => (img.decode ? img.decode().catch(() => {}) : null));
+    if (document.fonts && document.fonts.ready) waits.push(document.fonts.ready);
+    return Promise.race([Promise.all(waits), new Promise((resolve) => setTimeout(resolve, 2600))]);
   }
 
-  // Safety net: never leave the viewer staring at a stuck cover.
-  setTimeout(() => {
-    const overlay = document.getElementById('pageTransition');
-    if (overlay && overlay.classList.contains('is-covering')) {
-      overlay.classList.remove('is-covering');
-      overlay.style.display = 'none';
-    }
-  }, 4000);
+  prepareHero();
+  armReveals();
+  armCounters();
+  initZoom();
+  Site.nav.refresh();
+  if (!reduced) document.querySelectorAll('.case-playground-preview').forEach((el) => restOffscreen(el));
+
+  ready()
+    .then(() => {
+      // Fonts are in: measure the readout names for real.
+      nameSections();
+      Site.nav.refresh();
+      return Site.transition.reveal();
+    })
+    .then(() => {
+      heroEntrance();
+      animateHeroScreen();
+      Site.emit('intro:done');
+    });
 })();

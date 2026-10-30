@@ -1,0 +1,552 @@
+/* ==================================================================
+   NITESH DIXIT — PORTFOLIO 2026 · home sections
+   02 About   — "The Spec Sheet". The one ivory section: the copy inks
+                in as it is read, the capabilities sit in a coded spec
+                table, and a coachbuilder's sill plate signs it off.
+   03 Journey — "Telemetry". An instrument cluster that self-tests on
+                arrival, then the brand wall behind fine panel gaps.
+   Gauge dials and the copy's word split are built by home-sections.js.
+   ================================================================== */
+
+/* ==================================================================
+   02 · ABOUT — THE SPEC SHEET
+   ================================================================== */
+.about {
+  isolation: isolate;
+  overflow: clip;
+}
+
+/* Drafting paper: a 16 px minor / 80 px major grid, struck from the
+   gutter and fading out toward the edges of the sheet. */
+.about::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  --g1: rgba(13, 13, 14, 0.055);
+  --g2: rgba(13, 13, 14, 0.028);
+  background:
+    linear-gradient(var(--g1) 1px, transparent 1px) 0 var(--section-pad) / 100% 80px,
+    linear-gradient(90deg, var(--g1) 1px, transparent 1px) var(--gutter) 0 / 80px 100%,
+    linear-gradient(var(--g2) 1px, transparent 1px) 0 var(--section-pad) / 100% 16px,
+    linear-gradient(90deg, var(--g2) 1px, transparent 1px) var(--gutter) 0 / 16px 100%;
+  -webkit-mask-image: radial-gradient(85% 70% at 62% 42%, #000 18%, transparent 78%);
+          mask-image: radial-gradient(85% 70% at 62% 42%, #000 18%, transparent 78%);
+}
+
+.about > .rule { margin-bottom: clamp(3.5rem, 7vw, 6.5rem); }
+
+.about-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(17rem, 27vw, 25.5rem);
+  align-items: end;
+  column-gap: clamp(2.5rem, 6vw, 6.5rem);
+}
+
+/* ---- The statement: light Archivo, set like a printed spec note ---- */
+.about-copy {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 300;
+  font-size: clamp(1.85rem, 0.75rem + 3.3vw, 4.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.024em;
+  color: var(--c-fg);
+  text-wrap: pretty;
+}
+.about-copy em { font-weight: 500; }
+/* splitText's line wrappers: a little clip margin keeps descenders. */
+.about-copy > span { overflow-clip-margin: 0.06em; }
+
+/* ---- Sill plate — brushed steel, engraved, four countersunk screws ---- */
+.about-plate {
+  margin: 0;
+  display: grid;
+  gap: 1.15rem;
+  padding-bottom: 0.4rem;
+}
+.plate {
+  --brush: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='300'%3E%3Cfilter id='b' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0032 0.95' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23b)'/%3E%3C/svg%3E");
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  aspect-ratio: 2.3 / 1;
+  padding: 1.45em 1.9em 1.35em;
+  font-size: clamp(0.66rem, 0.42rem + 0.42vw, 0.86rem);
+  color: #2b2c30;
+  overflow: clip;
+  background:
+    var(--brush) 0 0 / 100% 100%,
+    linear-gradient(112deg, rgba(255, 255, 255, 0) 18%, rgba(255, 255, 255, 0.5) 41%, rgba(255, 255, 255, 0) 57%),
+    linear-gradient(180deg, #d4d5d8 0%, #b5b6ba 34%, #a2a3a8 62%, #c3c4c8 100%);
+  background-blend-mode: soft-light, normal, normal;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    inset 1px 0 0 rgba(255, 255, 255, 0.4),
+    inset -1px 0 0 rgba(0, 0, 0, 0.16),
+    0 0 0 1px rgba(13, 13, 14, 0.2),
+    0 1px 0 1px rgba(255, 255, 255, 0.55),
+    0 22px 34px -22px rgba(13, 13, 14, 0.55),
+    0 3px 6px rgba(13, 13, 14, 0.1);
+}
+
+/* Engraved lettering: dark in the cut, a lit lower lip. */
+.plate-row,
+.plate-name {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.62), 0 -1px 0 rgba(0, 0, 0, 0.12);
+}
+.plate-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.86em;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding-inline: 0.9em;
+}
+.plate-row--foot { padding-top: 1.05em; }
+.plate-name {
+  align-self: end;
+  padding: 0 0.42em 0.5em;
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 600;
+  font-size: 2.55em;
+  line-height: 0.9;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+/* The engraved rule between the name and the foot line. */
+.plate-cut {
+  position: relative;
+  z-index: 1;
+  height: 2px;
+  margin-inline: 0.9em;
+  background: linear-gradient(rgba(25, 26, 30, 0.42) 0 1px, rgba(255, 255, 255, 0.6) 1px 2px);
+}
+
+/* Countersunk screws; the slot turns with --turn. */
+.plate-screw {
+  --turn: 0;
+  position: absolute;
+  z-index: 2;
+  width: 1.05em;
+  height: 1.05em;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #fbfbfb 0%, #d2d3d6 32%, #8e8f94 72%, #6c6d72 100%);
+  box-shadow:
+    0 0 0 1px rgba(30, 31, 35, 0.35),
+    0 1px 0 1px rgba(255, 255, 255, 0.55),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.25);
+}
+.plate-screw::after {
+  content: '';
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: linear-gradient(rgba(30, 31, 35, 0.75) 0 1px, rgba(255, 255, 255, 0.55) 1px 2px);
+  transform: rotate(calc(var(--a) + var(--turn) * 1deg));
+}
+.plate-screw:nth-of-type(1) { left: 0.75em; top: 0.75em; --a: 28deg; }
+.plate-screw:nth-of-type(2) { right: 0.75em; top: 0.75em; --a: -52deg; }
+.plate-screw:nth-of-type(3) { left: 0.75em; bottom: 0.75em; --a: 81deg; }
+.plate-screw:nth-of-type(4) { right: 0.75em; bottom: 0.75em; --a: -14deg; }
+
+/* One pass of studio light across the steel (home-sections.js). */
+.plate-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(108deg,
+    rgba(255, 255, 255, 0) 33%,
+    rgba(255, 255, 255, 0.28) 43%,
+    rgba(255, 255, 255, 0.9) 49%,
+    rgba(255, 255, 255, 0.9) 51%,
+    rgba(255, 255, 255, 0.28) 57%,
+    rgba(255, 255, 255, 0) 67%);
+  mix-blend-mode: overlay;
+  transform: translateX(-100%);
+}
+
+.about-plate-dim { color: var(--c-fg-3); }
+
+/* ---- Capabilities — a coded spec table ---- */
+.about-caps { margin-top: clamp(4.5rem, 9vw, 8rem); }
+.about-caps-head {
+  display: grid;
+  grid-template-columns: auto minmax(2rem, 1fr) auto;
+  align-items: end;
+  column-gap: clamp(0.75rem, 1.6vw, 1.5rem);
+  margin-bottom: clamp(1.1rem, 2vw, 1.6rem);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.about-caps-head > span:first-child { color: var(--c-fg); }
+.about-caps-ticks {
+  height: 9px;
+  transform-origin: left center;
+  background:
+    repeating-linear-gradient(90deg, var(--c-line-2) 0 1px, transparent 1px 80px) left bottom / 100% 9px no-repeat,
+    repeating-linear-gradient(90deg, var(--c-line) 0 1px, transparent 1px 8px) left bottom / 100% 4px no-repeat;
+}
+
+.about-caps-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, auto);
+  grid-auto-flow: column;
+  column-gap: clamp(1.5rem, 4vw, 3.5rem);
+  counter-reset: cap;
+}
+.cap {
+  --draw: 1;
+  position: relative;
+  display: grid;
+  grid-template-columns: 4.1rem minmax(0, 1fr);
+  align-items: baseline;
+  padding: clamp(0.95rem, 1.5vw, 1.2rem) 0 clamp(1rem, 1.6vw, 1.3rem);
+  background: linear-gradient(var(--c-line-2), var(--c-line-2)) left top / calc(var(--draw) * 100%) 1px no-repeat;
+}
+.cap::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 7px;
+  background: var(--c-fg-3);
+  opacity: var(--draw);
+}
+/* Close each column with a hairline under its last row. */
+.cap:nth-child(3n)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--c-line);
+  transform: scaleX(var(--draw));
+  transform-origin: left center;
+}
+.cap-code {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  color: var(--c-signal);
+  font-variant-numeric: tabular-nums;
+}
+.cap-name {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: clamp(1.02rem, 0.88rem + 0.42vw, 1.35rem);
+  line-height: 1.25;
+  letter-spacing: -0.008em;
+  color: var(--c-fg);
+}
+
+/* ==================================================================
+   03 · JOURNEY — TELEMETRY
+   ================================================================== */
+.journey > .rule { margin-bottom: clamp(3.5rem, 7vw, 6rem); }
+
+.journey-heading {
+  max-width: 25ch;
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 300;
+  font-size: clamp(1.65rem, 0.85rem + 2.35vw, 3.3rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--c-fg-2);
+  text-wrap: pretty;
+}
+.journey-heading em { color: var(--c-fg); font-weight: 520; }
+
+/* ---- The instrument cluster ---- */
+.cluster {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.32fr) minmax(0, 1fr);
+  align-items: end;
+  column-gap: clamp(1.5rem, 5vw, 5rem);
+  max-width: 64rem;
+  margin: clamp(4.5rem, 9vw, 7.5rem) auto 0;
+  padding-bottom: 2.6rem;
+}
+/* The binnacle's baseline: a ruler the three instruments stand on. */
+.cluster::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 12px;
+  background:
+    linear-gradient(var(--c-line-2), var(--c-line-2)) left bottom / 100% 1px no-repeat,
+    repeating-linear-gradient(90deg, var(--c-fg-3) 0 1px, transparent 1px 25%) left bottom / calc(100% + 1px) 12px no-repeat,
+    repeating-linear-gradient(90deg, var(--c-line-2) 0 1px, transparent 1px 10px) left bottom / 100% 5px no-repeat;
+}
+.gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.gauge-body {
+  position: relative;
+  order: -1;
+  width: 100%;
+  aspect-ratio: 1;
+}
+.gauge-dial {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.gauge-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85em;
+  margin-top: 0.4rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--c-fg);
+  white-space: nowrap;
+}
+.gauge-code { color: var(--c-signal); }
+
+/* Digital readout, set in the open foot of the dial. */
+.gauge-read {
+  position: absolute;
+  left: 50%;
+  top: 73%;
+  transform: translate(-50%, -50%);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-weight: 250;
+  font-size: clamp(1.5rem, 0.9rem + 1.5vw, 2.4rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--c-fg);
+  white-space: nowrap;
+}
+.gauge--main .gauge-read { font-size: clamp(2rem, 1.1rem + 2.2vw, 3.3rem); }
+
+/* Without JS there are no dials to draw: a plain row of readouts. */
+html:not(.js) .gauge-dial { display: none; }
+html:not(.js) .gauge-body { aspect-ratio: auto; padding-block: 1.5rem 1.25rem; text-align: center; }
+html:not(.js) .gauge-read { position: static; transform: none; }
+
+/* SVG parts (built in home-sections.js). */
+.g-bezel { fill: none; stroke: var(--c-line); stroke-width: 1; }
+.g-face { fill: none; stroke: var(--c-line); stroke-width: 1; stroke-dasharray: 1 5; }
+.g-ring { fill: none; stroke: var(--c-line-2); stroke-width: 1; }
+.g-red { fill: none; stroke: var(--c-signal); stroke-width: 3; opacity: 0.85; }
+.g-tick { stroke: var(--c-fg-4); stroke-width: 1.1; transition: stroke 0.22s var(--ease-soft); }
+.g-tick.is-mid { stroke-width: 1.3; }
+.g-tick.is-major { stroke-width: 1.8; }
+.g-tick.is-lit { stroke: var(--c-fg); }
+.g-tick.is-red { stroke: rgba(255, 59, 29, 0.38); }
+.g-tick.is-red.is-lit { stroke: var(--c-signal); }
+.g-num {
+  fill: var(--c-fg-3);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-anchor: middle;
+  dominant-baseline: central;
+  transition: fill 0.3s var(--ease-soft);
+}
+.gauge--main .g-num { font-size: 12.5px; }
+.g-num.is-lit { fill: var(--c-fg); }
+.g-num.is-red { fill: rgba(255, 59, 29, 0.6); }
+.g-num.is-red.is-lit { fill: var(--c-signal); }
+.g-unit {
+  fill: var(--c-fg-3);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-anchor: middle;
+  text-transform: uppercase;
+}
+.gauge--main .g-unit { font-size: 10px; }
+.g-needle-glow { fill: none; stroke: var(--c-signal); stroke-width: 7; stroke-linecap: round; opacity: 0.16; }
+.g-needle-body { fill: var(--c-signal); }
+.g-needle-tip { fill: none; stroke: #ffd9cf; stroke-width: 1; stroke-linecap: round; }
+.g-hub { fill: var(--c-bg); stroke: var(--c-fg-3); stroke-width: 1; }
+.g-hub-dot { fill: var(--c-fg-3); }
+
+/* ---- Brand wall — panels separated by fine gaps ---- */
+.brand-wall { margin-top: clamp(6rem, 12vw, 10rem); }
+.brands-rule { margin-bottom: clamp(1.5rem, 3vw, 2.25rem); }
+
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--c-line);
+  border-block: 1px solid var(--c-line);
+}
+.brand-cell {
+  /* --u: the optical unit — the height of a round badge such as VW.
+     Each logo's width is set in units of it, from its measured ink
+     box, so marks of every shape carry the same visual weight. */
+  --u: clamp(2.2rem, 1.35rem + 1.65vw, 3.2rem);
+  position: relative;
+  isolation: isolate;
+  height: clamp(7.25rem, 4rem + 8vw, 11rem);
+  background: var(--c-bg);
+  overflow: clip;
+}
+.brand-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--u) * var(--k, 1) / var(--fw, 1));
+  max-width: none;
+  height: auto;
+  translate: calc(var(--cx, 0.5) * -100%) calc(var(--cy, 0.5) * -100%);
+  /* Monochrome ivory: grey, invert (dark ink turns light, light
+     accents fall to mid-grey so overlapping shapes stay legible). */
+  filter: grayscale(1) invert(1) brightness(1.32) sepia(0.14);
+  opacity: 0.46;
+  transition: opacity 0.9s var(--ease-soft);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+/* Measured ink boxes: --fw = ink width / file width, --cx/--cy = ink
+   centre as a fraction of the file box, --k = width in --u. */
+.brand-cell[data-brand="audi"] { --k: 1.34; --fw: 0.681; --cx: 0.5035; --cy: 0.4965; }
+.brand-cell[data-brand="porsche"] { --k: 0.84; --fw: 0.403; --cx: 0.498; --cy: 0.5026; }
+.brand-cell[data-brand="vw"] { --k: 1; --fw: 0.4296; --cx: 0.5005; --cy: 0.5035; }
+.brand-cell[data-brand="edwisely"] { --k: 1.62; --fw: 0.9874; --cx: 0.4984; --cy: 0.499; }
+.brand-cell[data-brand="elextensions"] { --k: 1.7; --fw: 0.8098; --cx: 0.492; --cy: 0.4974; }
+.brand-cell[data-brand="reachship"] { --k: 2.05; --fw: 0.941; --cx: 0.5005; --cy: 0.5; }
+.brand-cell[data-brand="candescent"] { --k: 2.62; --fw: 0.7785; --cx: 0.3947; --cy: 0.4845; }
+.brand-cell[data-brand="learnwoo"] { --k: 2.5; --fw: 0.783; --cx: 0.4031; --cy: 0.4714; }
+.brand-cell[data-brand="zervise"] { --k: 2; --fw: 0.9954; --cx: 0.4977; --cy: 0.5467; }
+
+.brand-no {
+  position: absolute;
+  left: clamp(0.8rem, 1.4vw, 1.25rem);
+  top: clamp(0.75rem, 1.3vw, 1.1rem);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  color: var(--c-fg-4);
+  transition: color 0.6s var(--ease-soft);
+}
+/* Studio light that crosses a panel when it's hovered: overlay lifts
+   the ivory badge's mid-tones hard and leaves the dark panel dark. */
+.brand-cell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(104deg,
+    rgba(255, 248, 238, 0) 36%,
+    rgba(255, 248, 238, 0.5) 46%,
+    rgba(255, 248, 238, 0.95) 50%,
+    rgba(255, 248, 238, 0.5) 54%,
+    rgba(255, 248, 238, 0) 64%);
+  mix-blend-mode: overlay;
+  transform: translateX(-101%);
+}
+@media (hover: hover) {
+  .brand-cell:hover .brand-logo { opacity: 0.95; transition-duration: 0.6s; }
+  .brand-cell:hover .brand-no { color: var(--c-signal); }
+  .brand-cell:hover::after {
+    transform: translateX(101%);
+    transition: transform 1.25s var(--ease-in-out);
+  }
+}
+
+/* ==================================================================
+   RESPONSIVE
+   ================================================================== */
+@media (max-width: 1100px) {
+  .about-caps-list { column-gap: clamp(1.25rem, 3vw, 2rem); }
+}
+
+@media (max-width: 900px) {
+  .about-body { grid-template-columns: 1fr; row-gap: clamp(3rem, 8vw, 4.5rem); }
+  .about-plate { max-width: 26rem; }
+  .about-caps-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(5, auto);
+  }
+  .cap:nth-child(3n)::after { content: none; }
+  .cap:nth-child(5)::after,
+  .cap:nth-child(9)::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--c-line);
+    transform: scaleX(var(--draw));
+    transform-origin: left center;
+  }
+
+  .cluster {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas: 'main main' 'a b';
+    row-gap: 2.75rem;
+    max-width: 34rem;
+  }
+  .gauge--main { grid-area: main; width: min(100%, 22rem); justify-self: center; }
+  .gauge:first-child { grid-area: a; }
+  .gauge:last-child { grid-area: b; }
+}
+
+@media (max-width: 560px) {
+  .about-caps-list {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-auto-flow: row;
+  }
+  .cap:nth-child(5)::after { content: none; }
+  .cap { grid-template-columns: 3.6rem minmax(0, 1fr); }
+
+  .cluster { column-gap: 1.25rem; }
+  .gauge-label { flex-direction: column; align-items: center; gap: 0.5em; text-align: center; white-space: normal; }
+  /* The flanking dials render at ~half size here: larger numerals. */
+  .gauge:not(.gauge--main) .g-num { font-size: 21px; }
+  .gauge:not(.gauge--main) .g-unit { font-size: 17px; }
+  .gauge:not(.gauge--main) .gauge-read { font-size: 1.6rem; }
+
+  .brand-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .brand-cell { --u: 2.05rem; height: 7.25rem; }
+  .brand-cell:last-child { grid-column: 1 / -1; }
+}

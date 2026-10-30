@@ -101,7 +101,7 @@ window.CASE_STUDIES = {
       },
     },
 
-    next: 'offpeak',
+    next: 'hmi',
   },
 
   /* ================================================================ */
@@ -545,7 +545,7 @@ window.CASE_STUDIES = {
       },
     },
 
-    next: 'hmi',
+    next: 'suspension',
   },
 
   /* ================================================================ */
@@ -646,7 +646,7 @@ window.CASE_STUDIES = {
       },
     },
 
-    next: 'suspension',
+    next: 'offpeak',
   },
 
 };
