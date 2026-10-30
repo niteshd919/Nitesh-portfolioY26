@@ -12,7 +12,7 @@ window.CASE_STUDIES = {
     title: 'Suspension Diagnostics',
     subtitle: 'Sensor based suspension diagnostic system on IVI',
     tagline: 'See what the suspension sees, before the terrain does.',
-    year: '2026',
+    year: '2025',
     platform: 'In-car · Center infotainment display',
     scope: 'IVI concept for a next-generation SUV or electric off-road vehicle',
     tags: ['HMI', 'Automotive', 'Diagnostics'],
@@ -192,7 +192,7 @@ window.CASE_STUDIES = {
       intro: `This project is under NDA, so the page stops at the brief and a few
         screens. I’d love to walk you through the full process on a call.`,
       cta: 'Let’s set up a call',
-      url: 'mailto:hello@nitesh.design?subject=Tariff%20Based%20EV%20Charging%20case%20study',
+      url: 'mailto:sayhi@niteshdixit.in?subject=Tariff%20Based%20EV%20Charging%20case%20study',
       points: [
         { title: 'The framing', desc: 'How the problem was broken down, and the idea that shaped every screen.' },
         { title: 'The directions', desc: 'The concepts I explored, and how I chose between them.' },
@@ -554,7 +554,7 @@ window.CASE_STUDIES = {
     title: 'HMI',
     subtitle: 'Cockpit experience',
     tagline: 'Four surfaces, one cockpit.',
-    year: '2026',
+    year: '2024',
     platform: 'In-car · Škoda',
     scope: 'Virtual Cockpit, AR Head-Up Display, 13" infotainment, Laura voice assistant',
     tags: ['HMI', 'Automotive', 'Voice'],
