@@ -545,6 +545,23 @@ window.CASE_STUDIES = {
       },
     },
 
+    next: 'search',
+  },
+
+  /* ================================================================ */
+  /* A bespoke page (case-search.html) rather than this template: the
+     entry keeps the study's place in the series, and `href` sends every
+     link to it there. */
+  search: {
+    slug: 'search',
+    href: 'case-search.html',
+    title: 'The First Query',
+    subtitle: 'In-app search research',
+    tagline: 'Most people search once. This is how to make that once count.',
+    year: '2026',
+    tags: ['UX Research', 'Search', 'Conversational AI'],
+    gradient: 'linear-gradient(135deg,#ffb070,#1a1a1a)',
+    accent: '#ffb070',
     next: 'suspension',
   },
 

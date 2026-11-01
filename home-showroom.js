@@ -1,6 +1,6 @@
 /* ==================================================================
    NITESH DIXIT — PORTFOLIO 2026 · home · showroom
-   The selected work as a private viewing: four bays on one track.
+   The selected work as a private viewing: five bays on one track.
 
    ≥ 900px  The stage is sticky (CSS). Page scroll through the tall
             section pans the track bay by bay by seeking one paused
@@ -72,7 +72,8 @@
         sweep: q('.bay-sweep i'),
         cap: q('.bay-cap'),
         settle: q('.sus-zoom, .cf-plate img'),
-        rise: qa('.hmi-glass, .hmi-rise, .hmi-tag'),
+        rise: qa('.hmi-glass, .hmi-rise, .hmi-tag, .fqb-rise'),
+        typed: q('.fqb-q'),
         phones: qa('.ev-phone-body'),
         port: q('.ev-port'),
         led: q('.ev-port-led'),
@@ -321,12 +322,30 @@
     }
 
     /* ------------------------------------------------------------------
-       6. LOOPS — wheel-sensor pings, the charge port breathing. Created
-          once a bay has been shown, paused whenever it leaves the view,
-          never run with reduced motion.
+       6. LOOPS — wheel-sensor pings, the charge port breathing, queries
+          typed into the search box. Created once a bay has been shown,
+          paused whenever it leaves the view, never run with reduced
+          motion.
     ------------------------------------------------------------------ */
+    // Queries from the study, one per kind of failure it found.
+    const QUERIES = ['13in laptop', 'return policy', 'knee pain', 'freeze card'];
+
     function startLoops(b) {
       if (reduced || b.loops.length) return;
+      if (b.typed) {
+        const typing = createTimeline({ loop: true, autoplay: false });
+        let at = 0;
+        QUERIES.forEach((text) => {
+          const type = { n: 0 };
+          const wipe = { n: text.length };
+          const show = (o) => () => { b.typed.textContent = text.slice(0, Math.round(o.n)); };
+          typing.add(type, { n: [0, text.length], duration: text.length * 90, ease: 'linear', onUpdate: show(type) }, at);
+          at += text.length * 90 + 1900;
+          typing.add(wipe, { n: [text.length, 0], duration: text.length * 30, ease: 'linear', onUpdate: show(wipe) }, at);
+          at += text.length * 30 + 450;
+        });
+        b.loops.push(typing);
+      }
       if (b.pings.length) {
         b.loops.push(animate(b.pings, {
           scale: [0.92, 1.9],

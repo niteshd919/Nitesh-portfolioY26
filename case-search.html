@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The First Query — In-app search research — Nitesh Dixit</title>
+  <meta name="description" content="The First Query — a research-backed playbook for in-app search, from the first keystroke to conversational AI. Case study by Nitesh Dixit." />
+  <meta name="theme-color" content="#0a0a0b" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230a0a0b'/%3E%3Cpath d='M13 45a21 21 0 1 1 38 0' fill='none' stroke='%23ece9e2' stroke-width='3'/%3E%3Cpath d='M32 41 45 24' stroke='%23ff3b1d' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <script>document.documentElement.classList.add('js', 'is-transitioning');</script>
+
+  <!-- ============================================================
+       FONTS — Archivo (variable width + weight) + Martian Mono
+  ============================================================ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Martian+Mono:wdth,wght@75..112.5,100..800&display=swap" rel="stylesheet" />
+
+  <!-- ============================================================
+       STYLES — the shared system, the case-study template (hero,
+       rules, panels, tables, next project), then this study's climb.
+  ============================================================ -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="case-study.css" />
+  <link rel="stylesheet" href="case-search.css" />
+  <link rel="stylesheet" href="contact.css" />
+</head>
+<body class="page-case page-search">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============================================================
+       CURSOR — precision reticle (core.js)
+  ============================================================ -->
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <span class="cursor-dot"></span>
+    <span class="cursor-follow">
+      <span class="cursor-ring"></span>
+      <span class="cursor-label" id="cursorLabel"></span>
+    </span>
+  </div>
+
+  <!-- ============================================================
+       PAGE TRANSITION — starts closed; case-search.js opens it.
+  ============================================================ -->
+  <div class="pt is-covering" id="pageTransition" aria-hidden="true">
+    <div class="pt-slats">
+      <i class="pt-slat"></i><i class="pt-slat"></i><i class="pt-slat"></i>
+      <i class="pt-slat"></i><i class="pt-slat"></i><i class="pt-slat"></i>
+      <i class="pt-slat"></i><i class="pt-slat"></i><i class="pt-slat"></i>
+    </div>
+    <div class="pt-label">
+      <span class="pt-mask"><span class="pt-title">The First Query</span></span>
+      <span class="pt-mask"><span class="pt-eyebrow">Now entering</span></span>
+    </div>
+    <span class="pt-light"></span>
+  </div>
+  <script>
+    // Keep the words the last page closed the shutter on (transition.js).
+    try { const ptl = JSON.parse(sessionStorage.getItem('nd:pt')); sessionStorage.removeItem('nd:pt'); if (ptl) { document.querySelector('#pageTransition .pt-title').textContent = ptl.title; document.querySelector('#pageTransition .pt-eyebrow').textContent = ptl.eyebrow; } } catch (err) {}
+  </script>
+
+  <!-- ============================================================
+       THE CLIMB — night sky behind the page and the altimeter in the
+       margin. case-search.js drives both from the reader's altitude.
+  ============================================================ -->
+  <div class="fq-sky" id="fqSky" aria-hidden="true">
+    <span class="fq-sky-ground"></span>
+    <span class="fq-sky-stars is-far"></span>
+    <span class="fq-sky-stars"></span>
+    <span class="fq-sky-dawn"></span>
+  </div>
+
+  <aside class="fq-alt" id="fqAlt" aria-hidden="true">
+    <span class="fq-alt-head">Elev.</span>
+    <span class="fq-alt-tape">
+      <i class="fq-alt-fill"></i>
+      <ol class="fq-alt-marks"></ol>
+      <span class="fq-alt-needle"><b class="fq-alt-read">0</b><small>m</small></span>
+    </span>
+    <span class="fq-alt-foot">Sea level</span>
+  </aside>
+
+  <!-- ============================================================
+       NAV — identical to the homepage; links point back to it
+  ============================================================ -->
+  <header class="nav" id="nav">
+    <a href="index.html" class="nav-mark" data-transition data-transition-label="Nitesh Dixit" aria-label="Nitesh Dixit, home">Nitesh Dixit</a>
+    <div class="nav-readout" aria-hidden="true">
+      <span class="nav-readout-gauge"><i></i></span>
+      <span class="nav-readout-index">—</span>
+      <span class="nav-readout-name"><span>The First Query</span></span>
+    </div>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu">
+      <span class="menu-btn-label"><span>Menu</span><span>Close</span></span>
+      <span class="menu-btn-icon" aria-hidden="true"><i></i><i></i></span>
+    </button>
+  </header>
+
+  <!-- ============================================================
+       MENU — the index, behind a closing grille
+  ============================================================ -->
+  <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Site index">
+    <div class="menu-slats" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="menu-inner">
+      <div class="rule menu-rule">
+        <span class="rule-index">§</span>
+        <span class="rule-title">Index</span>
+        <span class="rule-line" aria-hidden="true"></span>
+        <span class="rule-meta">04 Destinations</span>
+      </div>
+      <ol class="menu-list">
+        <li><a href="index.html#work" class="menu-link" data-transition data-transition-label="Selected Work" data-cursor="Go"><span class="menu-num">01</span><span class="menu-name"><span>Work</span></span><span class="menu-dim" aria-hidden="true"></span><span class="menu-meta">05 Projects</span></a></li>
+        <li><a href="index.html#about" class="menu-link" data-transition data-transition-label="About" data-cursor="Go"><span class="menu-num">02</span><span class="menu-name"><span>About</span></span><span class="menu-dim" aria-hidden="true"></span><span class="menu-meta">Spec sheet</span></a></li>
+        <li><a href="index.html#journey" class="menu-link" data-transition data-transition-label="Journey" data-cursor="Go"><span class="menu-num">03</span><span class="menu-name"><span>Journey</span></span><span class="menu-dim" aria-hidden="true"></span><span class="menu-meta">Telemetry</span></a></li>
+        <li><a href="index.html#contact" class="menu-link" data-transition data-transition-label="Contact" data-cursor="Go"><span class="menu-num">04</span><span class="menu-name"><span>Contact</span></span><span class="menu-dim" aria-hidden="true"></span><span class="menu-meta">Say hi</span></a></li>
+      </ol>
+      <dl class="spec menu-spec">
+        <div class="spec-row"><dt>Write</dt><dd><a href="mailto:sayhi@niteshdixit.in" class="link">sayhi@niteshdixit.in</a></dd></div>
+        <div class="spec-row"><dt>Elsewhere</dt><dd><a href="https://www.instagram.com/pixelandgear/" class="link" target="_blank" rel="noopener">Instagram</a><a href="https://www.linkedin.com/in/niteshdixit/" class="link" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.behance.net/niteshdixit2" class="link" target="_blank" rel="noopener">Behance</a></dd></div>
+        <div class="spec-row"><dt>Based in</dt><dd>India — working globally</dd></div>
+        <div class="spec-row"><dt>Local time</dt><dd><span data-clock>--:--</span> IST</dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <!-- ==========================================================
+         HERO — the model badge, its spec sheet, and the route: the
+         whole case study drawn as one climb, 0 to 3,000 m.
+    ========================================================== -->
+    <section class="case-hero" data-section="The First Query" data-index="—">
+      <div class="case-hero-top">
+        <a href="index.html#work" class="case-back-link" data-transition data-transition-label="Selected Work" data-cursor="Back">
+          <span class="case-back-dim" aria-hidden="true"><i></i></span>
+          <span>Selected work</span>
+        </a>
+        <span class="case-hero-ruler" aria-hidden="true"><i></i></span>
+        <p class="case-hero-no" id="caseNo">Case study</p>
+      </div>
+
+      <div class="case-hero-head">
+        <div class="hero-tag-mask"><p class="hero-tag" id="caseSubtitle">In-app search · UX research &amp; best practices</p></div>
+        <h1 class="case-hero-title">
+          <span class="line-mask"><span class="line" id="caseTitle">The First Query</span></span>
+        </h1>
+      </div>
+
+      <div class="case-hero-brief">
+        <div>
+          <div class="hero-tag-mask"><p class="case-tagline" id="caseTagline">Most people search once. This is how to make that once count, from the search box all the way up to AI.</p></div>
+          <div class="case-hero-meta-tags" id="caseTags">
+            <span class="work-tag">UX Research</span>
+            <span class="work-tag">Search</span>
+            <span class="work-tag">Conversational AI</span>
+          </div>
+        </div>
+        <dl class="case-meta-bar spec" id="caseMetaBar">
+          <div class="case-meta-item spec-row"><dt>Role</dt><dd>Product &amp; UX design · Research &amp; synthesis</dd></div>
+          <div class="case-meta-item spec-row"><dt>Timeline</dt><dd>Oct 2026</dd></div>
+          <div class="case-meta-item spec-row"><dt>Output</dt><dd>Research document + 27-slide playbook</dd></div>
+          <div class="case-meta-item spec-row"><dt>Scope</dt><dd>Desk research · Evidence grading · Domain playbooks · Conversational search · Measurement &amp; build plan</dd></div>
+          <div class="case-meta-item spec-row"><dt>Evidence</dt><dd>31 sources, graded A–D</dd></div>
+        </dl>
+      </div>
+
+      <!-- The display bay: the route of the whole study, as a climb. -->
+      <div class="case-hero-media fq-route-bay" id="caseHeroMedia">
+        <span class="case-hero-cap" aria-hidden="true">Fig. 05 — The route · 0 – 3,000 m</span>
+        <nav class="fq-route" id="fqRoute" aria-label="The route through this case study">
+          <div class="fq-route-plot">
+            <svg class="fq-route-svg fq-route-grid" viewBox="0 0 1000 420" preserveAspectRatio="none" aria-hidden="true" focusable="false"></svg>
+            <svg class="fq-route-svg fq-route-draw" viewBox="0 0 1000 420" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <defs>
+                <linearGradient id="fqRouteFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#ece9e2" stop-opacity="0.11" />
+                  <stop offset="0.6" stop-color="#ece9e2" stop-opacity="0.025" />
+                  <stop offset="1" stop-color="#ece9e2" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <path class="fq-route-area" d="" />
+              <path class="fq-route-line" d="" />
+            </svg>
+            <ol class="fq-route-axis" aria-hidden="true"></ol>
+            <ol class="fq-route-stops">
+              <li class="fq-stop"><a href="#basecamp" data-cursor="Go"><span class="fq-stop-no">00</span><span class="fq-stop-name">Base camp</span><span class="fq-stop-elev">0 m</span></a></li>
+              <li class="fq-stop"><a href="#why" data-cursor="Go"><span class="fq-stop-no">01</span><span class="fq-stop-name">Why it matters</span><span class="fq-stop-elev">450 m</span></a></li>
+              <li class="fq-stop"><a href="#expect" data-cursor="Go"><span class="fq-stop-no">02</span><span class="fq-stop-name">What users expect</span><span class="fq-stop-elev">850 m</span></a></li>
+              <li class="fq-stop"><a href="#anatomy" data-cursor="Go"><span class="fq-stop-no">03</span><span class="fq-stop-name">The anatomy</span><span class="fq-stop-elev">1,250 m</span></a></li>
+              <li class="fq-stop"><a href="#words" data-cursor="Go"><span class="fq-stop-no">04</span><span class="fq-stop-name">Words first</span><span class="fq-stop-elev">1,650 m</span></a></li>
+              <li class="fq-stop"><a href="#stakes" data-cursor="Go"><span class="fq-stop-no">05</span><span class="fq-stop-name">Higher stakes</span><span class="fq-stop-elev">2,050 m</span></a></li>
+              <li class="fq-stop"><a href="#talk" data-cursor="Go"><span class="fq-stop-no">06</span><span class="fq-stop-name">Search that talks</span><span class="fq-stop-elev">2,450 m</span></a></li>
+              <li class="fq-stop"><a href="#measure" data-cursor="Go"><span class="fq-stop-no">07</span><span class="fq-stop-name">Measure &amp; build</span><span class="fq-stop-elev">2,800 m</span></a></li>
+              <li class="fq-stop is-summit"><a href="#summit" data-cursor="Go"><span class="fq-stop-no">08</span><span class="fq-stop-name">Summit</span><span class="fq-stop-elev">3,000 m</span></a></li>
+            </ol>
+            <span class="fq-route-car" aria-hidden="true"></span>
+          </div>
+          <p class="fq-route-dim dim" aria-hidden="true">Basics → mastery · 9 stages · 3,000 m</p>
+        </nav>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         STAGE 00 · BASE CAMP — the brief, the route and the method
+    ========================================================== -->
+    <section class="case-section fq-stage" id="basecamp" data-stage data-elev="0" data-section="Base camp" data-index="00">
+      <div class="section-index rule" data-rule><span class="rule-index">00</span><span class="rule-title section-index-label">Base camp</span><span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span><span class="rule-meta">Ground zero</span></div>
+      <header class="fq-gate">
+        <p class="fq-gate-alt"><span class="fq-gate-num">0000</span><span class="fq-gate-unit">m</span><span class="sr-only"> elevation</span></p>
+        <div class="fq-gate-copy">
+          <p class="fq-gate-level"><span>Stage 00 / 08</span><i aria-hidden="true"></i><span>The brief</span></p>
+          <h2 class="fq-gate-title">Search is where users tell you exactly what they want.</h2>
+          <p class="fq-gate-q"><span>Q.</span> Why do so many apps still get it wrong, and what would getting it right take?</p>
+        </div>
+        <div class="fq-track" aria-hidden="true"></div>
+      </header>
+
+      <div class="fq-brief">
+        <p class="case-copy-lg">It is the one place in an app where people say, in their own words, what they came for. It is also where most apps let them down.</p>
+        <div class="fq-brief-side">
+          <p class="case-copy">I set out to find out why, and to turn the evidence into a playbook a product team can build from. It starts at a plain search box and ends with an AI assistant that answers back, across ecommerce, fintech, healthtech and the car.</p>
+          <p class="case-copy">Every number on this page names its source. The full reasoning, decision log and confidence ratings live in the research document.</p>
+        </div>
+      </div>
+
+      <div class="case-subblock">
+        <h3 class="case-subtitle">Five questions set the route</h3>
+        <ol class="fq-questions">
+          <li class="fq-question"><span class="fq-question-no">Q.01</span><p>Why does search matter so much?</p><a class="fq-question-to" href="#why" data-cursor="Go">Stage 01</a></li>
+          <li class="fq-question"><span class="fq-question-no">Q.02</span><p>What do users expect from it?</p><a class="fq-question-to" href="#expect" data-cursor="Go">Stage 02</a></li>
+          <li class="fq-question"><span class="fq-question-no">Q.03</span><p>How does it change by domain?</p><a class="fq-question-to" href="#stakes" data-cursor="Go">Stages 04–06</a></li>
+          <li class="fq-question"><span class="fq-question-no">Q.04</span><p>How should we build it?</p><a class="fq-question-to" href="#anatomy" data-cursor="Go">Stages 03 + 07</a></li>
+          <li class="fq-question"><span class="fq-question-no">Q.05</span><p>How do we know it works?</p><a class="fq-question-to" href="#measure" data-cursor="Go">Stage 07</a></li>
+        </ol>
+      </div>
+
+      <div class="case-subblock fq-method">
+        <div>
+          <h3 class="case-subtitle">The method</h3>
+          <ol class="fq-steps">
+            <li class="fq-step"><span>01</span><p>Framed five questions: why, expectations, domains, build and measure.</p></li>
+            <li class="fq-step"><span>02</span><p>Started from behaviour: what people type and where they fail.</p></li>
+            <li class="fq-step"><span>03</span><p>Graded every source before letting it shape a recommendation.</p></li>
+            <li class="fq-step"><span>04</span><p>Found what never changes, then what varies by domain.</p></li>
+            <li class="fq-step"><span>05</span><p>Tied each recommendation to a metric, so it can be tested.</p></li>
+          </ol>
+        </div>
+        <div>
+          <h3 class="case-subtitle">Evidence, graded</h3>
+          <ol class="fq-grades">
+            <li class="fq-grade"><b>A</b><p><strong>Usability research and peer-reviewed studies</strong> set the guidelines: Baymard, NN/g, JMIR, Kaiser Permanente.</p></li>
+            <li class="fq-grade"><b>B</b><p><strong>Surveys, regulators and standards</strong> size the problem: Google / Harris, HHS, NHTSA, W3C.</p></li>
+            <li class="fq-grade"><b>C</b><p><strong>Practitioner studies and product docs</strong> give direction: the AI summaries study, Revolut, Visa.</p></li>
+            <li class="fq-grade is-out"><b>D</b><p><strong>Recycled vendor statistics</strong> such as &ldquo;searchers convert 2–3x&rdquo; were left out: their methods can&rsquo;t be traced.</p><span class="fq-stamp">Excluded</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="case-subblock fq-lens">
+        <span class="case-label">One lens, applied to every domain</span>
+        <ol class="fq-lens-list">
+          <li><span>L.01</span>What does the user call it?</li>
+          <li><span>L.02</span>What does a wrong result cost?</li>
+          <li><span>L.03</span>What must never leak?</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         STAGE 01 · WHY IT MATTERS — fundamentals
+    ========================================================== -->
+    <section class="case-section fq-stage" id="why" data-stage data-elev="450" data-section="Why it matters" data-index="01">
+      <div class="section-index rule" data-rule><span class="rule-index">01</span><span class="rule-title section-index-label">Why it matters</span><span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span><span class="rule-meta">Fundamentals</span></div>
+      <header class="fq-gate">
+        <p class="fq-gate-alt"><span class="fq-gate-num">0450</span><span class="fq-gate-unit">m</span><span class="sr-only"> elevation</span></p>
+        <div class="fq-gate-copy">
+          <p class="fq-gate-level"><span>Stage 01 / 08</span><i aria-hidden="true"></i><span>Fundamentals</span></p>
+          <h2 class="fq-gate-title">The first query decides the outcome.</h2>
+          <p class="fq-gate-q"><span>Q.</span> Why does search deserve this much attention?</p>
+        </div>
+        <div class="fq-track" aria-hidden="true"></div>
+      </header>
+
+      <div class="fq-split">
+        <figure class="fq-success" role="img" aria-label="Search success rate: 51% on the first query, 32% on the second and 18% on the third.">
+          <figcaption class="case-label">Search success rate</figcaption>
+          <div class="fq-cols" aria-hidden="true">
+            <div class="fq-col is-lead" style="--v: 51"><span class="fq-col-track"><i></i><span class="fq-col-val"><b class="fq-odo">51</b>%</span></span><span class="fq-col-key">1st query</span></div>
+            <div class="fq-col" style="--v: 32"><span class="fq-col-track"><i></i><span class="fq-col-val"><b class="fq-odo">32</b>%</span></span><span class="fq-col-key">2nd query</span></div>
+            <div class="fq-col" style="--v: 18"><span class="fq-col-track"><i></i><span class="fq-col-val"><b class="fq-odo">18</b>%</span></span><span class="fq-col-key">3rd query</span></div>
+          </div>
+        </figure>
+        <div class="fq-callout">
+          <p class="fq-lead">Almost half of users whose first search failed gave up immediately.</p>
+          <p class="case-copy">Most people won&rsquo;t rephrase. Each retry cuts the odds of success, and many never make a second attempt. So everything that follows is about one thing: winning the first query by understanding the user&rsquo;s words, not the app&rsquo;s.</p>
+          <p class="fq-source">Source: Nielsen Norman Group, ecommerce search testing (&ldquo;Search: Visible and Simple&rdquo;)</p>
+        </div>
+      </div>
+
+      <div class="case-subblock">
+        <h3 class="case-subtitle">Search is the highest-intent path in an app</h3>
+        <dl class="fq-readouts">
+          <div class="fq-readout"><dt><span class="fq-odo">~50</span><small>%</small></dt><dd>of shoppers choose search first to find products</dd></div>
+          <div class="fq-readout"><dt><span class="fq-odo">92</span><small>%</small></dt><dd>buy the item after a successful search</dd></div>
+          <div class="fq-readout"><dt><span class="fq-odo">81</span><small>%</small></dt><dd>are likelier to buy elsewhere after a failed search</dd></div>
+          <div class="fq-readout"><dt><span class="fq-odo">78</span><small>%</small></dt><dd>feel less loyal when things are hard to find</dd></div>
+        </dl>
+        <p class="fq-source">Sources: Baymard Institute 2026; Google Cloud / Harris Poll 2023 (US shoppers)</p>
+      </div>
+
+      <div class="case-jobs fq-jobs">
+        <span class="case-label">Users rely on search for two jobs</span>
+        <div class="case-jobs-list">
+          <span class="case-job"><small>01</small>Control<em>Going straight to what they want.</em></span>
+          <span class="case-job"><small>02</small>Rescue<em>An escape hatch when navigation fails.</em></span>
+        </div>
+        <p class="fq-source">Source: Nielsen Norman Group</p>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         STAGE 02 · WHAT USERS EXPECT — fundamentals
+    ========================================================== -->
+    <section class="case-section fq-stage" id="expect" data-stage data-elev="850" data-section="What users expect" data-index="02">
+      <div class="section-index rule" data-rule><span class="rule-index">02</span><span class="rule-title section-index-label">What users expect</span><span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span><span class="rule-meta">Fundamentals</span></div>
+      <header class="fq-gate">
+        <p class="fq-gate-alt"><span class="fq-gate-num">0850</span><span class="fq-gate-unit">m</span><span class="sr-only"> elevation</span></p>
+        <div class="fq-gate-copy">
+          <p class="fq-gate-level"><span>Stage 02 / 08</span><i aria-hidden="true"></i><span>Fundamentals</span></p>
+          <h2 class="fq-gate-title">Users bring web-search habits to every app.</h2>
+          <p class="fq-gate-q"><span>Q.</span> What does someone expect the moment they tap the search box?</p>
+        </div>
+        <div class="fq-track" aria-hidden="true"></div>
+      </header>
+
+      <p class="case-section-intro fq-intro">Six expectations travel with people from web search engines into every app they open. None of them is negotiable, and each one is measurable.</p>
+
+      <ol class="fq-expect">
+        <li class="fq-exp">
+          <span class="fq-exp-no">E.01</span>
+          <h3>Understand my words</h3>
+          <p>Synonyms, typos, units and symbols all work.</p>
+          <p class="fq-exp-stat"><b>54%</b> of stores fail on queries like &ldquo;13in&rdquo;</p>
+        </li>
+        <li class="fq-exp">
+          <span class="fq-exp-no">E.02</span>
+          <h3>Short queries work</h3>
+          <p>Two words, no syntax.</p>
+          <p class="fq-exp-stat"><b>2.0</b> words: the mean query in NN/g&rsquo;s testing</p>
+        </li>
+        <li class="fq-exp">
+          <span class="fq-exp-no">E.03</span>
+          <h3>Right first time</h3>
+          <p>The best answers sit on the first screen. Few users page past it or rephrase.</p>
+        </li>
+        <li class="fq-exp">
+          <span class="fq-exp-no">E.04</span>
+          <h3>Search everything</h3>
+          <p>Help, policies, settings and actions too, not only products.</p>
+          <p class="fq-exp-stat"><b>34%</b> of test users searched for non-product content</p>
+        </li>
+        <li class="fq-exp">
+          <span class="fq-exp-no">E.05</span>
+          <h3>Feel instant</h3>
+          <p>Suggestions within about 0.1 s, results within about 1 s, visible progress beyond that.</p>
+          <p class="fq-exp-stat fq-latency" aria-hidden="true"><span class="fq-latency-bar"><i style="--t: 0.1"></i><i style="--t: 1"></i></span><span class="fq-latency-key"><span>0.1 s · suggest</span><span>1 s · results</span></span></p>
+        </li>
+        <li class="fq-exp">
+          <span class="fq-exp-no">E.06</span>
+          <h3>Never leave me stuck</h3>
+          <p>Zero results still offers a next step. Generic &ldquo;search tips&rdquo; go unread.</p>
+        </li>
+      </ol>
+      <p class="fq-source">Sources: Baymard Institute 2025–2026; NN/g (2001, 1993)</p>
+    </section>
+
+    <!-- ==========================================================
+         STAGE 03 · THE ANATOMY — patterns
+    ========================================================== -->
+    <section class="case-section fq-stage" id="anatomy" data-stage data-elev="1250" data-section="The anatomy" data-index="03">
+      <div class="section-index rule" data-rule><span class="rule-index">03</span><span class="rule-title section-index-label">The anatomy</span><span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span><span class="rule-meta">Patterns</span></div>
+      <header class="fq-gate">
+        <p class="fq-gate-alt"><span class="fq-gate-num">1250</span><span class="fq-gate-unit">m</span><span class="sr-only"> elevation</span></p>
+        <div class="fq-gate-copy">
+          <p class="fq-gate-level"><span>Stage 03 / 08</span><i aria-hidden="true"></i><span>Patterns</span></p>
+          <h2 class="fq-gate-title">Every path ends at the goal or a recovery.</h2>
+          <p class="fq-gate-q"><span>Q.</span> What is a search experience actually made of?</p>
+        </div>
+        <div class="fq-track" aria-hidden="true"></div>
+      </header>
+
+      <figure class="fq-loop" id="fqLoop">
+        <figcaption class="fq-loop-cap">
+          <span class="case-label">The search loop</span>
+          <p class="fq-lead">Zero or poor results route to recovery, never to an empty page.</p>
+        </figcaption>
+        <div class="fq-loop-scroll" data-lenis-prevent-horizontal>
+          <div class="fq-loop-grid">
+            <div class="fq-node" data-node="entry"><span class="fq-node-no">01</span><h4>Entry point</h4><p>Visible on every screen; hints what works</p></div>
+            <div class="fq-node" data-node="suggest"><span class="fq-node-no">02</span><h4>Autosuggest</h4><p>Guides the query, not just the typing</p></div>
+            <div class="fq-node" data-node="understand"><span class="fq-node-no">03</span><h4>Understand query</h4><p>Synonyms, typos, units; attributes become filters</p></div>
+            <div class="fq-node" data-node="results"><span class="fq-node-no">04</span><h4>Results</h4><p>Best match first; filters and scope</p></div>
+            <div class="fq-node is-recover" data-node="recover"><span class="fq-node-no">R</span><h4>Recover</h4><p>Related categories, alternatives, help</p></div>
+            <div class="fq-node is-goal" data-node="goal"><span class="fq-node-no">&check;</span><h4>Item or answer</h4><p>The user&rsquo;s goal; counts as success</p></div>
+            <svg class="fq-loop-wires" aria-hidden="true" focusable="false"></svg>
+          </div>
+        </div>
+        <p class="fq-loop-hint" aria-hidden="true">Swipe to follow the loop</p>
+      </figure>
+
+      <div class="case-subblock">
+        <h3 class="case-subtitle">Two components decide most searches</h3>
+        <div class="fq-comps">
+          <article class="fq-comp">
+            <header class="fq-comp-head">
+              <span class="case-label">Autosuggest</span>
+              <p class="fq-comp-stat"><span class="fq-odo">19</span><small>%</small></p>
+              <p class="fq-comp-desc">of stores get every detail right, though 80% offer it</p>
+              <span class="fq-ratio" aria-hidden="true"><i style="--v: 80"></i><b style="--v: 19"></b></span>
+            </header>
+            <figure class="fq-mock fq-suggest" role="img" aria-label="Illustrative autosuggest. The user types “lap”; suggestions show the predicted text in bold, a scope suggestion “in Laptops” is styled differently, and the arrow keys copy a suggestion into the box.">
+              <div class="fq-mock-page" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+              <div class="fq-mock-field" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="1.5" /></svg><span class="fq-suggest-q">lap</span><i class="fq-caret"></i></div>
+              <ul class="fq-suggest-list" aria-hidden="true">
+                <li><span>lap</span><b>top</b></li>
+                <li class="is-scope"><span>lap</span><b>top</b><em>in Laptops</em></li>
+                <li><span>lap</span><b>top stand</b></li>
+                <li><span>lap</span><b>top bag</b></li>
+                <li><span>lap</span><b> desk</b></li>
+              </ul>
+              <span class="fq-keys" aria-hidden="true"><kbd>&darr;</kbd><kbd>&crarr;</kbd></span>
+            </figure>
+            <ul class="case-bullets">
+              <li>Up to about 10 suggestions on desktop, 4–8 on mobile</li>
+              <li>Bold the predicted text, not what the user typed</li>
+              <li>Arrow keys move through and copy into the box</li>
+              <li>Style scope suggestions (&ldquo;in Laptops&rdquo;) differently</li>
+              <li>Dim the page; no scrollbar inside the list</li>
+            </ul>
+          </article>
+
+          <article class="fq-comp">
+            <header class="fq-comp-head">
+              <span class="case-label">Zero results</span>
+              <p class="fq-comp-stat"><span class="fq-odo">~50</span><small>%</small></p>
+              <p class="fq-comp-desc">of stores leave users at a dead end</p>
+              <span class="fq-ratio" aria-hidden="true"><i style="--v: 100"></i><b style="--v: 50"></b></span>
+            </header>
+            <figure class="fq-mock fq-zero" role="img" aria-label="Illustrative zero-results page for “waterproof hiking sandal”: an alternative query is applied automatically, with related categories, recently viewed items and a way to reach help.">
+              <div class="fq-mock-field" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="1.5" /></svg><span>waterproof hiking sandal</span></div>
+              <ol class="fq-zero-list" aria-hidden="true">
+                <li class="is-none"><span>0</span><p>No exact matches</p></li>
+                <li><span>R.02</span><p>Showing results for <b>hiking sandals</b></p></li>
+                <li><span>R.01</span><p>Related: <u>Sandals</u> <u>Hiking boots</u> <u>Water shoes</u></p></li>
+                <li><span>R.03</span><p>Recently viewed <i class="fq-thumb"></i><i class="fq-thumb"></i><i class="fq-thumb"></i></p></li>
+                <li><span>R.04</span><p>Still stuck? <u>Chat with us</u></p></li>
+              </ol>
+            </figure>
+            <ol class="fq-recovery">
+              <li><span>R.01</span>Related categories</li>
+              <li><span>R.02</span>Alternative queries, auto-applied if there is only one</li>
+              <li><span>R.03</span>Recently viewed items</li>
+              <li><span>R.04</span>Help, chat or phone</li>
+              <li><span>R.05</span>Popular items</li>
+            </ol>
+            <p class="fq-warn"><strong>Search tips alone don&rsquo;t work:</strong> users rarely read them.</p>
+          </article>
+        </div>
+        <p class="fq-source">Source: Baymard Institute, autocomplete (2022) and &ldquo;No Results&rdquo; page (2025) research · Mock-ups are illustrative</p>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         STAGE 04 · WORDS FIRST — patterns (ecommerce vocabulary)
+    ========================================================== -->
+    <section class="case-section fq-stage" id="words" data-stage data-elev="1650" data-section="Words first" data-index="04">
+      <div class="section-index rule" data-rule><span class="rule-index">04</span><span class="rule-title section-index-label">Words first</span><span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span><span class="rule-meta">Patterns</span></div>
+      <header class="fq-gate">
+        <p class="fq-gate-alt"><span class="fq-gate-num">1650</span><span class="fq-gate-unit">m</span><span class="sr-only"> elevation</span></p>
+        <div class="fq-gate-copy">
+          <p class="fq-gate-level"><span>Stage 04 / 08</span><i aria-hidden="true"></i><span>Patterns · Ecommerce</span></p>
+          <h2 class="fq-gate-title">Most failures are vocabulary failures.</h2>
+          <p class="fq-gate-q"><span>Q.</span> Where exactly does search break?</p>
+        </div>
+        <div class="fq-track" aria-hidden="true"></div>
+      </header>
+
+      <div class="fq-split fq-split--chart">
+        <figure class="fq-hbars" role="img" aria-label="Share of 170+ benchmarked stores and apps with search issues, by query type: non-product 66%, abbreviation and symbol 54%, compatibility 44%, use case 43%, feature 39%, symptom 37%, product type 20%, exact 12%.">
+          <figcaption class="case-label">Stores and apps with issues, by query type · 170+ benchmarked</figcaption>
+          <ol aria-hidden="true">
+            <li class="is-lead" style="--v: 66"><span class="fq-hbar-key">Non-product</span><span class="fq-hbar-track"><i></i></span><span class="fq-hbar-val"><b class="fq-odo">66</b>%</span></li>
+            <li style="--v: 54"><span class="fq-hbar-key">Abbreviation and symbol</span><span class="fq-hbar-track"><i></i></span><span class="fq-hbar-val"><b class="fq-odo">54</b>%</span></li>
+            <li style="--v: 44"><span class="fq-hbar-key">Compatibility</span><span class="fq-hbar-track"><i></i></span><span class="fq-hbar-val"><b class="fq-odo">44</b>%</span></li>
+            <li style="--v: 43"><span class="fq-hbar-key">Use case</span><span class="fq-hbar-track"><i></i></span><span class="fq-hbar-val"><b class="fq-odo">43</b>%</span></li>
+            <li style="--v: 39"><span class="fq-hbar-key">Feature</span><span class="fq-hbar-track"><i></i></span><span class="fq-hbar-val"><b class="fq-odo">39</b>%</span></li>
+            <li style="--v: 37"><span class="fq-hbar-key">Symptom</span><span class="fq-hbar-track"><i></i></span><span class="fq-hbar-val"><b class="fq-odo">37</b>%</span></li>
+            <li style="--v: 20"><span class="fq-hbar-key">Product type</span><span class="fq-hbar-track"><i></i></span><span class="fq-hbar-val"><b class="fq-odo">20</b>%</span></li>
+            <li style="--v: 12"><span class="fq-hbar-key">Exact</span><span class="fq-hbar-track"><i></i></span><span class="fq-hbar-val"><b class="fq-odo">12</b>%</span></li>
+          </ol>
+          <p class="fq-hbar-scale" aria-hidden="true"><span class="fq-hbar-scale-in"><span>0</span><span>25</span><span>50</span><span>75</span><span>100%</span></span></p>
+        </figure>
+        <aside class="fq-pattern">
+          <span class="case-label">The pattern</span>
+          <p class="fq-lead">The further a query drifts from the product&rsquo;s own name, the more often search fails.</p>
+          <p class="case-copy">Exact names fail on only 12% of sites. Help searches like &ldquo;return policy&rdquo; fail on two thirds. Overall, 56% of sites fall short, and apps fare worst.</p>
+          <p class="fq-pattern-rule"><span>Rule</span>Fix vocabulary before polishing the interface.</p>
+        </aside>
+      </div>
+      <p class="fq-source">Source: Baymard Institute, Ecommerce Search UX 2026 benchmark (10,000+ ratings)</p>
+
+      <div class="case-subblock">
+        <div class="case-section-head fq-head">
+          <h3 class="case-subtitle">Handle all eight ways shoppers search</h3>
+          <p class="case-section-intro">Each card is one query type, a query a shopper typed in testing, and what search should do with it. They climb from the easiest to the hardest for today&rsquo;s stores.</p>
+        </div>
+        <ol class="fq-qgrid">
+          <li class="fq-qcard" style="--v: 12"><div class="fq-qcard-top"><span>01</span><h4>Exact</h4><em>Fails on 12%</em></div><p class="fq-qfield"><span class="fq-typed">Keurig K45 Elite</span></p><p>Match titles, SKUs, models and misspellings</p><span class="fq-qmeter" aria-hidden="true"><i></i></span></li>
+          <li class="fq-qcard" style="--v: 20"><div class="fq-qcard-top"><span>02</span><h4>Product type</h4><em>Fails on 20%</em></div><p class="fq-qfield"><span class="fq-typed">sandals</span></p><p>Jump to the matching category and its filters</p><span class="fq-qmeter" aria-hidden="true"><i></i></span></li>
+          <li class="fq-qcard" style="--v: 37"><div class="fq-qcard-top"><span>03</span><h4>Symptom</h4><em>Fails on 37%</em></div><p class="fq-qfield"><span class="fq-typed">knee pain</span></p><p>Map problems to the products that solve them</p><span class="fq-qmeter" aria-hidden="true"><i></i></span></li>
+          <li class="fq-qcard" style="--v: 39"><div class="fq-qcard-top"><span>04</span><h4>Feature</h4><em>Fails on 39%</em></div><p class="fq-qfield"><span class="fq-typed">blue shirt</span></p><p>Pre-apply attributes as visible, removable filters</p><span class="fq-qmeter" aria-hidden="true"><i></i></span></li>
+          <li class="fq-qcard" style="--v: 43"><div class="fq-qcard-top"><span>05</span><h4>Use case</h4><em>Fails on 43%</em></div><p class="fq-qfield"><span class="fq-typed">spring jacket</span></p><p>Tag products by season, place and occasion</p><span class="fq-qmeter" aria-hidden="true"><i></i></span></li>
+          <li class="fq-qcard" style="--v: 44"><div class="fq-qcard-top"><span>06</span><h4>Compatibility</h4><em>Fails on 44%</em></div><p class="fq-qfield"><span class="fq-typed">Dell XPS 13 charger</span></p><p>Know what the user owns; show fit on results</p><span class="fq-qmeter" aria-hidden="true"><i></i></span></li>
+          <li class="fq-qcard" style="--v: 54"><div class="fq-qcard-top"><span>07</span><h4>Abbreviation</h4><em>Fails on 54%</em></div><p class="fq-qfield"><span class="fq-typed">13in, tv</span></p><p>Map short forms and symbols to full forms</p><span class="fq-qmeter" aria-hidden="true"><i></i></span></li>
+          <li class="fq-qcard is-lead" style="--v: 66"><div class="fq-qcard-top"><span>08</span><h4>Non-product</h4><em>Fails on 66%</em></div><p class="fq-qfield"><span class="fq-typed">return policy</span></p><p>Index help and policies; answer directly</p><span class="fq-qmeter" aria-hidden="true"><i></i></span></li>
+        </ol>
+        <div class="fq-note">
+          <span class="case-label">Ranking</span>
+          <p>Let margin, stock and promotions only break ties between equally relevant items, and label sponsored results clearly. In a 70-person usability study, sponsored results were noticed but skipped for low trust.</p>
+        </div>
+        <p class="fq-source">Sources: Baymard Institute 2026; Search Engine Journal (Indig, 2025) on sponsored results</p>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         STAGE 05 · HIGHER STAKES — domains
+    ========================================================== -->
+    <section class="case-section fq-stage" id="stakes" data-stage data-elev="2050" data-section="Higher stakes" data-index="05">
+      <div class="section-index rule" data-rule><span class="rule-index">05</span><span class="rule-title section-index-label">Higher stakes</span><span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span><span class="rule-meta">Domains</span></div>
+      <header class="fq-gate">
+        <p class="fq-gate-alt"><span class="fq-gate-num">2050</span><span class="fq-gate-unit">m</span><span class="sr-only"> elevation</span></p>
+        <div class="fq-gate-copy">
+          <p class="fq-gate-level"><span>Stage 05 / 08</span><i aria-hidden="true"></i><span>Domains</span></p>
+          <h2 class="fq-gate-title">Same search loop, different stakes.</h2>
+          <p class="fq-gate-q"><span>Q.</span> How does search change when a wrong result costs money, health or safety?</p>
+        </div>
+        <div class="fq-track" aria-hidden="true"></div>
+      </header>
+
+      <figure class="fq-spectrum">
+        <div class="fq-spectrum-zones">
+          <ul class="is-low"><li>Media and streaming</li><li>Ecommerce</li></ul>
+          <ul class="is-mid"><li>Travel</li><li>SaaS and B2B tools</li><li>Edtech</li></ul>
+          <ul class="is-high"><li>Fintech</li><li>Healthtech</li><li>In-vehicle</li></ul>
+        </div>
+        <span class="fq-spectrum-bar" aria-hidden="true"><i></i></span>
+        <p class="fq-spectrum-ends"><span>Lower cost of a wrong result</span><span>Higher cost of a wrong result</span></p>
+        <div class="fq-spectrum-modes">
+          <div><h4>Optimise for recall and discovery</h4><p>Synonyms, inspiration, personalised ranking and rich recovery paths.</p></div>
+          <div class="is-high"><h4>Optimise for precision, privacy and authority</h4><p>Explicit scope, sources and dates, masked data and gated actions.</p></div>
+        </div>
+        <figcaption class="fq-source">The same seven components apply everywhere; what changes is the cost of a miss. Placement is a judgement from the research synthesis, not a measured ranking.</figcaption>
+      </figure>
+
+      <!-- Playbook · Fintech -->
+      <article class="fq-play">
+        <header class="case-section-head fq-head">
+          <div>
+            <span class="case-label">Playbook · Fintech</span>
+            <h3 class="case-subtitle">Find the one transaction, safely</h3>
+          </div>
+          <p class="case-section-intro">One transaction, payee, action or answer, and a miss costs money or privacy. Search here is about precision and trust.</p>
+        </header>
+        <div class="fq-play-body">
+          <figure class="fq-mock fq-bank" role="img" aria-label="Illustrative banking search for “1,299”: the amount is matched as a number, a raw bank string is cleaned into the merchant name Northwind Café, the card number is masked, and a freeze-card action asks for the PIN first.">
+            <div class="fq-mock-field" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="1.5" /></svg><span>1,299</span></div>
+            <div class="fq-bank-body" aria-hidden="true">
+              <span class="fq-bank-label">Amount matches</span>
+              <div class="fq-txn">
+                <span class="fq-txn-logo">N</span>
+                <span class="fq-txn-name"><s class="fq-txn-raw">POS 0423 NRTHWND*CAFE BLR</s><b class="fq-txn-clean">Northwind Café</b><small>Coffee · 14 Oct · Card •• 4821</small></span>
+                <span class="fq-txn-amt">&minus;₹<mark>1,299</mark>.00</span>
+              </div>
+              <span class="fq-bank-label">Actions</span>
+              <div class="fq-txn is-action">
+                <span class="fq-txn-logo is-lock"><svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.5" /><rect x="5" y="10.5" width="14" height="10" fill="none" stroke="currentColor" stroke-width="1.5" /></svg></span>
+                <span class="fq-txn-name"><b>Freeze card •• 4821</b><small>Asks for your PIN first</small></span>
+                <span class="fq-txn-go">&rarr;</span>
+              </div>
+            </div>
+          </figure>
+          <div class="fq-fap">
+            <div class="fq-fap-col"><span class="fq-fap-no">F</span><h4>Find</h4><ul class="case-bullets"><li>Clean merchant names and logos, not raw bank strings</li><li>Search merchant, person, notes, amount, place and category across all accounts</li><li>Numbers as numbers: &ldquo;1,299&rdquo;, &ldquo;₹1,299.00&rdquo;, &ldquo;over 5000&rdquo;</li><li>Plain dates like &ldquo;last month&rdquo;, shown as a filter</li></ul></div>
+            <div class="fq-fap-col"><span class="fq-fap-no">A</span><h4>Act</h4><ul class="case-bullets"><li>Make actions findable: &ldquo;freeze card&rdquo;, &ldquo;download statement&rdquo;</li><li>Deep-link to them, but keep step-up authentication</li><li>Never execute anything from a suggestion</li><li>Answer fees and limits from the official source, with its date</li></ul></div>
+            <div class="fq-fap-col"><span class="fq-fap-no">P</span><h4>Protect</h4><ul class="case-bullets"><li>Mask account and card numbers in suggestions and recents</li><li>Let users clear history; hide sensitive recents on shared screens</li><li>Keep queries out of third-party analytics and URLs</li></ul></div>
+          </div>
+        </div>
+        <p class="fq-confidence"><span class="fq-gauge" style="--c: 0.4" aria-hidden="true"><i></i></span><span><strong>Confidence: low to medium.</strong> Public research on fintech search is thin; validate with your logs and a diary study.</span></p>
+        <p class="fq-source">Sources: Visa Developer; Revolut (2018); Monzo community; Search Engine Journal (Indig, 2025) · Mock-up is illustrative</p>
+      </article>
+
+      <!-- Playbook · Healthtech -->
+      <article class="fq-play">
+        <header class="case-section-head fq-head">
+          <div>
+            <span class="case-label">Playbook · Healthtech</span>
+            <h3 class="case-subtitle">Bridge lay words and clinical terms</h3>
+          </div>
+          <p class="case-section-intro">The core health search problem is vocabulary. Patients type the left; records and expert content say the right.</p>
+        </header>
+        <div class="fq-split">
+          <ul class="fq-lexicon">
+            <li><span class="fq-lay">&ldquo;dry mouth&rdquo;</span><i class="fq-lex-arrow" aria-hidden="true"></i><span class="fq-clin">xerostomia</span></li>
+            <li><span class="fq-lay">&ldquo;flu&rdquo;</span><i class="fq-lex-arrow" aria-hidden="true"></i><span class="fq-clin">influenza</span></li>
+            <li><span class="fq-lay">&ldquo;flat head&rdquo;</span><i class="fq-lex-arrow" aria-hidden="true"></i><span class="fq-clin">plagiocephaly</span></li>
+          </ul>
+          <figure class="fq-stack" role="img" aria-label="Swapping lay queries for clinical terms: 42% of searches got better, 39% did not change and 19% got worse.">
+            <figcaption class="case-label">Swapping lay queries for clinical terms</figcaption>
+            <span class="fq-stack-bar" aria-hidden="true"><i style="--v: 42"></i><i style="--v: 39"></i><i style="--v: 19"></i></span>
+            <p class="fq-stack-key" aria-hidden="true"><span style="--v: 42"><b>42%</b> better</span><span style="--v: 39"><b>39%</b> no change</span><span style="--v: 19"><b>19%</b> worse</span></p>
+            <p class="fq-lead fq-lead--sm">Expand with curated synonyms; never replace the user&rsquo;s words.</p>
+            <p class="fq-small">Arcane terms hurt: &ldquo;epilepsy, absence&rdquo; did worse than &ldquo;petit mal seizure&rdquo;.</p>
+          </figure>
+        </div>
+        <p class="fq-source">Sources: Vydiswaran et al., AMIA 2014; Plovnick and Zeng, JMIR 2004</p>
+
+        <div class="case-subblock">
+          <h3 class="case-subtitle">Two audiences need two designs</h3>
+          <div class="case-panel-grid" style="--cols: 2;">
+            <div class="case-panel">
+              <span class="case-panel-index">01</span>
+              <h3>Patients and caregivers</h3>
+              <ul class="case-bullets"><li>Search by symptom or plain name: &ldquo;skin doctor&rdquo; finds dermatology</li><li>Safety first: red-flag queries surface urgent-care guidance</li><li>Show author, reviewer and review date on every answer</li><li>Plain-language titles with the clinical term alongside</li></ul>
+            </div>
+            <div class="case-panel">
+              <span class="case-panel-index">02</span>
+              <h3>Clinicians in the EHR</h3>
+              <ul class="case-bullets"><li>Role-aware results: pharmacists search mostly for medications</li><li>Suggest synonyms: 33 clinicians rated search higher with them on</li><li>Show strength, form and route so look-alike drugs can&rsquo;t be confused</li><li>Treat repeated searches as a sign information is hard to find</li></ul>
+            </div>
+          </div>
+          <p class="fq-privacy"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.5" /><rect x="5" y="10.5" width="14" height="10" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="M12 14v3" stroke="currentColor" stroke-width="1.5" /></svg><span><strong>Keep health queries first-party:</strong> no ad or analytics pixels, de-identified logs. US HHS guidance still covers logged-in pages after a 2024 court ruling narrowed it.</span></p>
+          <p class="fq-source">Sources: Kaiser Permanente DOR 2020; Hanauer et al. 2017; Search Engine Journal 2025; Morrison Foerster 2024. Red-flag routing is a design recommendation to define with clinical governance.</p>
+        </div>
+      </article>
+
+      <!-- Playbook · Every other domain, the car in focus -->
+      <article class="fq-play">
+        <header class="case-section-head fq-head">
+          <div>
+            <span class="case-label">Playbook · Other domains</span>
+            <h3 class="case-subtitle">Every domain has its own must-have</h3>
+          </div>
+          <p class="case-section-intro">The same loop applies everywhere; what changes is the thing being found and the one behaviour search can&rsquo;t do without.</p>
+        </header>
+        <div class="case-table-wrap">
+          <table class="case-table fq-table">
+            <thead><tr><th scope="col">Domain</th><th scope="col">What users look for</th><th scope="col">Must-have behaviour</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">SaaS and B2B tools</th><td data-label="What users look for">Records, documents, people, commands</td><td data-label="Must-have behaviour">Command palette for actions; permission-aware results</td></tr>
+              <tr><th scope="row">Edtech</th><td data-label="What users look for">Concepts, lessons, video moments</td><td data-label="Must-have behaviour">Concept synonyms and misconceptions; transcript search</td></tr>
+              <tr><th scope="row">Media and streaming</th><td data-label="What users look for">Titles, people, moods</td><td data-label="Must-have behaviour">Heavy typo tolerance; availability by plan and region</td></tr>
+              <tr><th scope="row">Travel</th><td data-label="What users look for">Places, dates, constraints</td><td data-label="Must-have behaviour">Disambiguate places (&ldquo;Paris, TX&rdquo;); flexible dates</td></tr>
+              <tr class="is-focus"><th scope="row">In-vehicle</th><td data-label="What users look for">Destinations, media, settings</td><td data-label="Must-have behaviour">Voice first; each glance 2 s or less, 12 s per task (NHTSA)</td></tr>
+              <tr><th scope="row">Intranet</th><td data-label="What users look for">Policies, people, documents</td><td data-label="Must-have behaviour">Search across tools; best bets for top queries; access control</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="fq-glance">
+          <div class="fq-glance-copy">
+            <span class="case-label">In focus · In-vehicle</span>
+            <p class="fq-lead">In the car, search is safety-critical.</p>
+            <p class="case-copy">NHTSA&rsquo;s voluntary guidelines keep each glance to two seconds and a whole task to twelve seconds of eyes off the road. So in-vehicle search leans on voice and prediction instead of typing.</p>
+          </div>
+          <figure class="fq-glance-meter" role="img" aria-label="Eyes-off-road budget for one task: 12 seconds in total, with no single glance longer than 2 seconds.">
+            <span class="fq-glance-head" aria-hidden="true"><span>Eyes off road · one task</span><b><span class="fq-glance-t">12.0</span> s</b></span>
+            <span class="fq-glance-bar" aria-hidden="true"><i class="fq-glance-fill"></i></span>
+            <span class="fq-glance-ticks" aria-hidden="true"><span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span><span>12 s</span></span>
+            <span class="fq-glance-rule dim" aria-hidden="true">≤ 2 s per glance</span>
+          </figure>
+        </div>
+        <p class="fq-source">Sources: research document synthesis; US DOT / NHTSA visual-manual distraction guidelines</p>
+      </article>
+    </section>
+
+    <!-- ==========================================================
+         STAGE 06 · SEARCH THAT TALKS — AI + conversational search
+    ========================================================== -->
+    <section class="case-section fq-stage" id="talk" data-stage data-elev="2450" data-section="Search that talks" data-index="06">
+      <div class="section-index rule" data-rule><span class="rule-index">06</span><span class="rule-title section-index-label">Search that talks</span><span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span><span class="rule-meta">Frontier</span></div>
+      <header class="fq-gate">
+        <p class="fq-gate-alt"><span class="fq-gate-num">2450</span><span class="fq-gate-unit">m</span><span class="sr-only"> elevation</span></p>
+        <div class="fq-gate-copy">
+          <p class="fq-gate-level"><span>Stage 06 / 08</span><i aria-hidden="true"></i><span>Frontier · AI &amp; conversation</span></p>
+          <h2 class="fq-gate-title">AI should sit on top of real results.</h2>
+          <p class="fq-gate-q"><span>Q.</span> What changes when search learns to answer back?</p>
+        </div>
+        <div class="fq-track" aria-hidden="true"></div>
+      </header>
+
+      <div class="fq-split">
+        <figure class="fq-layers" role="img" aria-label="Three layers: a cited AI answer sits on top of ranked, checkable results, which sit on hybrid retrieval that combines keywords for exact strings with vectors for meaning.">
+          <div class="fq-layer is-ai" aria-hidden="true"><span>L.03</span><b>Cited AI answer</b><small>Summary · citations · dates</small></div>
+          <div class="fq-layer" aria-hidden="true"><span>L.02</span><b>Ranked, checkable results</b><small>What the answer stands on</small></div>
+          <div class="fq-layer" aria-hidden="true"><span>L.01</span><b>Hybrid retrieval</b><small>Keywords for exact strings · vectors for meaning</small></div>
+        </figure>
+        <div class="fq-trust">
+          <span class="case-label">Trust splits by stakes</span>
+          <dl class="fq-trust-list">
+            <div><dt>Low stakes</dt><dd>Quick facts often end in the AI summary.</dd></div>
+            <div class="is-high"><dt>Money and health</dt><dd>Users verify with official sources such as PayPal or Mayo Clinic.</dd></div>
+          </dl>
+          <p class="fq-small">When a summary is wrong or generic, users abandon it.</p>
+          <div class="fq-dodont">
+            <div class="is-do"><h4>Use AI for</h4><ul class="case-bullets"><li>Turning long queries into editable filters</li><li>Summarising help content, with citations and dates</li><li>Hybrid retrieval: keywords for exact strings, vectors for meaning</li></ul></div>
+            <div class="is-dont"><h4>Never for</h4><ul class="case-bullets"><li>Account facts: balances, statuses, test results</li><li>Health triage without clinical protocols</li><li>Actions without a confirmation step</li></ul></div>
+          </div>
+        </div>
+      </div>
+      <p class="fq-source">Sources: Search Engine Journal (Indig, 2025; 70-user study); Manticore Search hybrid search manual</p>
+
+      <div class="case-subblock">
+        <div class="case-section-head fq-head">
+          <h3 class="case-subtitle">In a chat, search changes shape</h3>
+          <p class="case-section-intro">When search lives inside an assistant, the same loop still exists. Each component just changes form.</p>
+        </div>
+        <div class="case-table-wrap">
+          <table class="case-table fq-table fq-table--shape">
+            <thead><tr><th scope="col">Component</th><th scope="col">Classic search</th><th scope="col">In a chat</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Entry</th><td data-label="Classic search">A search box</td><td data-label="In a chat">A prompt box plus starter prompts</td></tr>
+              <tr><th scope="row">Suggestions</th><td data-label="Classic search">Autocomplete as you type</td><td data-label="In a chat">Suggested follow-ups after each answer</td></tr>
+              <tr><th scope="row">Understanding</th><td data-label="Classic search">Keywords, synonyms, filters</td><td data-label="In a chat">Intent and constraints, remembered across turns</td></tr>
+              <tr><th scope="row">Clarifying</th><td data-label="Classic search">Filters the user picks</td><td data-label="In a chat">One good question, only when it adds value</td></tr>
+              <tr><th scope="row">Results</th><td data-label="Classic search">A ranked list</td><td data-label="In a chat">An answer plus cards: products, transactions, doctors</td></tr>
+              <tr><th scope="row">Showing its work</th><td data-label="Classic search">Visible filter chips</td><td data-label="In a chat">The constraints in use, shown and editable</td></tr>
+              <tr><th scope="row">Recovery</th><td data-label="Classic search">A zero-results page</td><td data-label="In a chat">Relax constraints, suggest options, reach a human</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="fq-note-line"><strong>Same loop, new shape:</strong> the assistant still has to show what it understood, and never leave the user stuck.</p>
+      </div>
+
+      <div class="case-subblock">
+        <h3 class="case-subtitle">Chat is search by another name</h3>
+        <dl class="fq-readouts fq-readouts--3">
+          <div class="fq-readout"><dt><span class="fq-odo">~75</span><small>%</small></dt><dd>of chatbot conversations were information-seeking</dd></div>
+          <div class="fq-readout"><dt><span class="fq-odo">3.8</span><small>%</small></dt><dd>included a clarifying question, though users wanted them</dd></div>
+          <div class="fq-readout"><dt><span class="fq-odo">22</span><small>%</small></dt><dd>were followed by any check of the answer</dd></div>
+        </dl>
+        <p class="fq-small fq-after">From a two-week diary study: 425 conversations by 18 people using ChatGPT, Bard and Bing Chat.</p>
+        <div class="fq-types">
+          <span class="case-label">Six conversation types: spot which one is happening, and adapt</span>
+          <ol class="fq-type-list">
+            <li class="fq-type"><b>Search query</b><p>One simple prompt, no follow-up</p></li>
+            <li class="fq-type"><b>Funneling</b><p>Starts vague, narrows step by step</p></li>
+            <li class="fq-type"><b>Exploring</b><p>Starts broad, goes deeper to learn</p></li>
+            <li class="fq-type"><b>Chiseling</b><p>Covers many facets of one topic</p></li>
+            <li class="fq-type"><b>Expanding</b><p>Broadens after a weak answer</p></li>
+            <li class="fq-type"><b>Pinpointing</b><p>One detailed, specific prompt</p></li>
+          </ol>
+          <p class="fq-note-line"><strong>Ask well or not at all:</strong> good clarifying questions raised success and satisfaction; poor ones lowered them.</p>
+        </div>
+        <p class="fq-source">Sources: NN/g diary study and conversation types (2023); Zou et al., ACM TOIS (2023)</p>
+      </div>
+
+      <!-- Conversation · Ecommerce -->
+      <article class="fq-convo">
+        <header class="fq-convo-head">
+          <span class="case-label">Conversation · Ecommerce</span>
+          <h3 class="case-subtitle">Turn a shopping need into a shortlist</h3>
+        </header>
+        <figure class="fq-chat" role="img" aria-label="Illustrative chat. The shopper asks for running shoes for flat feet under ₹5,000. The assistant shows the constraints it is using as removable chips, three stability shoes with prices from the catalogue, and two follow-ups: compare these three, or show wider sizes.">
+          <div class="fq-chat-bar" aria-hidden="true"><span>Shopping assistant</span><span class="fq-chat-ai">AI</span></div>
+          <ol class="fq-chat-log" aria-hidden="true">
+            <li class="fq-msg is-user">Running shoes for flat feet, under ₹5,000</li>
+            <li class="fq-msg is-bot">
+              <p>Here are three stability shoes. I&rsquo;m using:</p>
+              <p class="fq-chips"><span>Running shoes &times;</span><span>Stability &times;</span><span>Under ₹5,000 &times;</span></p>
+              <div class="fq-cards">
+                <div><b>Shoe A</b><span>₹4,299</span><small>Firm arch support</small></div>
+                <div><b>Shoe B</b><span>₹3,899</span><small>Wide toe box</small></div>
+                <div><b>Shoe C</b><span>₹4,799</span><small>Extra cushioning</small></div>
+              </div>
+            </li>
+            <li class="fq-msg is-follow"><span>Compare these three</span><span>Show wider sizes</span></li>
+          </ol>
+        </figure>
+        <div class="fq-convo-side">
+          <dl class="fq-readouts fq-readouts--2">
+            <div class="fq-readout"><dt><span class="fq-odo">300</span><small>M</small></dt><dd>customers used Amazon&rsquo;s Rufus assistant in 2025</dd></div>
+            <div class="fq-readout"><dt><span class="fq-odo">~$12</span><small>B</small></dt><dd>in extra annualised sales Amazon credits to it</dd></div>
+          </dl>
+          <ul class="case-bullets">
+            <li>Turn the need into constraints, shown as editable chips</li>
+            <li>Ground every pick in the live catalogue: price, stock, specs</li>
+            <li>Ask one useful question when the need is broad</li>
+            <li>Compare in a table when asked &ldquo;which is better?&rdquo;</li>
+            <li>Label sponsored picks; ads never pose as advice</li>
+            <li>Hand off to the product page or cart in one tap</li>
+          </ul>
+          <p class="fq-source">Sources: Amazon Q4 2025 results via Modern Retail (2026), Amazon&rsquo;s own figures; Baymard (2026) · Chat is illustrative</p>
+        </div>
+      </article>
+
+      <!-- Conversation · Fintech -->
+      <article class="fq-convo is-reverse">
+        <header class="fq-convo-head">
+          <span class="case-label">Conversation · Fintech</span>
+          <h3 class="case-subtitle">Answer from records, escalate disputes</h3>
+        </header>
+        <figure class="fq-chat" role="img" aria-label="Illustrative banking chat. Asked what was spent on food delivery last month, the assistant answers ₹6,480 across 14 orders in October and lists the orders from the ledger. When the customer says one of them isn’t theirs, it recognises a disputed charge and offers to report it or talk to an agent.">
+          <div class="fq-chat-bar" aria-hidden="true"><span>Bank assistant</span><span class="fq-chat-ai">AI</span></div>
+          <ol class="fq-chat-log" aria-hidden="true">
+            <li class="fq-msg is-user">What did I spend on food delivery last month?</li>
+            <li class="fq-msg is-bot">
+              <p><b>₹6,480</b> across 14 orders in October</p>
+              <ul class="fq-ledger">
+                <li><span>28 Oct · Food delivery</span><b>₹612</b></li>
+                <li><span>21 Oct · Food delivery</span><b>₹845</b></li>
+                <li><span>14 Oct · Food delivery</span><b>₹498</b></li>
+                <li class="is-more"><span>View all 14</span></li>
+              </ul>
+            </li>
+            <li class="fq-msg is-user">One of these isn&rsquo;t mine</li>
+            <li class="fq-msg is-bot">
+              <p>That sounds like a disputed charge.</p>
+              <p class="fq-actions"><span class="is-primary">Report this charge</span><span>Talk to an agent</span></p>
+            </li>
+          </ol>
+        </figure>
+        <div class="fq-convo-side">
+          <dl class="fq-readouts fq-readouts--2">
+            <div class="fq-readout"><dt><span class="fq-odo">37</span><small>%</small></dt><dd>of the US population used a bank&rsquo;s chatbot in 2022</dd></div>
+            <div class="fq-readout"><dt><span class="fq-odo">3</span><small>B+</small></dt><dd>interactions with Bank of America&rsquo;s Erica since 2018</dd></div>
+          </dl>
+          <ul class="case-bullets">
+            <li>Answer from account records, shown as data, not prose</li>
+            <li>Spot disputes and fraud; route them to the formal process</li>
+            <li>Always offer a human; break loops of unhelpful answers</li>
+            <li>Confirm every action and keep step-up authentication</li>
+          </ul>
+          <p class="fq-privacy"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M12 3 4 6.5v5.2c0 4.6 3.4 8.3 8 9.3 4.6-1 8-4.7 8-9.3V6.5z" fill="none" stroke="currentColor" stroke-width="1.5" /></svg><span><strong>Say it&rsquo;s AI.</strong> EU chatbots must disclose this from 2 August 2026. RBI&rsquo;s FREE-AI report (2025) proposes AI-use disclosure and a way to contest AI decisions.</span></p>
+          <p class="fq-source">Sources: CFPB 2023; ATM Marketplace 2025; Cooley 2026; Legal500 2025 · Chat is illustrative</p>
+        </div>
+      </article>
+
+      <!-- Conversation · Healthtech -->
+      <article class="fq-convo">
+        <header class="fq-convo-head">
+          <span class="case-label">Conversation · Healthtech</span>
+          <h3 class="case-subtitle">Ask for the details people leave out</h3>
+        </header>
+        <figure class="fq-hbars fq-hbars--health" role="img" aria-label="Correct answers on doctor-written scenarios, 1,298 participants. Identified the condition: LLM alone 94.9%, people using an LLM under 34.5%. Chose the right next step: LLM alone 56.3%, people using an LLM under 44.2%.">
+          <figcaption class="case-label">Correct answers on doctor-written scenarios · 1,298 participants</figcaption>
+          <p class="fq-hbars-group" aria-hidden="true">Identified the condition</p>
+          <ol aria-hidden="true">
+            <li style="--v: 94.9"><span class="fq-hbar-key">LLM alone</span><span class="fq-hbar-track"><i></i></span><span class="fq-hbar-val"><b class="fq-odo">94.9</b>%</span></li>
+            <li class="is-lead" style="--v: 34.5"><span class="fq-hbar-key">People + LLM</span><span class="fq-hbar-track"><i></i></span><span class="fq-hbar-val"><small>under</small> <b class="fq-odo">34.5</b>%</span></li>
+          </ol>
+          <p class="fq-hbars-group" aria-hidden="true">Chose the right next step</p>
+          <ol aria-hidden="true">
+            <li style="--v: 56.3"><span class="fq-hbar-key">LLM alone</span><span class="fq-hbar-track"><i></i></span><span class="fq-hbar-val"><b class="fq-odo">56.3</b>%</span></li>
+            <li class="is-lead" style="--v: 44.2"><span class="fq-hbar-key">People + LLM</span><span class="fq-hbar-track"><i></i></span><span class="fq-hbar-val"><small>under</small> <b class="fq-odo">44.2</b>%</span></li>
+          </ol>
+          <p class="fq-small">People using an LLM did no better than a control group using their usual sources. The model knew the answer; the conversation lost it.</p>
+        </figure>
+        <div class="fq-convo-side">
+          <span class="case-label">Why it failed</span>
+          <ul class="case-bullets fq-why">
+            <li>People left out key details</li>
+            <li>Small rewordings changed the answer</li>
+            <li>Good and bad advice came mixed together</li>
+          </ul>
+          <span class="case-label case-label-gap">Design the conversation to close the gap</span>
+          <ul class="case-bullets">
+            <li>Ask for what people omit: age, duration, severity</li>
+            <li>Check red flags first; route to urgent care</li>
+            <li>Same facts, same answer: use vetted, dated content</li>
+            <li>Show what it assumed, so the user can correct it</li>
+            <li>Offer next steps, never a diagnosis</li>
+            <li>For clinicians: answer from the chart and cite the note or lab</li>
+            <li>Guard against over-trust: prompt a check with a clinician</li>
+          </ul>
+          <p class="fq-source">Sources: Bean et al., Nature Medicine (2026), a randomised study led by Oxford; WHO guidance on large multi-modal models (2024)</p>
+        </div>
+      </article>
+
+      <div class="case-subblock">
+        <div class="case-section-head fq-head">
+          <h3 class="case-subtitle">Each domain needs its own conversation</h3>
+          <p class="case-section-intro">The same conversational principles, tuned per domain. These rows are design recommendations rather than measured findings.</p>
+        </div>
+        <div class="case-table-wrap">
+          <table class="case-table fq-table">
+            <thead><tr><th scope="col">Domain</th><th scope="col">Users ask</th><th scope="col">Must-have behaviour</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">SaaS and B2B tools</th><td data-label="Users ask">&ldquo;How do I export invoices?&rdquo;</td><td data-label="Must-have behaviour">Answer from docs; do tasks only with a preview</td></tr>
+              <tr><th scope="row">Edtech</th><td data-label="Users ask">&ldquo;Is my answer right?&rdquo;</td><td data-label="Must-have behaviour">Give hints and questions before answers</td></tr>
+              <tr><th scope="row">Media and streaming</th><td data-label="Users ask">&ldquo;Something like X, but shorter&rdquo;</td><td data-label="Must-have behaviour">Moods become filters; only titles the user can watch</td></tr>
+              <tr><th scope="row">Travel</th><td data-label="Users ask">&ldquo;Beach trip in May, under ₹60k&rdquo;</td><td data-label="Must-have behaviour">Remember constraints; live prices, never invented</td></tr>
+              <tr class="is-focus"><th scope="row">In-vehicle</th><td data-label="Users ask">&ldquo;Find a charger on my route&rdquo;</td><td data-label="Must-have behaviour">Voice first, short replies, confirm before acting</td></tr>
+              <tr><th scope="row">Intranet</th><td data-label="Users ask">&ldquo;What&rsquo;s our leave policy?&rdquo;</td><td data-label="Must-have behaviour">Answer only from documents the person may see</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="fq-note-line"><strong>In every domain:</strong> say it&rsquo;s AI, cite sources, and keep a path to the classic results and to a human.</p>
+        <p class="fq-source">Design synthesis from the research; NHTSA glance limits apply to in-vehicle voice and screens</p>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         STAGE 07 · MEASURE & BUILD — mastery
+    ========================================================== -->
+    <section class="case-section fq-stage" id="measure" data-stage data-elev="2800" data-section="Measure &amp; build" data-index="07">
+      <div class="section-index rule" data-rule><span class="rule-index">07</span><span class="rule-title section-index-label">Measure &amp; build</span><span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span><span class="rule-meta">Mastery</span></div>
+      <header class="fq-gate">
+        <p class="fq-gate-alt"><span class="fq-gate-num">2800</span><span class="fq-gate-unit">m</span><span class="sr-only"> elevation</span></p>
+        <div class="fq-gate-copy">
+          <p class="fq-gate-level"><span>Stage 07 / 08</span><i aria-hidden="true"></i><span>Mastery</span></p>
+          <h2 class="fq-gate-title">Measure a stack, then build behind gates.</h2>
+          <p class="fq-gate-q"><span>Q.</span> How do we know it works, and in what order do we build it?</p>
+        </div>
+        <div class="fq-track" aria-hidden="true"></div>
+      </header>
+
+      <div class="fq-split fq-split--strata">
+        <div>
+          <h3 class="case-subtitle">Measure a stack, not a single number</h3>
+          <p class="case-copy">Task success is the goal; each layer below explains why it moves. When success drops, read down the stack.</p>
+          <p class="case-copy">Pair every metric with a guardrail: cutting zero results by returning everything destroys precision. Segment by query type, and set targets from your own baseline rather than vendor benchmarks.</p>
+          <p class="fq-source">Sources: NN/g response-time limits; SearchStax site-search analytics definitions</p>
+        </div>
+        <ol class="fq-strata">
+          <li class="fq-stratum is-top"><div><b>Outcome</b><small>Did users get what they came for?</small></div><p>Task success · Time to success · Ease rating</p></li>
+          <li class="fq-stratum"><div><b>Behaviour</b><small>Where does the loop break?</small></div><p>Zero results · Clicks · Exits · Reformulations · Recovery</p></li>
+          <li class="fq-stratum"><div><b>Relevance</b><small>Is ranking getting better?</small></div><p>nDCG@10 · Precision@k on a judged query set</p></li>
+          <li class="fq-stratum"><div><b>System</b><small>Is it fast and complete?</small></div><p>Latency (≈0.1 s suggest, ≈1 s results) · Coverage</p></li>
+        </ol>
+      </div>
+
+      <div class="case-subblock">
+        <div class="case-section-head fq-head">
+          <h3 class="case-subtitle">For conversations: measure resolution, not replies</h3>
+          <p class="case-section-intro">Classic metrics still apply underneath, but a conversation is judged by whether the task got resolved.</p>
+        </div>
+        <div class="fq-quads">
+          <div class="fq-quad is-key"><h4>Outcome: did it solve the task?</h4><ul class="case-bullets"><li>Resolution rate: solved without a human</li><li>Escalation quality: reached a human when needed</li><li>Time to resolution</li></ul></div>
+          <div class="fq-quad"><h4>Conversation: was it efficient?</h4><ul class="case-bullets"><li>Turns to resolution</li><li>Clarifying questions rated useful</li><li>Repeat-question rate, a sign of loops</li></ul></div>
+          <div class="fq-quad"><h4>Answer quality: was it right?</h4><ul class="case-bullets"><li>Citation coverage of claims</li><li>Unsupported-claim rate on a judged set</li><li>Safety-routing accuracy</li></ul></div>
+          <div class="fq-quad"><h4>Trust: was it believed, rightly?</h4><ul class="case-bullets"><li>Source and verification clicks</li><li>Thumbs-down rate with reasons</li><li>Fallback to classic results</li></ul></div>
+        </div>
+        <p class="fq-warn"><strong>Guardrail:</strong> a high containment rate can mean users are trapped. Pair it with escalation quality and the repeat-question rate.</p>
+        <p class="fq-source">Sources: CFPB on chatbot loops (2023); Zou et al. (2023); NN/g diary study (2023)</p>
+      </div>
+
+      <div class="case-subblock">
+        <div class="case-section-head fq-head">
+          <h3 class="case-subtitle">Build in four phases, each gated by a metric</h3>
+          <p class="case-section-intro">Instrument first so every later change can be judged. Fix vocabulary and recovery next, because that is where most failures are. Then the interface, and AI last.</p>
+        </div>
+        <ol class="fq-phases">
+          <li class="fq-phase"><span class="fq-phase-no">Phase 1</span><h4>Instrument</h4><ul class="case-bullets"><li>Log every search and its outcome</li><li>Build a judged query set</li><li>Run a baseline usability test</li></ul><p class="fq-gatebox"><span>Gate</span>A dashboard the team trusts</p></li>
+          <li class="fq-phase"><span class="fq-phase-no">Phase 2</span><h4>Vocabulary</h4><ul class="case-bullets"><li>Synonyms, typos and units from the logs</li><li>Index help, policies and actions</li><li>Rebuild the zero-results state</li></ul><p class="fq-gatebox"><span>Gate</span>Zero results down, precision holds</p></li>
+          <li class="fq-phase"><span class="fq-phase-no">Phase 3</span><h4>Interface</h4><ul class="case-bullets"><li>Autosuggest to the research pattern</li><li>Filters, scope and snippets</li><li>Accessible combobox; A/B tests</li></ul><p class="fq-gatebox"><span>Gate</span>Task success up, latency in budget</p></li>
+          <li class="fq-phase"><span class="fq-phase-no">Phase 4</span><h4>Intelligence</h4><ul class="case-bullets"><li>Hybrid retrieval</li><li>Learning to rank from behaviour</li><li>Cited AI answers</li></ul><p class="fq-gatebox"><span>Gate</span>Relevance up, no unsupported claims</p></li>
+        </ol>
+        <p class="fq-note-line"><strong>Throughout:</strong> give search an owner, and review the top zero-result queries, top exits and new terms every week. Phases can overlap, but each gate must hold before the next phase counts as a success.</p>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         STAGE 08 · SUMMIT — where to start, at first light
+    ========================================================== -->
+    <section class="case-section fq-stage fq-summit" id="summit" data-stage data-elev="3000" data-section="Summit" data-index="08">
+      <div class="section-index rule" data-rule><span class="rule-index">08</span><span class="rule-title section-index-label">Summit</span><span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span><span class="rule-meta">First light</span></div>
+      <header class="fq-gate">
+        <p class="fq-gate-alt"><span class="fq-gate-num">3000</span><span class="fq-gate-unit">m</span><span class="sr-only"> elevation</span></p>
+        <div class="fq-gate-copy">
+          <p class="fq-gate-level"><span>Stage 08 / 08</span><i aria-hidden="true"></i><span>Summit</span></p>
+          <h2 class="fq-gate-title">Where to start on Monday.</h2>
+          <p class="fq-gate-q"><span>Q.</span> With all of this in hand, what are the first three moves?</p>
+        </div>
+        <div class="fq-track" aria-hidden="true"></div>
+        <span class="fq-sunline" aria-hidden="true"></span>
+      </header>
+
+      <ol class="fq-moves">
+        <li class="fq-move"><span class="fq-move-no">1</span><h3>Baseline first</h3><p>Log every search with results, clicks, exits and reformulations. Pull the top 100 queries and build a judged set.</p></li>
+        <li class="fq-move"><span class="fq-move-no">2</span><h3>Fix words and dead ends</h3><p>Add synonyms, units and abbreviations from the logs, index help and actions, and give every zero-result state a next step.</p></li>
+        <li class="fq-move"><span class="fq-move-no">3</span><h3>Agree the ground rules</h3><p>Pick the first product, name an owner for search, and confirm which privacy rules govern query logs, such as HIPAA or India&rsquo;s DPDP Act.</p></li>
+      </ol>
+      <p class="fq-note-line fq-then"><strong>Then</strong> the interface, then AI, each behind its metric gate.</p>
+
+      <p class="case-closing">Win the first query. Never leave anyone stuck. Let AI stand on results people can check.</p>
+
+      <dl class="fq-log">
+        <div><dt>Climbed</dt><dd><span class="fq-odo">3000</span> m</dd></div>
+        <div><dt>Stages</dt><dd><span class="fq-odo">09</span></dd></div>
+        <div><dt>Domains</dt><dd><span class="fq-odo">09</span></dd></div>
+        <div><dt>Sources</dt><dd><span class="fq-odo">31</span></dd></div>
+      </dl>
+    </section>
+
+    <!-- ==========================================================
+         LOGBOOK — every source the climb stood on
+    ========================================================== -->
+    <section class="case-section fq-logbook" id="logbook" data-section="Logbook" data-index="§">
+      <div class="section-index rule" data-rule><span class="rule-index">§</span><span class="rule-title section-index-label">Logbook</span><span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span><span class="rule-meta">31 Sources</span></div>
+      <div class="case-section-head">
+        <h2 class="case-section-title">Every number traces to a source.</h2>
+        <p class="case-section-intro">All sources were opened and read during the research. The Amazon figures are the company&rsquo;s own; the RBI FREE-AI items are recommendations, not yet binding rules.</p>
+      </div>
+      <div class="fq-sources">
+        <div>
+          <span class="case-label">Search research</span>
+          <ol class="fq-source-list">
+            <li>Baymard Institute: Ecommerce Search UX 2026</li>
+            <li>Baymard Institute: Autocomplete design patterns (2022)</li>
+            <li>Baymard Institute: &ldquo;No Results&rdquo; page strategies (2025)</li>
+            <li>NN/g: Search, Visible and Simple (2001)</li>
+            <li>NN/g: Response Times, 3 Limits (1993)</li>
+            <li>Google Cloud / Harris Poll: Search abandonment (2023)</li>
+            <li>Indig: Trust Still Lives in Blue Links (2025)</li>
+            <li>Plovnick and Zeng, JMIR (2004)</li>
+            <li>Vydiswaran et al., AMIA (2014)</li>
+            <li>Hanauer et al., J Biomed Inform (2017)</li>
+            <li>Kaiser Permanente DOR: EHR search terms (2020)</li>
+            <li>Woods Rogers: HHS OCR tracking guidance</li>
+            <li>Morrison Foerster: OCR guidance vacated in part (2024)</li>
+            <li>US DOT / NHTSA: In-vehicle distraction guidelines</li>
+            <li>W3C WAI-ARIA: Combobox pattern</li>
+            <li>Visa Developer: Transaction data enrichment</li>
+            <li>Revolut: Transaction search (2018)</li>
+            <li>Monzo community: Searching by amount</li>
+            <li>Manticore Search: Hybrid search</li>
+            <li>SearchStax: Site search analytics</li>
+          </ol>
+        </div>
+        <div>
+          <span class="case-label">Conversational search</span>
+          <ol class="fq-source-list">
+            <li>NN/g: Generative AI diary study (2023)</li>
+            <li>NN/g: The 6 Types of Conversations with Generative AI (2023)</li>
+            <li>Zou et al.: Users Meet Clarifying Questions, ACM TOIS (2023)</li>
+            <li>Modern Retail: Amazon on its Rufus assistant (2026)</li>
+            <li>CFPB: Chatbots in consumer finance (2023)</li>
+            <li>ATM Marketplace: Erica passes 3 billion interactions (2025)</li>
+            <li>Legal500: RBI FREE-AI committee report (2025)</li>
+            <li>Cooley: EU AI Act transparency obligations (2026)</li>
+            <li>Bean et al., Nature Medicine (2026), and the Oxford news release</li>
+            <li>WHO: Guidance on large multi-modal models (2024)</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         NEXT PROJECT
+    ========================================================== -->
+    <section class="case-next" data-section="Next project" data-index="—">
+      <p class="case-next-eyebrow">Next Project</p>
+      <a href="case-study.html?p=suspension" class="case-next-link" id="caseNextLink" data-cursor="Next" data-transition>
+        <span class="line-mask"><span class="line" id="caseNextTitle">Suspension Diagnostics</span></span>
+        <span class="case-next-dim" aria-hidden="true"><i></i></span>
+      </a>
+    </section>
+
+    <!-- region:contact ============================================ -->
+    <section class="contact" id="contact" data-section="Contact" data-index="—" aria-labelledby="contact-title">
+      <div class="contact-copy">
+        <p class="contact-eyebrow label" data-reveal="fade">Have a project in mind?</p>
+        <h2 class="contact-title" id="contact-title" data-reveal="lines">Let’s talk.</h2>
+        <p class="contact-write" data-reveal="up" data-reveal-delay="250"><span class="label">Write to</span><a href="mailto:sayhi@niteshdixit.in" class="contact-email link" data-cursor="Write">sayhi@niteshdixit.in</a></p>
+      </div>
+      <div class="contact-ignition">
+        <a href="mailto:sayhi@niteshdixit.in" class="ignition" aria-label="Let’s talk — email sayhi@niteshdixit.in" data-cursor="Say hi">
+          <svg class="ignition-scale" viewBox="-100 -100 200 200" aria-hidden="true" focusable="false"><circle class="is-rim" r="97" /><circle class="is-minor" r="88" pathLength="360" /><circle class="is-major" r="89" pathLength="360" /></svg>
+          <svg class="ignition-scale ignition-scale--lit" viewBox="-100 -100 200 200" aria-hidden="true" focusable="false"><circle class="is-minor" r="88" pathLength="360" /><circle class="is-major" r="89" pathLength="360" /></svg>
+          <span class="ignition-ring" aria-hidden="true"></span>
+          <span class="ignition-led" aria-hidden="true"></span>
+          <span class="ignition-face" aria-hidden="true"><span class="ignition-engine">Engine</span><span class="ignition-start">Start</span><span class="ignition-stop">Stop</span></span>
+        </a>
+        <p class="contact-dim dim" aria-hidden="true" data-reveal="fade" data-reveal-delay="500">Push to start</p>
+      </div>
+    </section>
+    <!-- /region:contact =========================================== -->
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER — the spec sheet sign-off (shared chrome)
+  ============================================================ -->
+  <footer class="footer" data-section="Sign-off" data-index="—">
+    <div class="rule footer-rule" data-rule>
+      <span class="rule-index">§</span>
+      <span class="rule-title">End of line</span>
+      <span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span>
+      <a href="#top" class="rule-meta footer-top" data-cursor="Top">Back to top ↑</a>
+    </div>
+    <dl class="spec footer-spec">
+      <div class="spec-row"><dt>Designer</dt><dd>Nitesh Dixit</dd></div>
+      <div class="spec-row"><dt>Discipline</dt><dd>HMI · Product · Brand</dd></div>
+      <div class="spec-row"><dt>Based in</dt><dd>India — working globally</dd></div>
+      <div class="spec-row"><dt>Write</dt><dd><a href="mailto:sayhi@niteshdixit.in" class="link">sayhi@niteshdixit.in</a></dd></div>
+      <div class="spec-row"><dt>Elsewhere</dt><dd class="footer-social"><a href="https://www.instagram.com/pixelandgear/" class="link" target="_blank" rel="noopener">Instagram</a><a href="https://www.linkedin.com/in/niteshdixit/" class="link" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.behance.net/niteshdixit2" class="link" target="_blank" rel="noopener">Behance</a></dd></div>
+      <div class="spec-row"><dt>Local time</dt><dd><span data-clock>--:--</span> IST</dd></div>
+    </dl>
+    <div class="footer-mark" data-fit aria-hidden="true">Nitesh Dixit</div>
+    <div class="footer-base">
+      <span>&copy; <span id="year">2026</span> Nitesh Dixit. All rights reserved.</span>
+      <span>Coachbuilt in India · MMXXVI</span>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       SCRIPTS — Anime.js v4 + Lenis, shared core, then this study.
+  ============================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/animejs@4.5.0/dist/bundles/anime.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+  <script src="core.js"></script>
+  <script src="transition.js"></script>
+  <script src="case-study-data.js"></script>
+  <script src="case-search.js"></script>
+  <script src="contact.js"></script>
+</body>
+</html>

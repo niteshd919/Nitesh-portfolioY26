@@ -31,6 +31,11 @@
     window.location.href = 'index.html';
     return;
   }
+  // A study with its own page lives there, not in this template.
+  if (data.href) {
+    window.location.replace(data.href);
+    return;
+  }
 
   const Site = window.Site;
   const A = Site && Site.anime;
@@ -960,7 +965,7 @@
   const nextLink = byId('caseNextLink');
   if (nextData && nextLink) {
     const nextSlug = nextData.slug || data.next;
-    nextLink.setAttribute('href', `case-study.html?p=${nextSlug}`);
+    nextLink.setAttribute('href', nextData.href || `case-study.html?p=${nextSlug}`);
     nextLink.setAttribute('data-transition-label', fullName(nextData));
     nextLink.setAttribute('data-transition-eyebrow', `Next · ${caseNo(data.next)}`);
     nextLink.setAttribute('aria-label', `Next project: ${fullName(nextData)}`);
