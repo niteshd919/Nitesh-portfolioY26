@@ -1,6 +1,6 @@
 /* ==================================================================
    NITESH DIXIT — PORTFOLIO 2026 · home · showroom
-   The selected work as a private viewing: five bays on one track.
+   The selected work as a private viewing: six bays on one track.
 
    pinned   ≥ 900px wide, or ≥ 540px tall. The stage is sticky (CSS).
             Page scroll through the tall section pans the track bay by
@@ -76,8 +76,10 @@
         sweep: q('.bay-sweep i'),
         cap: q('.bay-cap'),
         settle: q('.sus-zoom, .cf-plate img'),
-        rise: qa('.hmi-glass, .hmi-rise, .hmi-tag, .fqb-rise'),
+        rise: qa('.hmi-glass, .hmi-rise, .hmi-tag, .fqb-rise, .bfb-rise'),
         typed: q('.fqb-q'),
+        charge: qa('.bfb-row[data-ease]'),
+        clock: q('.bfb-q'),
         phones: qa('.ev-phone-body'),
         port: q('.ev-port'),
         led: q('.ev-port-led'),
@@ -286,6 +288,8 @@
       if (b.rise.length) utils.set(b.rise, { opacity: 0, translateY: 18 });
       if (b.phones.length) utils.set(b.phones, { opacity: 0, '--fan': 0 });
       if (b.port) utils.set(b.port, { opacity: 0 });
+      if (b.charge.length) utils.set(b.charge, { '--g': 0 });
+      if (b.clock) b.clock.textContent = '01';
     }
 
     function arrive(b) {
@@ -384,6 +388,24 @@
           alternate: true,
           autoplay: false,
         }));
+      }
+      // Four batteries charge over the same ten questions, each at the
+      // pace its bar moved; they hold, drain, and charge again.
+      if (b.charge.length) {
+        const RUN = 2600;
+        const EASES = { fast: 'out(3)', linear: 'linear', slow: 'in(3)' };
+        const q = { n: 1 };
+        const tick = () => { if (b.clock) b.clock.textContent = pad(Math.round(q.n)); };
+        const charging = createTimeline({ loop: true, autoplay: false })
+          .add(q, { n: [1, 10], duration: RUN, ease: 'linear', onUpdate: tick }, 0);
+        b.charge.forEach((row) => {
+          charging
+            .add(row, { '--g': [0, 1], duration: RUN, ease: EASES[row.dataset.ease] || 'linear' }, 0)
+            .add(row, { '--g': [1, 0], duration: 600, ease: 'in(2)' }, RUN + 2600);
+        });
+        charging.add(q, { n: [10, 1], duration: 600, ease: 'in(2)', onUpdate: tick }, RUN + 2600);
+        charging.call(() => {}, RUN + 3500);
+        b.loops.push(charging);
       }
       b.live = false;
       request();

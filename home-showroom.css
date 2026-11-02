@@ -1,7 +1,7 @@
 /* ==================================================================
    HOME · SHOWROOM — the selected work as a private viewing.
 
-   Five bays on one track, each split down a ruled centre line: the
+   Six bays on one track, each split down a ruled centre line: the
    build sheet on the left, the car under studio light on the right.
 
    ≥ 900px wide, or ≥ 540px tall (with JS): the section is a tall
@@ -24,7 +24,7 @@
 
 /* ================= 1. SECTION ================= */
 .showroom {
-  --bays: 5;
+  --bays: 6;
   --seg: 0.9;            /* scroll for one bay change, × viewport height */
   --dwell: 0.2;          /* held on the first and last bay, × viewport height */
   --band-top: calc(var(--nav-h) + clamp(2.25rem, 5.6vh, 3.5rem));
@@ -803,6 +803,117 @@
   .fqb-bars { height: 43cqh; }
 }
 
+/* ---- 5f. Built to Finish — four batteries charged over the same ten
+   questions, each at the pace its bar moved, beside the break-off
+   that pace produced. The charge (#8fb4ff) is the study's colour. ---- */
+.media-stepper { --stage: #060607; }
+.media-stepper .bay-stage {
+  background:
+    radial-gradient(60% 45% at 50% 106%, rgba(143, 180, 255, 0.1), transparent 70%),
+    linear-gradient(to bottom, #050506 0%, #0a0a0c 62%, #08080a 100%);
+}
+.bfb-panel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  row-gap: 4.5cqh;
+  width: min(78cqw, 36rem);
+  translate: -50% -52%;
+}
+.bfb-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 2.4cqh;
+  border-bottom: 1px solid var(--c-line);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.bfb-head b {
+  margin-left: 0.5rem;
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 300;
+  font-size: clamp(1rem, 3.6cqw, 1.6rem);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-fg);
+}
+.bfb-rows { display: grid; row-gap: 3.4cqh; }
+.bfb-row {
+  --g: 1;
+  display: grid;
+  grid-template-columns: minmax(6rem, 0.36fr) minmax(0, 1fr) 3rem;
+  align-items: center;
+  column-gap: 0.9rem;
+}
+.bfb-key {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: var(--c-fg-2);
+}
+.bfb-bat {
+  position: relative;
+  height: clamp(0.9rem, 5.2cqh, 1.6rem);
+  margin-right: 5px;
+  padding: 2px;
+  border: 1px solid var(--c-line-2);
+}
+.bfb-bat::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 30%;
+  bottom: 30%;
+  width: 3px;
+  background: var(--c-line-2);
+}
+.bfb-bat i {
+  display: block;
+  width: calc(var(--v) * var(--g) * 1%);
+  height: 100%;
+  background: linear-gradient(90deg, rgba(236, 233, 226, 0.14), rgba(236, 233, 226, 0.34));
+}
+.bfb-row.is-none .bfb-bat { border-style: dashed; }
+.bfb-row.is-best .bfb-bat { border-color: rgba(143, 180, 255, 0.5); }
+.bfb-row.is-best .bfb-bat i {
+  background: linear-gradient(90deg, rgba(143, 180, 255, 0.3), #8fb4ff);
+  box-shadow: 0 0 18px -5px rgba(143, 180, 255, 0.7);
+}
+.bfb-row.is-worst .bfb-bat i { background: linear-gradient(90deg, rgba(255, 59, 29, 0.35), var(--c-signal)); }
+.bfb-row > b {
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 300;
+  font-size: clamp(0.95rem, 3.4cqw, 1.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-fg);
+}
+.bfb-row.is-best > b { color: #d6e4ff; }
+.bfb-row.is-worst > b { color: var(--c-signal); }
+/* A short bay: tighter rows. A narrow one: the label above its bar. */
+@container (max-height: 13rem) {
+  .bfb-panel { row-gap: 0.8rem; }
+  .bfb-rows { row-gap: 0.45rem; }
+  .bfb-head { padding-bottom: 0.45rem; }
+}
+@container (max-width: 26rem) {
+  .bfb-row { grid-template-columns: minmax(0, 1fr) 2.6rem; row-gap: 0.3rem; }
+  .bfb-key { grid-column: 1 / -1; }
+}
+
 /* ================= 6. HUD — the bay selector ================= */
 .showroom-selector { display: none; }
 
@@ -839,7 +950,7 @@
   height: 9px;
   background:
     linear-gradient(var(--c-line-2), var(--c-line-2)) left bottom / 100% 1px no-repeat,
-    repeating-linear-gradient(90deg, var(--c-fg-3) 0 1px, transparent 1px 20%) left bottom / calc(100% + 1px) 9px no-repeat,
+    repeating-linear-gradient(90deg, var(--c-fg-3) 0 1px, transparent 1px calc(100% / var(--bays))) left bottom / calc(100% + 1px) 9px no-repeat,
     repeating-linear-gradient(90deg, var(--c-line) 0 1px, transparent 1px 8px) left bottom / 100% 4px no-repeat;
 }
 .showroom-needle {
@@ -1084,9 +1195,10 @@
 
 /* If the script fails part-way, nothing may stay hidden. */
 .showroom.is-static .bay-details *,
-.showroom.is-static :is(.bay-cap, .hmi-glass, .hmi-rise, .hmi-tag, .ev-phone-body, .ev-port, .fqb-rise) { opacity: 1 !important; }
+.showroom.is-static :is(.bay-cap, .hmi-glass, .hmi-rise, .hmi-tag, .ev-phone-body, .ev-port, .fqb-rise, .bfb-rise) { opacity: 1 !important; }
 .showroom.is-static .bay-details *,
-.showroom.is-static :is(.hmi-rise, .fqb-rise) { transform: none !important; }
+.showroom.is-static :is(.hmi-rise, .fqb-rise, .bfb-rise) { transform: none !important; }
+.showroom.is-static .bfb-row { --g: 1 !important; }
 .showroom.is-static .bay-media { clip-path: none !important; }
 .showroom.is-static .bay-scanline { display: none; }
 .showroom.is-static .bay-spec-cell { --draw: 1 !important; }

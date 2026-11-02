@@ -562,6 +562,22 @@ window.CASE_STUDIES = {
     tags: ['UX Research', 'Documentation'],
     gradient: 'linear-gradient(135deg,#ffb070,#1a1a1a)',
     accent: '#ffb070',
+    next: 'stepper',
+  },
+
+  /* ================================================================ */
+  /* Also bespoke (case-stepper.html): a page that charges as it is
+     read, built like the stepper it recommends. */
+  stepper: {
+    slug: 'stepper',
+    href: 'case-stepper.html',
+    title: 'Built to Finish',
+    subtitle: 'Stepper UX research',
+    tagline: 'People don’t finish the indicator. They finish the steps.',
+    year: '2026',
+    tags: ['UX Research', 'Design Systems', 'Accessibility'],
+    gradient: 'linear-gradient(135deg,#8fb4ff,#1a1a1a)',
+    accent: '#8fb4ff',
     next: 'suspension',
   },
 
