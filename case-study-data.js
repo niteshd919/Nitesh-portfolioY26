@@ -559,7 +559,7 @@ window.CASE_STUDIES = {
     subtitle: 'In-app search research',
     tagline: 'Most people search once. This is how to make that once count.',
     year: '2026',
-    tags: ['UX Research', 'Search', 'Conversational AI'],
+    tags: ['UX Research', 'Documentation'],
     gradient: 'linear-gradient(135deg,#ffb070,#1a1a1a)',
     accent: '#ffb070',
     next: 'suspension',
