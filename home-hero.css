@@ -377,13 +377,18 @@ html.is-ignited .preloader { display: none; }
 .hero-car .hc-leader { opacity: 0.34; }
 .hero-car .hc-dot { fill: var(--c-bg); stroke: var(--c-fg); opacity: 0.85; }
 
-/* ---- Callout labels (HTML, placed in drawing units) ---- */
+/* ---- Callout labels (HTML, placed in drawing units) ----
+   --hang: 0 hangs right of the leader, 1 hangs left (home-hero.js reads
+   it to wipe the label out from the leader). --lift raises a label, in
+   drawing units; home-hero.js runs its leader up to meet it. */
 .hero-note {
   --x: 0;
   --y: 0;
+  --hang: 0;
+  --lift: 0;
   position: absolute;
   left: calc(var(--x) / 1200 * 100%);
-  top: calc(var(--y) / 420 * 100%);
+  top: calc((var(--y) - var(--lift)) / 420 * 100%);
   display: flex;
   align-items: baseline;
   gap: 0.6em;
@@ -397,19 +402,18 @@ html.is-ignited .preloader { display: none; }
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--c-fg);
-  transform: translate(-0.5px, -100%);
+  transform: translate(calc(var(--hang) * (1px - 100%) - 0.5px), -100%);
 }
 .hero-note::after {
   content: '';
   position: absolute;
-  left: 0;
+  left: calc(var(--hang) * (100% - 1.6rem));
   bottom: 0;
   width: 1.6rem;
   height: 1px;
   background: var(--c-fg-3);
 }
-.hero-note.is-left { transform: translate(calc(-100% + 0.5px), -100%); }
-.hero-note.is-left::after { left: auto; right: 0; }
+.hero-note.is-left { --hang: 1; }
 .hero-note-i { color: var(--c-signal); }
 
 .hero-dim {
@@ -503,7 +507,7 @@ html.is-ignited .preloader { display: none; }
     container-type: normal;
     align-self: center;
     height: calc(var(--fig-w) / (1200 / 420));
-    margin: clamp(2.25rem, 6svh, 3.5rem) calc(-1 * var(--gutter)) clamp(1.5rem, 4svh, 2.5rem);
+    margin: clamp(2.75rem, 7svh, 4rem) calc(-1 * var(--gutter)) clamp(1.5rem, 4svh, 2.5rem);
   }
   .hero-fig {
     right: auto;
@@ -511,13 +515,13 @@ html.is-ignited .preloader { display: none; }
     width: var(--fig-w);
     height: auto;
   }
-  /* Two callouts on phones, both hanging left of their leaders. */
-  .hero-note { transform: translate(calc(-100% + 0.5px), -100%); }
-  .hero-note::after { left: auto; right: 0; }
-  .hero-note[data-note="01"],
-  .hero-note[data-note="03"],
-  .hero-car .hc-note[data-note="01"],
-  .hero-car .hc-note[data-note="03"] { display: none; }
+  /* All four callouts on phones, staggered in two tiers so they clear
+     each other: 01 hangs right off the tail, the rest hang left, and 02
+     and 04 stand a tier higher. */
+  .hero-note { --hang: 1; }
+  .hero-note[data-note="01"] { --hang: 0; }
+  .hero-note[data-note="02"],
+  .hero-note[data-note="04"] { --lift: 100; }
   .hero-car .hc-lane { stroke-width: 2.8; }
   .hero-foot {
     grid-template-columns: 1fr auto;

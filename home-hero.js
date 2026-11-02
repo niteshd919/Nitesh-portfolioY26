@@ -62,6 +62,18 @@
   let seen = false;
   try { seen = sessionStorage.getItem(SEEN_KEY) === '1'; } catch (err) { seen = false; }
 
+  // A label lifted a tier (--lift, in drawing units, set by the CSS on
+  // phones) gets its leader run up to meet it.
+  function fitLeaders() {
+    notes.forEach((note) => {
+      const leader = car.querySelector(`.hc-note[data-note="${note.dataset.note}"] .hc-leader`);
+      if (!leader) return;
+      if (!leader.dataset.d) leader.dataset.d = leader.getAttribute('d');
+      const lift = parseFloat(getComputedStyle(note).getPropertyValue('--lift')) || 0;
+      leader.setAttribute('d', leader.dataset.d.replace(/V(-?[\d.]+)$/, (m, y) => `V${Number(y) - lift}`));
+    });
+  }
+
   /* ------------------------------------------------------------------
      1. HIDDEN STATES — set from JS so the page reads complete without
         it. The preloader (or the shutter) covers all of this.
@@ -208,7 +220,7 @@
         opacity: [0, 1],
         // Wipe out from the leader: left-hanging labels open leftwards.
         clipPath: (el) => ({
-          from: el.classList.contains('is-left') || phone.matches ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)',
+          from: parseFloat(getComputedStyle(el).getPropertyValue('--hang')) ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)',
           to: 'inset(0% 0% 0% 0%)',
         }),
         duration: 800,
@@ -480,6 +492,9 @@
   function dropPreloader() {
     if (pre && pre.parentNode) pre.remove();
   }
+
+  fitLeaders();
+  if (phone.addEventListener) phone.addEventListener('change', fitLeaders);
 
   if (reduced) {
     dropPreloader();

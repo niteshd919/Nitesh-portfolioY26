@@ -2,12 +2,15 @@
    NITESH DIXIT — PORTFOLIO 2026 · home · showroom
    The selected work as a private viewing: five bays on one track.
 
-   ≥ 900px  The stage is sticky (CSS). Page scroll through the tall
-            section pans the track bay by bay by seeking one paused
-            Anime.js timeline; the pan eases into every bay like a
-            selector clicking into its detent.
-   < 900px  The track is a native swipe strip (scroll-snap). The same
-            timeline follows its scrollLeft for the HUD and parallax.
+   pinned   ≥ 900px wide, or ≥ 540px tall. The stage is sticky (CSS).
+            Page scroll through the tall section pans the track bay by
+            bay by seeking one paused Anime.js timeline; the pan eases
+            into every bay like a selector clicking into its detent, and
+            a touch drag that comes to rest between bays settles into
+            the one it was heading for.
+   strip    Narrow and short (a phone on its side). The track is a
+            native swipe strip (scroll-snap). The same timeline follows
+            its scrollLeft for the HUD and parallax.
 
    A bay arrives once, the first time it is in view: the title lines
    rise, the spec figures roll, the CTA rule draws, the media is
@@ -45,7 +48,8 @@
     const rule = section.querySelector('.showroom-rule');
     const selector = section.querySelector('.showroom-selector');
     const segs = [...section.querySelectorAll('[data-showroom-go]')];
-    const wide = window.matchMedia('(min-width: 900px)');
+    // The same query as section 7 of home-showroom.css.
+    const pin = window.matchMedia('(min-width: 900px), (min-height: 540px)');
     const NUMERIC = /^[\d.,]+$/;
     const pad = (n) => String(n).padStart(2, '0');
 
@@ -151,22 +155,35 @@
     let introDone = false;
     let wasDocked = false;
     let frame = 0;
+    let heading = 0;       // which way the track last moved: -1, 0 or 1
+    let inPin = false;     // the stage is pinned, between its first and last scroll
+    let touching = false;
+    let armed = false;     // a touch scroll is under way; settle once it rests (see 7.)
+    let settleTimer = 0;
 
     function update() {
       frame = 0;
       const vh = window.innerHeight;
       const box = stage.getBoundingClientRect();
-      const pinned = wide.matches;
+      const pinned = pin.matches;
 
       if (pinned) {
-        const r = utils.clamp(-section.getBoundingClientRect().top / travel, 0, 1);
+        const raw = -section.getBoundingClientRect().top / travel;
+        inPin = raw > 0 && raw < 1;
+        const r = utils.clamp(raw, 0, 1);
         pos = detent(utils.clamp((r - hold) / (1 - 2 * hold), 0, 1) * (N - 1));
       } else {
+        inPin = false;
         pos = utils.clamp(track.scrollLeft / Math.max(1, track.clientWidth), 0, N - 1);
       }
       if (pos !== seeked) {
+        if (seeked !== null) heading = Math.sign(pos - seeked);
         pan.seek(pos * STEP);
         seeked = pos;
+      }
+      if (armed) {
+        clearTimeout(settleTimer);
+        settleTimer = setTimeout(settle, 160);
       }
 
       const next = utils.clamp(Math.round(pos), 0, N - 1);
@@ -383,7 +400,7 @@
           sideways trackpad swipes.
     ------------------------------------------------------------------ */
     function goTo(i, opts = {}) {
-      if (wide.matches) {
+      if (pin.matches) {
         measure();
         const docTop = section.getBoundingClientRect().top + window.scrollY;
         Site.scroll.to(docTop + dockOffset(i), {
@@ -399,7 +416,7 @@
 
     // Tabbing to a CTA in a bay that is off stage brings that bay in.
     track.addEventListener('focusin', (e) => {
-      if (!wide.matches) return;
+      if (!pin.matches) return;
       const b = bays.find((x) => x.el.contains(e.target));
       if (!b) return;
       const box = stage.getBoundingClientRect();
@@ -416,12 +433,36 @@
     // the content runs, instead of doing nothing.
     stage.addEventListener('wheel', (e) => {
       const lenis = Site.scroll.lenis;
-      if (!wide.matches || !lenis || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      if (!pin.matches || !lenis || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       const box = stage.getBoundingClientRect();
       if (box.top > 1 || box.bottom < window.innerHeight - 1) return;
       e.preventDefault();
       lenis.scrollTo(lenis.targetScroll + e.deltaX, { duration: lenis.options.duration, easing: lenis.options.easing });
     }, { passive: false });
+
+    // On a pinned stage, a touch drag (and its fling) that comes to rest
+    // between two bays settles into the one it was heading for, the way
+    // a swipe strip snaps. A nudge of less than 0.15 of a bay falls back.
+    function settle() {
+      armed = false;
+      if (touching || !pin.matches || !inPin) return;
+      const target = utils.clamp(heading < 0 ? Math.floor(pos + 0.15) : Math.ceil(pos - 0.15), 0, N - 1);
+      if (Math.abs(pos - target) > 0.002) goTo(target, { duration: 0.9 });
+    }
+
+    window.addEventListener('touchstart', () => {
+      touching = true;
+      armed = false;
+      clearTimeout(settleTimer);
+    }, { passive: true });
+    const release = () => {
+      touching = false;
+      armed = true;
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(settle, 160);
+    };
+    window.addEventListener('touchend', release, { passive: true });
+    window.addEventListener('touchcancel', release, { passive: true });
 
     /* ------------------------------------------------------------------
        8. IMAGES — load every bay before the stage arrives, so nothing
@@ -453,7 +494,7 @@
     };
     window.addEventListener('resize', remeasure);
     window.addEventListener('load', remeasure);
-    if (wide.addEventListener) wide.addEventListener('change', remeasure);
+    if (pin.addEventListener) pin.addEventListener('change', remeasure);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
     Site.when('intro:done').then(() => {
       introDone = true;
