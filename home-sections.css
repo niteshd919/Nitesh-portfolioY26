@@ -1,8 +1,10 @@
 /* ==================================================================
    NITESH DIXIT — PORTFOLIO 2026 · home sections
    02 About   — "The Spec Sheet". The one ivory section: the copy inks
-                in as it is read, the capabilities sit in a coded spec
-                table, and a coachbuilder's sill plate signs it off.
+                in as it is read, a coachbuilder's sill plate, the
+                capabilities in a coded spec table, and a sign-off
+                that lists range and fuel like the last page of a
+                brochure (fine print included).
    03 Journey — "Telemetry". An instrument cluster that self-tests on
                 arrival, then the brand wall behind fine panel gaps.
    Gauge dials and the copy's word split are built by home-sections.js.
@@ -211,7 +213,7 @@
 .about-caps-list {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: repeat(3, auto);
+  grid-template-rows: repeat(2, auto);
   grid-auto-flow: column;
   column-gap: clamp(1.5rem, 4vw, 3.5rem);
   counter-reset: cap;
@@ -236,7 +238,7 @@
   opacity: var(--draw);
 }
 /* Close each column with a hairline under its last row. */
-.cap:nth-child(3n)::after {
+.cap:nth-child(2n)::after {
   content: '';
   position: absolute;
   left: 0;
@@ -263,6 +265,126 @@
   line-height: 1.25;
   letter-spacing: -0.008em;
   color: var(--c-fg);
+}
+
+/* ---- Sign-off — set on the capabilities' three columns: the line
+   takes two, the closing spec rows the third ---- */
+.about-coda {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  column-gap: clamp(1.5rem, 4vw, 3.5rem);
+  row-gap: clamp(2.5rem, 6vw, 3.5rem);
+  margin-top: clamp(5rem, 10vw, 9rem);
+}
+.coda-line {
+  grid-column: span 2;
+  /* Room under the second line for the overflow note. */
+  padding-bottom: 1.9rem;
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 300;
+  font-size: clamp(1.7rem, 0.8rem + 2.75vw, 3.6rem);
+  line-height: 1.12;
+  letter-spacing: -0.022em;
+  color: var(--c-fg);
+}
+.coda-row { display: block; }
+.coda-out {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* The box drawn around "Out of the" — and "box" left outside it. */
+.coda-in { position: relative; }
+.coda-frame {
+  --draw: 1;
+  position: absolute;
+  left: -0.16em;
+  right: -0.1em;
+  top: 0.04em;
+  bottom: -0.02em;
+  border: 1px solid var(--c-fg-3);
+  pointer-events: none;
+  clip-path: inset(0 calc((1 - var(--draw)) * 100%) 0 0);
+}
+.coda-frame::before,
+.coda-frame::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  width: 1px;
+  height: 0.22em;
+  background: var(--c-fg-3);
+  translate: 0 -100%;
+}
+.coda-frame::before { left: -1px; }
+.coda-frame::after { right: -1px; }
+
+/* A redline review note, hung from the escaped word. */
+.coda-spill { position: relative; }
+.coda-note {
+  position: absolute;
+  left: 0.04em;
+  top: calc(100% + 0.5rem);
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-weight: 400;
+  font-size: var(--fs-label);
+  letter-spacing: 0.06em;
+  line-height: 1;
+  color: var(--c-signal);
+  white-space: nowrap;
+}
+.coda-note::before {
+  content: '';
+  width: 1.4rem;
+  height: 1px;
+  background: currentColor;
+}
+
+.coda-spec dd {
+  font-size: clamp(0.875rem, 0.82rem + 0.18vw, 1rem);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+.coda-mark { color: var(--c-signal); }
+
+/* Fuel gauge: E to F in ten cells, the first one the reserve. */
+.fuel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 0.7rem;
+  max-width: 15rem;
+  margin-top: 0.95rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  line-height: 1;
+  color: var(--c-fg-3);
+}
+.fuel-bar {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 3px;
+  height: 7px;
+}
+.fuel-bar > i { background: var(--c-fg); }
+.fuel-bar > i:first-child { background: var(--c-signal); }
+
+.coda-fine {
+  margin-top: 0.85rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  color: var(--c-fg-3);
 }
 
 /* ==================================================================
@@ -503,11 +625,11 @@ html:not(.js) .gauge-read { position: static; transform: none; }
   .about-plate { max-width: 26rem; }
   .about-caps-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(5, auto);
+    grid-template-rows: repeat(3, auto);
   }
-  .cap:nth-child(3n)::after { content: none; }
-  .cap:nth-child(5)::after,
-  .cap:nth-child(9)::after {
+  .cap:nth-child(2n)::after { content: none; }
+  .cap:nth-child(3)::after,
+  .cap:nth-child(6)::after {
     content: '';
     position: absolute;
     left: 0;
@@ -518,6 +640,10 @@ html:not(.js) .gauge-read { position: static; transform: none; }
     transform: scaleX(var(--draw));
     transform-origin: left center;
   }
+
+  .about-coda { grid-template-columns: 1fr; }
+  .coda-line { grid-column: auto; }
+  .coda-sheet { max-width: 28rem; }
 
   .cluster {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -536,8 +662,9 @@ html:not(.js) .gauge-read { position: static; transform: none; }
     grid-template-rows: none;
     grid-auto-flow: row;
   }
-  .cap:nth-child(5)::after { content: none; }
+  .cap:nth-child(3)::after { content: none; }
   .cap { grid-template-columns: 3.6rem minmax(0, 1fr); }
+  .coda-sheet { max-width: none; }
 
   .cluster { column-gap: 1.25rem; }
   .gauge-label { flex-direction: column; align-items: center; gap: 0.5em; text-align: center; white-space: normal; }

@@ -2,7 +2,9 @@
    NITESH DIXIT — PORTFOLIO 2026 · home sections
    02 About   — the copy rises line by line, then inks in word by word
                 as it is read; capability rows draw in from their
-                ticks; the sill plate's screws seat and light crosses it.
+                ticks; the sill plate's screws seat and light crosses it;
+                the sign-off draws a box one word too small and fills
+                the fuel gauge.
    03 Journey — three gauges are built in SVG and run a self-test when
                 the cluster arrives: needles sweep to the end stop and
                 settle on their value, the scale lights up behind them
@@ -112,7 +114,35 @@
   }
 
   /* ------------------------------------------------------------------
-     4. JOURNEY · GAUGES — a 240° dial per stat: ticks inside the ring,
+     4. ABOUT · SIGN-OFF — the two lines rise, the frame is drawn round
+        "Out of the" and stops short of "box", the redline note hangs
+        off the escapee; then the spec rows settle and the fuel gauge
+        fills from E to F.
+  ------------------------------------------------------------------ */
+  function initCoda(block) {
+    if (!block || reduced) return;
+    const rows = block.querySelectorAll('.coda-row');
+    const frame = block.querySelector('.coda-frame');
+    const note = block.querySelector('.coda-note');
+    const sheet = block.querySelectorAll('.coda-spec .spec-row, .coda-fine');
+    const cells = block.querySelectorAll('.fuel-bar > i');
+    utils.set(rows, { opacity: 0, translateY: 28 });
+    utils.set(frame, { '--draw': 0 });
+    utils.set(note, { opacity: 0, translateX: -10 });
+    utils.set(sheet, { opacity: 0, translateY: 14 });
+    utils.set(cells, { opacity: 0.16 });
+    Site.observe(block, () => {
+      createTimeline()
+        .add(rows, { opacity: [0, 1], translateY: [28, 0], duration: 1200, delay: stagger(120), ease: EASE.out }, 0)
+        .add(frame, { '--draw': [0, 1], duration: 1000, ease: EASE.inOut }, 700)
+        .add(note, { opacity: [0, 1], translateX: [-10, 0], duration: 700, ease: EASE.out }, 1650)
+        .add(sheet, { opacity: [0, 1], translateY: [14, 0], duration: 1100, delay: stagger(90), ease: EASE.out }, 350)
+        .add(cells, { opacity: [0.16, 1], duration: 260, delay: stagger(70), ease: 'out(2)' }, 1100);
+    });
+  }
+
+  /* ------------------------------------------------------------------
+     5. JOURNEY · GAUGES — a 240° dial per stat: ticks inside the ring,
         numerals outside, a redline band, a full-length needle from a
         hub, the readout in the open foot. data-* on .gauge sets the
         scale: max, minor (tick step), major (numeral step), red, value.
@@ -233,10 +263,11 @@
   }
 
   /* ------------------------------------------------------------------
-     5. BOOT
+     6. BOOT
   ------------------------------------------------------------------ */
   initCopy(document.querySelector('.about-copy'));
   initCaps(document.querySelector('.about-caps'));
   initPlate(document.querySelector('.plate'));
+  initCoda(document.querySelector('.about-coda'));
   initCluster(document.querySelector('.cluster'));
 })();
