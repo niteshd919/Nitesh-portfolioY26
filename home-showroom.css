@@ -803,9 +803,12 @@
   .fqb-bars { height: 43cqh; }
 }
 
-/* ---- 5f. Built to Finish — four batteries charged over the same ten
-   questions, each at the pace its bar moved, beside the break-off
-   that pace produced. The charge (#8fb4ff) is the study's colour. ---- */
+/* ---- 5f. Built to Finish — the stepper the study recommends, at work.
+   Wide-screen layout: a side list of five steps, "Step X of 5" over a
+   cell bar that charges only as steps are completed, and the current
+   step's form. Arriving counts as the first step (the head start).
+   A narrow bay drops the list, as the phone layout does. The charge
+   (#8fb4ff) is the study's colour. ---- */
 .media-stepper { --stage: #060607; }
 .media-stepper .bay-stage {
   background:
@@ -817,101 +820,197 @@
   left: 50%;
   top: 50%;
   display: grid;
-  row-gap: 4.5cqh;
-  width: min(78cqw, 36rem);
+  row-gap: 2.6cqh;
+  width: min(80cqw, 38rem);
+  padding: clamp(0.9rem, 4cqh, 1.5rem) clamp(0.9rem, 3.4cqw, 1.5rem);
+  border: 1px solid var(--c-line-2);
+  background: rgba(14, 14, 16, 0.92);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.95);
   translate: -50% -52%;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
 }
 .bfb-head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  padding-bottom: 2.4cqh;
-  border-bottom: 1px solid var(--c-line);
-  font-family: var(--f-mono);
-  font-stretch: var(--wd-mono);
+  gap: 1rem;
   font-size: 0.5625rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--c-fg-3);
 }
+.bfb-at { display: flex; align-items: baseline; gap: 0.5rem; white-space: nowrap; }
+.bfb-at i { align-self: center; width: 1.2rem; height: 1px; background: var(--c-line-2); }
+.bfb-name { color: var(--c-fg); }
 .bfb-head b {
-  margin-left: 0.5rem;
   font-family: var(--f-display);
   font-stretch: var(--wd-display);
   font-weight: 300;
-  font-size: clamp(1rem, 3.6cqw, 1.6rem);
+  font-size: clamp(1rem, 3.4cqw, 1.5rem);
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
   color: var(--c-fg);
 }
-.bfb-rows { display: grid; row-gap: 3.4cqh; }
-.bfb-row {
-  --g: 1;
-  display: grid;
-  grid-template-columns: minmax(6rem, 0.36fr) minmax(0, 1fr) 3rem;
-  align-items: center;
-  column-gap: 0.9rem;
-}
-.bfb-key {
-  font-family: var(--f-mono);
-  font-stretch: var(--wd-mono);
-  font-size: 0.5625rem;
-  letter-spacing: 0.1em;
-  white-space: nowrap;
-  text-transform: uppercase;
-  color: var(--c-fg-2);
-}
-.bfb-bat {
+.bfb-pct b { color: #d6e4ff; }
+
+/* Five cells and a terminal nub: a battery that only charges forward. */
+.bfb-cells {
   position: relative;
-  height: clamp(0.9rem, 5.2cqh, 1.6rem);
-  margin-right: 5px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  column-gap: 3px;
+  height: clamp(0.6rem, 3.4cqh, 0.95rem);
+  margin-right: 6px;
   padding: 2px;
-  border: 1px solid var(--c-line-2);
+  border: 1px solid rgba(143, 180, 255, 0.45);
 }
-.bfb-bat::after {
+.bfb-cells::after {
   content: '';
   position: absolute;
-  right: -5px;
-  top: 30%;
-  bottom: 30%;
+  right: -6px;
+  top: 28%;
+  bottom: 28%;
   width: 3px;
-  background: var(--c-line-2);
+  background: rgba(143, 180, 255, 0.45);
 }
-.bfb-bat i {
-  display: block;
-  width: calc(var(--v) * var(--g) * 1%);
-  height: 100%;
-  background: linear-gradient(90deg, rgba(236, 233, 226, 0.14), rgba(236, 233, 226, 0.34));
+.bfb-cells i { position: relative; background: rgba(236, 233, 226, 0.05); }
+.bfb-cells b {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(143, 180, 255, 0.4), #8fb4ff);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.bfb-row.is-none .bfb-bat { border-style: dashed; }
-.bfb-row.is-best .bfb-bat { border-color: rgba(143, 180, 255, 0.5); }
-.bfb-row.is-best .bfb-bat i {
-  background: linear-gradient(90deg, rgba(143, 180, 255, 0.3), #8fb4ff);
-  box-shadow: 0 0 18px -5px rgba(143, 180, 255, 0.7);
+.bfb-cells i.is-full b { transform: none; box-shadow: 0 0 14px -4px rgba(143, 180, 255, 0.8); }
+.bfb-cells i.is-on { outline: 1px solid rgba(143, 180, 255, 0.35); outline-offset: -1px; }
+
+.bfb-body {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 0.34fr) minmax(0, 1fr);
+  column-gap: clamp(0.9rem, 3.4cqw, 1.6rem);
+  padding-top: 2.6cqh;
+  border-top: 1px solid var(--c-line);
 }
-.bfb-row.is-worst .bfb-bat i { background: linear-gradient(90deg, rgba(255, 59, 29, 0.35), var(--c-signal)); }
-.bfb-row > b {
-  font-family: var(--f-display);
-  font-stretch: var(--wd-display);
-  font-weight: 300;
-  font-size: clamp(0.95rem, 3.4cqw, 1.5rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
+.bfb-steps {
+  display: grid;
+  align-content: start;
+  row-gap: 0.15rem;
+  padding-right: clamp(0.6rem, 2.4cqw, 1.2rem);
+  border-right: 1px solid var(--c-line);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.bfb-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: clamp(0.3rem, 1.6cqh, 0.55rem) 0.5rem;
+  border-left: 2px solid transparent;
+  transition: color 0.4s, border-color 0.4s, background-color 0.4s;
+}
+.bfb-mark {
+  position: relative;
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  border: 1px solid var(--c-line-2);
+  transition: border-color 0.4s, background-color 0.4s;
+}
+/* Done: a filled cell with a tick. Current: an outlined, lit row. */
+.bfb-steps li.is-done { color: var(--c-fg-2); }
+.bfb-steps li.is-done .bfb-mark { border-color: #8fb4ff; background: #8fb4ff; }
+.bfb-steps li.is-done .bfb-mark::after {
+  content: '';
+  position: absolute;
+  left: 32%;
+  top: 12%;
+  width: 28%;
+  height: 52%;
+  border: solid #060607;
+  border-width: 0 1.5px 1.5px 0;
+  rotate: 45deg;
+}
+.bfb-steps li.is-on {
+  border-left-color: #8fb4ff;
+  background: rgba(143, 180, 255, 0.07);
   color: var(--c-fg);
 }
-.bfb-row.is-best > b { color: #d6e4ff; }
-.bfb-row.is-worst > b { color: var(--c-signal); }
-/* A short bay: tighter rows. A narrow one: the label above its bar. */
-@container (max-height: 13rem) {
-  .bfb-panel { row-gap: 0.8rem; }
-  .bfb-rows { row-gap: 0.45rem; }
-  .bfb-head { padding-bottom: 0.45rem; }
+.bfb-steps li.is-on .bfb-mark { border-color: #8fb4ff; }
+
+.bfb-form { display: grid; align-content: start; row-gap: clamp(0.45rem, 2.4cqh, 0.8rem); }
+.bfb-title {
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 400;
+  font-size: clamp(0.85rem, 2.6cqw, 1.15rem);
+  letter-spacing: -0.01em;
+  color: var(--c-fg);
+}
+.bfb-field { display: grid; row-gap: 0.3rem; }
+.bfb-field small {
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+/* A field: an empty box whose entry draws in when the step is filled. */
+.bfb-field i {
+  position: relative;
+  height: clamp(1.1rem, 5.4cqh, 1.7rem);
+  border: 1px solid var(--c-line-2);
+}
+.bfb-field i::after {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  width: 46%;
+  height: 2px;
+  background: var(--c-fg-2);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bfb-field:nth-of-type(2) i::after { width: 22%; }
+.bfb-field:nth-of-type(3) i::after { width: 38%; }
+.bfb-form.is-filled .bfb-field i::after { transform: none; }
+.bfb-form.is-filled .bfb-field:nth-of-type(2) i::after { transition-delay: 0.25s; }
+.bfb-form.is-filled .bfb-field:nth-of-type(3) i::after { transition-delay: 0.5s; }
+.bfb-btn {
+  justify-self: end;
+  margin-top: 0.2rem;
+  padding: 0.55rem 0.9rem;
+  background: var(--c-fg);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #0b0b0c;
+  transition: transform 0.15s, background-color 0.3s;
+}
+.bfb-btn.is-press { transform: scale(0.95); background: #8fb4ff; }
+.bfb-panel.is-complete .bfb-btn { background: #8fb4ff; }
+
+/* A shorter bay sheds fields, then the form title, and tightens its
+   rows. A narrow one drops the side list — the one-line header carries
+   where you are, as on the phone layout. */
+@container (max-height: 30rem) {
+  .bfb-field:nth-of-type(3) { display: none; }
+  .bfb-steps li { padding-block: 0.2rem; }
+}
+@container (max-height: 19rem) {
+  .bfb-panel { row-gap: 0.55rem; padding-block: 0.75rem; }
+  .bfb-body { padding-top: 0.55rem; }
+  .bfb-title, .bfb-field:nth-of-type(2) { display: none; }
+  .bfb-steps li { padding-block: 0.1rem; }
 }
 @container (max-width: 26rem) {
-  .bfb-row { grid-template-columns: minmax(0, 1fr) 2.6rem; row-gap: 0.3rem; }
-  .bfb-key { grid-column: 1 / -1; }
+  .bfb-body { grid-template-columns: minmax(0, 1fr); }
+  .bfb-steps { display: none; }
+  .bfb-btn { justify-self: stretch; text-align: center; }
 }
 
 /* ================= 6. HUD — the bay selector ================= */
@@ -1198,7 +1297,6 @@
 .showroom.is-static :is(.bay-cap, .hmi-glass, .hmi-rise, .hmi-tag, .ev-phone-body, .ev-port, .fqb-rise, .bfb-rise) { opacity: 1 !important; }
 .showroom.is-static .bay-details *,
 .showroom.is-static :is(.hmi-rise, .fqb-rise, .bfb-rise) { transform: none !important; }
-.showroom.is-static .bfb-row { --g: 1 !important; }
 .showroom.is-static .bay-media { clip-path: none !important; }
 .showroom.is-static .bay-scanline { display: none; }
 .showroom.is-static .bay-spec-cell { --draw: 1 !important; }

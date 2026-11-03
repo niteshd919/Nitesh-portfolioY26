@@ -78,8 +78,7 @@
         settle: q('.sus-zoom, .cf-plate img'),
         rise: qa('.hmi-glass, .hmi-rise, .hmi-tag, .fqb-rise, .bfb-rise'),
         typed: q('.fqb-q'),
-        charge: qa('.bfb-row[data-ease]'),
-        clock: q('.bfb-q'),
+        stepper: q('.bfb-panel'),
         phones: qa('.ev-phone-body'),
         port: q('.ev-port'),
         led: q('.ev-port-led'),
@@ -288,8 +287,7 @@
       if (b.rise.length) utils.set(b.rise, { opacity: 0, translateY: 18 });
       if (b.phones.length) utils.set(b.phones, { opacity: 0, '--fan': 0 });
       if (b.port) utils.set(b.port, { opacity: 0 });
-      if (b.charge.length) utils.set(b.charge, { '--g': 0 });
-      if (b.clock) b.clock.textContent = '01';
+      if (b.stepper) stepTo(b, 1);
     }
 
     function arrive(b) {
@@ -351,6 +349,42 @@
     // Queries from the study, one per kind of failure it found.
     const QUERIES = ['13in laptop', 'return policy', 'knee pain', 'freeze card'];
 
+    // The five steps of the study's checkout example. Each button names
+    // where it goes next ("Continue to extras"), as the study recommends.
+    const STEPS = [
+      { name: 'Details', fields: ['Full name', 'Email', 'Phone'] },
+      { name: 'Delivery', fields: ['Address', 'Postcode', 'Delivery slot'] },
+      { name: 'Payment', fields: ['Card number', 'Expiry', 'Name on card'] },
+      { name: 'Extras', fields: ['Gift wrap', 'Protection', 'Note'] },
+      { name: 'Review', fields: ['Items', 'Deliver to', 'Total'] },
+    ];
+
+    // k = steps completed; the current step is k (0-based), and k = 5
+    // is the finished flow. Cells charge only for completed steps.
+    function stepTo(b, k) {
+      const p = b.stepper;
+      const n = STEPS.length;
+      const s = STEPS[Math.min(k, n - 1)];
+      const q = (sel) => p.querySelector(sel);
+      p.querySelectorAll('.bfb-steps li').forEach((li, j) => {
+        li.classList.toggle('is-done', j < k);
+        li.classList.toggle('is-on', j === k);
+      });
+      p.querySelectorAll('.bfb-cells i').forEach((c, j) => {
+        c.classList.toggle('is-full', j < k);
+        c.classList.toggle('is-on', j === k);
+      });
+      p.querySelectorAll('.bfb-field small').forEach((f, j) => { f.textContent = s.fields[j]; });
+      q('.bfb-n').textContent = pad(Math.min(k + 1, n));
+      q('.bfb-name').textContent = k < n ? s.name : 'Complete';
+      q('.bfb-pct b').textContent = Math.round((k / n) * 100);
+      q('.bfb-title').textContent = s.name;
+      q('.bfb-btn').firstChild.textContent = k < n - 1 ? 'Continue to ' : '';
+      q('.bfb-next').textContent = k < n - 1 ? STEPS[k + 1].name.toLowerCase() : k < n ? 'Place order' : 'Order placed';
+      q('.bfb-form').classList.toggle('is-filled', k >= n);
+      p.classList.toggle('is-complete', k >= n);
+    }
+
     function startLoops(b) {
       if (reduced || b.loops.length) return;
       if (b.typed) {
@@ -389,23 +423,25 @@
           autoplay: false,
         }));
       }
-      // Four batteries charge over the same ten questions, each at the
-      // pace its bar moved; they hold, drain, and charge again.
-      if (b.charge.length) {
-        const RUN = 2600;
-        const EASES = { fast: 'out(3)', linear: 'linear', slow: 'in(3)' };
-        const q = { n: 1 };
-        const tick = () => { if (b.clock) b.clock.textContent = pad(Math.round(q.n)); };
-        const charging = createTimeline({ loop: true, autoplay: false })
-          .add(q, { n: [1, 10], duration: RUN, ease: 'linear', onUpdate: tick }, 0);
-        b.charge.forEach((row) => {
-          charging
-            .add(row, { '--g': [0, 1], duration: RUN, ease: EASES[row.dataset.ease] || 'linear' }, 0)
-            .add(row, { '--g': [1, 0], duration: 600, ease: 'in(2)' }, RUN + 2600);
-        });
-        charging.add(q, { n: [10, 1], duration: 600, ease: 'in(2)', onUpdate: tick }, RUN + 2600);
-        charging.call(() => {}, RUN + 3500);
-        b.loops.push(charging);
+      // The stepper works through its flow from the head start (step 1
+      // done on arrival): fill the fields, press Continue, charge a
+      // cell. Full, it holds, then a new customer arrives.
+      if (b.stepper) {
+        const STEP = 2300;
+        const form = b.stepper.querySelector('.bfb-form');
+        const btn = b.stepper.querySelector('.bfb-btn');
+        const flow = createTimeline({ loop: true, autoplay: false });
+        let at = 0;
+        for (let k = 1; k < STEPS.length; k++) {
+          flow
+            .call(() => stepTo(b, k), at)
+            .call(() => form.classList.add('is-filled'), at + 350)
+            .call(() => btn.classList.add('is-press'), at + 1650)
+            .call(() => btn.classList.remove('is-press'), at + 1850);
+          at += STEP;
+        }
+        flow.call(() => stepTo(b, STEPS.length), at).call(() => {}, at + 2800);
+        b.loops.push(flow);
       }
       b.live = false;
       request();
