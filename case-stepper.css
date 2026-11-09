@@ -860,11 +860,14 @@ html.menu-open .bf-scrim { opacity: 0; visibility: hidden; }
   color: var(--c-fg-2);
 }
 .bf-gate-q span {
-  margin-right: 0.35em;
+  display: block;
+  margin-bottom: 0.55rem;
   font-family: var(--f-mono);
   font-stretch: var(--wd-mono);
   font-size: var(--fs-label);
   letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
   color: var(--c-signal);
 }
 
@@ -931,6 +934,7 @@ html.menu-open .bf-scrim { opacity: 0; visibility: hidden; }
   font-size: var(--fs-label);
   letter-spacing: 0.12em;
   line-height: 1;
+  text-transform: uppercase;
   color: var(--c-signal);
   font-variant-numeric: tabular-nums;
 }
