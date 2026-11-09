@@ -1610,7 +1610,7 @@ html.menu-open .bf-scrim { opacity: 0; visibility: hidden; }
   font-size: 0.78rem;
   color: var(--c-fg);
 }
-/* B.01: the total jumps. Static: the old count struck over the new;
+/* Broken promise 01: the total jumps. Static: the old count struck over the new;
    live (script), one rolls into the other. */
 .bf-jump {
   display: grid;
@@ -1630,7 +1630,7 @@ html.menu-open .bf-scrim { opacity: 0; visibility: hidden; }
 .bf-jump-bar i { flex: 1 1 0; background: var(--c-line-2); }
 .bf-jump-bar i.is-on { background: var(--c-fg-2); }
 .bf-jump-bar i.is-extra { background: rgba(255, 59, 29, 0.55); }
-/* B.02: Back empties the field. Static: empty, with the caret. */
+/* Broken promise 02: Back empties the field. Static: empty, with the caret. */
 .bf-back-btn {
   justify-self: start;
   padding: 0.3rem 0.55rem;
@@ -1660,7 +1660,7 @@ html.menu-open .bf-scrim { opacity: 0; visibility: hidden; }
 .bf-back-caret { width: 1px; height: 1em; margin-left: -1px; background: var(--c-fg); }
 .bf-break[data-break="back"] .bf-back-caret { animation: bf-blink 1.05s steps(1) infinite; }
 @keyframes bf-blink { 50% { opacity: 0; } }
-/* B.03: a fee appears at review. Static: the fee and the new total. */
+/* Broken promise 03: a fee appears at review. Static: the fee and the new total. */
 .bf-fee-head {
   font-family: var(--f-mono);
   font-stretch: var(--wd-mono);

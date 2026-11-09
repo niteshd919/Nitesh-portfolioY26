@@ -222,7 +222,8 @@
   --draw: 1;
   position: relative;
   display: grid;
-  grid-template-columns: 4.1rem minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 0.4rem;
   align-items: baseline;
   padding: clamp(0.95rem, 1.5vw, 1.2rem) 0 clamp(1rem, 1.6vw, 1.3rem);
   background: linear-gradient(var(--c-line-2), var(--c-line-2)) left top / calc(var(--draw) * 100%) 1px no-repeat;
@@ -663,7 +664,6 @@ html:not(.js) .gauge-read { position: static; transform: none; }
     grid-auto-flow: row;
   }
   .cap:nth-child(3)::after { content: none; }
-  .cap { grid-template-columns: 3.6rem minmax(0, 1fr); }
   .coda-sheet { max-width: none; }
 
   .cluster { column-gap: 1.25rem; }
