@@ -732,7 +732,9 @@ html.menu-open .menu-btn-icon i:last-child { top: 3.5px; width: 100%; transform:
   font-family: var(--f-display);
   font-stretch: var(--wd-display);
   font-weight: 300;
-  font-size: clamp(2.25rem, 1rem + 5.2vw, 5.75rem);
+  /* Five destinations: capped by height so they fit a short screen,
+     and by width so "Publications" fits a phone. */
+  font-size: min(clamp(2.25rem, 1rem + 5.2vw, 5.75rem), 8.4vh, 7.6vw);
   line-height: 0.95;
   text-transform: uppercase;
   letter-spacing: -0.01em;

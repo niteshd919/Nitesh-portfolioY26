@@ -53,12 +53,12 @@
         titles carry their subtitle on the shutter, as the home page's
         labels do ("HMI — Cockpit experience").
   ---------------------------------------------------------------- */
-  const sequence = [];
-  for (let s = store.suspension ? 'suspension' : slug; store[s] && !sequence.includes(s); s = store[s].next) {
-    sequence.push(s);
-  }
-  Object.keys(store).forEach((s) => { if (!sequence.includes(s)) sequence.push(s); });
-  const caseNo = (s) => `Case ${pad(sequence.indexOf(s) + 1)} / ${pad(sequence.length)}`;
+  // Numbered within its own series, cases or publications
+  // (CASE_SERIES in case-study-data.js).
+  const series = window.CASE_SERIES ? window.CASE_SERIES(slug) : null;
+  const sequence = series ? series.sequence : [slug];
+  const nextNoun = (s) => (series && series.noun(s) === 'publication' ? 'publication' : 'project');
+  const caseNo = (s) => (series ? series.no(s) : `Case ${pad(sequence.indexOf(s) + 1)} / ${pad(sequence.length)}`);
   const fullName = (d) => (/\s/.test(d.title.trim()) ? d.title : `${d.title} — ${d.subtitle}`);
 
   if (Site && Site.transition) Site.transition.setLabel(fullName(data), caseNo(slug));
@@ -98,7 +98,7 @@
   // and the series ruler with this study's stretch in redline.
   const caseIndex = sequence.indexOf(slug);
   const caseNoEl = byId('caseNo');
-  if (caseNoEl) caseNoEl.innerHTML = `<b>${caseNo(slug)}</b><i aria-hidden="true"></i><span>Model year ${data.year}</span>`;
+  if (caseNoEl) caseNoEl.innerHTML = `<b>${caseNo(slug)}</b><i aria-hidden="true"></i><span>${data.published ? `Published ${data.published}` : `Model year ${data.year}`}</span>`;
   const heroRuler = document.querySelector('.case-hero-ruler');
   if (heroRuler) {
     heroRuler.style.setProperty('--case-i', caseIndex);
@@ -968,10 +968,10 @@
     nextLink.setAttribute('href', nextData.href || `case-study.html?p=${nextSlug}`);
     nextLink.setAttribute('data-transition-label', fullName(nextData));
     nextLink.setAttribute('data-transition-eyebrow', `Next · ${caseNo(data.next)}`);
-    nextLink.setAttribute('aria-label', `Next project: ${fullName(nextData)}`);
+    nextLink.setAttribute('aria-label', `Next ${nextNoun(data.next)}: ${fullName(nextData)}`);
     byId('caseNextTitle').textContent = nextData.title;
     const nextEyebrow = document.querySelector('.case-next-eyebrow');
-    if (nextEyebrow) nextEyebrow.textContent = `Next project · ${caseNo(data.next)}`;
+    if (nextEyebrow) nextEyebrow.textContent = `Next ${nextNoun(data.next)} · ${caseNo(data.next)}`;
   }
 
   /* ----------------------------------------------------------------

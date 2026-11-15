@@ -1,6 +1,7 @@
 /* ==================================================================
    NITESH DIXIT — PORTFOLIO 2026 · home · showroom
-   The selected work as a private viewing: six bays on one track (Homingly parked).
+   The selected work as a private viewing: four bays on one track (Homingly parked;
+   the research studies moved to Publications).
 
    pinned   ≥ 900px wide, or ≥ 540px tall. The stage is sticky (CSS).
             Page scroll through the tall section pans the track bay by
@@ -76,9 +77,7 @@
         sweep: q('.bay-sweep i'),
         cap: q('.bay-cap'),
         settle: q('.sus-zoom, .cf-plate img'),
-        rise: qa('.hmi-glass, .hmi-rise, .hmi-tag, .fqb-rise, .bfb-rise, .hmb-rise'),
-        typed: q('.fqb-q'),
-        stepper: q('.bfb-panel'),
+        rise: qa('.hmi-glass, .hmi-rise, .hmi-tag, .hmb-rise'),
         estimate: q('.hmb-panel'),
         phones: qa('.ev-phone-body'),
         port: q('.ev-port'),
@@ -288,7 +287,6 @@
       if (b.rise.length) utils.set(b.rise, { opacity: 0, translateY: 18 });
       if (b.phones.length) utils.set(b.phones, { opacity: 0, '--fan': 0 });
       if (b.port) utils.set(b.port, { opacity: 0 });
-      if (b.stepper) stepTo(b, 1);
       if (b.estimate) estimateTo(b, 2);
     }
 
@@ -343,50 +341,10 @@
     }
 
     /* ------------------------------------------------------------------
-       6. LOOPS — wheel-sensor pings, the charge port breathing, queries
-          typed into the search box. Created once a bay has been shown,
-          paused whenever it leaves the view, never run with reduced
-          motion.
+       6. LOOPS — wheel-sensor pings, the charge port breathing, the
+          estimator at work. Created once a bay has been shown, paused
+          whenever it leaves the view, never run with reduced motion.
     ------------------------------------------------------------------ */
-    // Queries from the study, one per kind of failure it found.
-    const QUERIES = ['13in laptop', 'return policy', 'knee pain', 'freeze card'];
-
-    // The five steps of the study's checkout example. Each button names
-    // where it goes next ("Continue to extras"), as the study recommends.
-    const STEPS = [
-      { name: 'Details', fields: ['Full name', 'Email', 'Phone'] },
-      { name: 'Delivery', fields: ['Address', 'Postcode', 'Delivery slot'] },
-      { name: 'Payment', fields: ['Card number', 'Expiry', 'Name on card'] },
-      { name: 'Extras', fields: ['Gift wrap', 'Protection', 'Note'] },
-      { name: 'Review', fields: ['Items', 'Deliver to', 'Total'] },
-    ];
-
-    // k = steps completed; the current step is k (0-based), and k = 5
-    // is the finished flow. Cells charge only for completed steps.
-    function stepTo(b, k) {
-      const p = b.stepper;
-      const n = STEPS.length;
-      const s = STEPS[Math.min(k, n - 1)];
-      const q = (sel) => p.querySelector(sel);
-      p.querySelectorAll('.bfb-steps li').forEach((li, j) => {
-        li.classList.toggle('is-done', j < k);
-        li.classList.toggle('is-on', j === k);
-      });
-      p.querySelectorAll('.bfb-cells i').forEach((c, j) => {
-        c.classList.toggle('is-full', j < k);
-        c.classList.toggle('is-on', j === k);
-      });
-      p.querySelectorAll('.bfb-field small').forEach((f, j) => { f.textContent = s.fields[j]; });
-      q('.bfb-n').textContent = pad(Math.min(k + 1, n));
-      q('.bfb-name').textContent = k < n ? s.name : 'Complete';
-      q('.bfb-pct b').textContent = Math.round((k / n) * 100);
-      q('.bfb-title').textContent = s.name;
-      q('.bfb-btn').firstChild.textContent = k < n - 1 ? 'Continue to ' : '';
-      q('.bfb-next').textContent = k < n - 1 ? STEPS[k + 1].name.toLowerCase() : k < n ? 'Place order' : 'Order placed';
-      q('.bfb-form').classList.toggle('is-filled', k >= n);
-      p.classList.toggle('is-complete', k >= n);
-    }
-
     // Homingly's estimator, on step k of 3 (0-based). The price stays
     // "₹ ?" until the third step, when the range is known.
     function estimateTo(b, k) {
@@ -401,20 +359,6 @@
 
     function startLoops(b) {
       if (reduced || b.loops.length) return;
-      if (b.typed) {
-        const typing = createTimeline({ loop: true, autoplay: false });
-        let at = 0;
-        QUERIES.forEach((text) => {
-          const type = { n: 0 };
-          const wipe = { n: text.length };
-          const show = (o) => () => { b.typed.textContent = text.slice(0, Math.round(o.n)); };
-          typing.add(type, { n: [0, text.length], duration: text.length * 90, ease: 'linear', onUpdate: show(type) }, at);
-          at += text.length * 90 + 1900;
-          typing.add(wipe, { n: [text.length, 0], duration: text.length * 30, ease: 'linear', onUpdate: show(wipe) }, at);
-          at += text.length * 30 + 450;
-        });
-        b.loops.push(typing);
-      }
       if (b.pings.length) {
         b.loops.push(animate(b.pings, {
           scale: [0.92, 1.9],
@@ -436,26 +380,6 @@
           alternate: true,
           autoplay: false,
         }));
-      }
-      // The stepper works through its flow from the head start (step 1
-      // done on arrival): fill the fields, press Continue, charge a
-      // cell. Full, it holds, then a new customer arrives.
-      if (b.stepper) {
-        const STEP = 2300;
-        const form = b.stepper.querySelector('.bfb-form');
-        const btn = b.stepper.querySelector('.bfb-btn');
-        const flow = createTimeline({ loop: true, autoplay: false });
-        let at = 0;
-        for (let k = 1; k < STEPS.length; k++) {
-          flow
-            .call(() => stepTo(b, k), at)
-            .call(() => form.classList.add('is-filled'), at + 350)
-            .call(() => btn.classList.add('is-press'), at + 1650)
-            .call(() => btn.classList.remove('is-press'), at + 1850);
-          at += STEP;
-        }
-        flow.call(() => stepTo(b, STEPS.length), at).call(() => {}, at + 2800);
-        b.loops.push(flow);
       }
       // The estimator asks its two questions, then answers with a range
       // and holds it; then the next visitor starts at step one.

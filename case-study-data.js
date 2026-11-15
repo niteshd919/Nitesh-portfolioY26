@@ -545,15 +545,17 @@ window.CASE_STUDIES = {
       },
     },
 
-    next: 'search',
+    next: 'suspension', // 'homingly' once that case is reconnected
   },
 
   /* ================================================================ */
   /* A bespoke page (case-search.html) rather than this template: the
-     entry keeps the study's place in the series, and `href` sends every
-     link to it there. */
+     entry keeps the study's place in its series (the publications —
+     see CASE_SERIES below), and `href` sends every link to it there. */
   search: {
     slug: 'search',
+    kind: 'publication',
+    published: 'Oct 2026',
     href: 'case-search.html',
     title: 'The First Query',
     subtitle: 'In-app search research',
@@ -570,6 +572,8 @@ window.CASE_STUDIES = {
      read, built like the stepper it recommends. */
   stepper: {
     slug: 'stepper',
+    kind: 'publication',
+    published: 'Aug 2026',
     href: 'case-stepper.html',
     title: 'Built to Finish',
     subtitle: 'Stepper UX research',
@@ -578,7 +582,7 @@ window.CASE_STUDIES = {
     tags: ['UX Research', 'Design Systems', 'Accessibility'],
     gradient: 'linear-gradient(135deg,#8fb4ff,#1a1a1a)',
     accent: '#8fb4ff',
-    next: 'suspension', // 'homingly' once that case is reconnected
+    next: 'search',
   },
   /* Homingly, disconnected for now (case-homingly.* is kept):
   homingly: {
@@ -696,4 +700,37 @@ window.CASE_STUDIES = {
     next: 'offpeak',
   },
 
+};
+
+/* ==================================================================
+   SERIES — the site keeps two: the cases in the showroom and the
+   publications in the library (entries with kind: 'publication').
+   Each page numbers itself within its own series, walking the `next`
+   chain from that series' first entry.
+     const S = CASE_SERIES('stepper');
+     S.sequence        // ['search', 'stepper']
+     S.no('stepper')   // "Publication 02 / 02"
+     S.noun('hmi')     // "case"
+   ================================================================== */
+window.CASE_SERIES = function (slug) {
+  const store = window.CASE_STUDIES || {};
+  const kindOf = (s) => (store[s] && store[s].kind) || 'case';
+  const pad = (n) => String(n).padStart(2, '0');
+  const cache = {};
+  function series(kind) {
+    if (cache[kind]) return cache[kind];
+    const keys = Object.keys(store).filter((s) => kindOf(s) === kind);
+    const seq = [];
+    for (let s = keys[0]; s && store[s] && kindOf(s) === kind && !seq.includes(s); s = store[s].next) seq.push(s);
+    keys.forEach((s) => { if (!seq.includes(s)) seq.push(s); });
+    cache[kind] = seq;
+    return seq;
+  }
+  const noun = (s) => (kindOf(s) === 'publication' ? 'publication' : 'case');
+  const no = (s) => {
+    const seq = series(kindOf(s));
+    const word = noun(s) === 'publication' ? 'Publication' : 'Case';
+    return `${word} ${pad(seq.indexOf(s) + 1)} / ${pad(seq.length)}`;
+  };
+  return { sequence: series(kindOf(slug)), no, noun, kind: kindOf(slug) };
 };
