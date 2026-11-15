@@ -1,6 +1,6 @@
 /* ==================================================================
    NITESH DIXIT — PORTFOLIO 2026 · home · showroom
-   The selected work as a private viewing: six bays on one track.
+   The selected work as a private viewing: six bays on one track (Homingly parked).
 
    pinned   ≥ 900px wide, or ≥ 540px tall. The stage is sticky (CSS).
             Page scroll through the tall section pans the track bay by
@@ -76,9 +76,10 @@
         sweep: q('.bay-sweep i'),
         cap: q('.bay-cap'),
         settle: q('.sus-zoom, .cf-plate img'),
-        rise: qa('.hmi-glass, .hmi-rise, .hmi-tag, .fqb-rise, .bfb-rise'),
+        rise: qa('.hmi-glass, .hmi-rise, .hmi-tag, .fqb-rise, .bfb-rise, .hmb-rise'),
         typed: q('.fqb-q'),
         stepper: q('.bfb-panel'),
+        estimate: q('.hmb-panel'),
         phones: qa('.ev-phone-body'),
         port: q('.ev-port'),
         led: q('.ev-port-led'),
@@ -288,6 +289,7 @@
       if (b.phones.length) utils.set(b.phones, { opacity: 0, '--fan': 0 });
       if (b.port) utils.set(b.port, { opacity: 0 });
       if (b.stepper) stepTo(b, 1);
+      if (b.estimate) estimateTo(b, 2);
     }
 
     function arrive(b) {
@@ -385,6 +387,18 @@
       p.classList.toggle('is-complete', k >= n);
     }
 
+    // Homingly's estimator, on step k of 3 (0-based). The price stays
+    // "₹ ?" until the third step, when the range is known.
+    function estimateTo(b, k) {
+      const p = b.estimate;
+      p.querySelectorAll('.hmb-screen img').forEach((img, j) => img.classList.toggle('is-on', j === k));
+      p.querySelectorAll('.hmb-steps li').forEach((li, j) => {
+        li.classList.toggle('is-done', j < k);
+        li.classList.toggle('is-on', j === k);
+      });
+      p.classList.toggle('is-known', k >= 2);
+    }
+
     function startLoops(b) {
       if (reduced || b.loops.length) return;
       if (b.typed) {
@@ -441,6 +455,17 @@
           at += STEP;
         }
         flow.call(() => stepTo(b, STEPS.length), at).call(() => {}, at + 2800);
+        b.loops.push(flow);
+      }
+      // The estimator asks its two questions, then answers with a range
+      // and holds it; then the next visitor starts at step one.
+      if (b.estimate) {
+        const STEP = 1900;
+        const flow = createTimeline({ loop: true, autoplay: false })
+          .call(() => estimateTo(b, 0), 0)
+          .call(() => estimateTo(b, 1), STEP)
+          .call(() => estimateTo(b, 2), STEP * 2)
+          .call(() => {}, STEP * 2 + 3800);
         b.loops.push(flow);
       }
       b.live = false;

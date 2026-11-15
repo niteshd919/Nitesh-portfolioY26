@@ -1,0 +1,2800 @@
+/* ==================================================================
+   NITESH DIXIT — PORTFOLIO 2026 · case study · "Homingly"
+   A bespoke study on top of case-study.css (hero, rules, panels,
+   tables, next project, zoom). Concept: "Open plan".
+
+   The study turns on one line from the brief: pricing is the first
+   wall. So the page is drawn the way an interior is drawn: hatched
+   walls for what stops people, door swings for the ways through,
+   dimension lines for every honest range, room tags for captions,
+   and the app itself as a floor plan on a drawing sheet.
+
+   Colour stays Coachbuilt: obsidian, ivory, one redline for UI
+   chrome and for errors. The study's own colour is brass, lamplight
+   on a fitting (--brass). It lights only the project's visuals: the
+   range, the doors, the happy path, the screens' glow.
+
+   Driven by case-homingly.js:
+     --d / --ad  on walkthrough items   distance from the reading position
+     --p         on the walkthrough     pan progress (0..1), for the needle
+     --open      on door figures        how far a door has swung (0..1)
+
+   1.  Page tokens
+   2.  Shared kit — phone, crop, room tag, figure caption, stats
+   3.  Hero — the estimate bay
+   4.  01 · The first wall — the look, the wall figure
+   5.  02 · A door in the wall — the door figure, task, measures
+   6.  03 · Two sides of the table — people, the bridge, the switch
+   7.  04 · House rules — principles and their proofs
+   8.  05 · The floor plan — the drawing sheet, routes
+   9.  06 · The walkthrough — pinned pan, the measured floor
+   10. 07 · Honest numbers — notes, ranges, ledger, receipts
+   11. 08 · Every wall has a door — edge states
+   12. 09 · Beyond the booking — line-ups
+   13. 10 · The finish schedule — nudges, contrast, type, measure
+   14. 11 · Still to prove + finale
+   15. Zoom
+   16. Responsive
+   17. Reduced motion
+   ================================================================== */
+
+/* ================= 1. PAGE TOKENS ================= */
+.page-homingly {
+  --brass: #d4b27c;
+  --brass-hi: #f0dcb4;
+  --brass-soft: rgba(212, 178, 124, 0.14);
+  --brass-line: rgba(212, 178, 124, 0.5);
+  --cs-accent: var(--brass);
+  --wall: var(--c-fg-2);
+  --hatch: repeating-linear-gradient(-45deg, var(--c-line-2) 0 1px, transparent 1px 7px);
+  --hatch-red: repeating-linear-gradient(-45deg, rgba(255, 59, 29, 0.55) 0 1px, transparent 1px 5px);
+}
+
+/* On the drawing sheet, brass darkens to stay legible on paper. */
+.page-homingly [data-theme="paper"] {
+  --brass: #7a5a26;
+  --brass-hi: #5e4519;
+  --brass-soft: rgba(122, 90, 38, 0.1);
+  --brass-line: rgba(122, 90, 38, 0.45);
+  --wall: var(--c-fg);
+  --hatch: repeating-linear-gradient(-45deg, rgba(13, 13, 14, 0.32) 0 1px, transparent 1px 6px);
+  --hatch-red: repeating-linear-gradient(-45deg, rgba(194, 37, 15, 0.6) 0 1px, transparent 1px 5px);
+}
+
+/* ================= 2. SHARED KIT ================= */
+
+/* ---- The phone: the screen is the box, the bezel is drawn around
+   it by box-shadow, so every size comes from the phone's own width
+   (cqw). Screens are exported with their corners already rounded. ---- */
+.hm-phone {
+  container-type: inline-size;
+  position: relative;
+  margin: 0;
+}
+.hm-screen {
+  position: relative;
+  display: block;
+  aspect-ratio: 390 / 844;
+  overflow: hidden;
+  border-radius: 10.26cqw;
+  background: #0e0e10;
+  box-shadow:
+    0 0 0 2.4cqw #0e0e10,
+    0 0 0 calc(2.4cqw + 1px) rgba(236, 233, 226, 0.13),
+    0 18cqw 34cqw -10cqw rgba(0, 0, 0, 0.92);
+}
+.hm-screen img {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  translate: 0 0;
+  transition: translate 1.6s var(--ease-in-out);
+}
+img[data-zoom] { cursor: zoom-in; }
+html.has-cursor img[data-zoom] { cursor: none; }
+
+/* Screens that scroll in the app: hover runs the page down the phone. */
+@media (hover: hover) {
+  .hm-phone.is-tall:hover .hm-screen img {
+    translate: 0 calc(-100% + 216.41cqw);
+    transition-duration: 3.4s;
+  }
+}
+.hm-phone.is-tall::after {
+  content: '';
+  position: absolute;
+  right: -2.4cqw;
+  top: 18%;
+  width: 1px;
+  height: 22%;
+  background: linear-gradient(var(--brass), transparent);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* ---- A crop: shows one region of a screen, in 1x screen units.
+   --cx/--cy is the region's top-left, --cw/--ch its size. ---- */
+.hm-crop {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: var(--cw) / var(--ch);
+  background: #f8f9fb;
+}
+.hm-crop img {
+  position: absolute;
+  left: calc(var(--cx) / var(--cw) * -100%);
+  top: calc(var(--cy) / var(--ch) * -100%);
+  width: calc(390 / var(--cw) * 100%);
+  max-width: none;
+  height: auto;
+}
+
+/* ---- The room tag: the label an architect drops into a room. ---- */
+.hm-roomtag {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.9rem 1.1rem 1rem;
+  background: rgba(10, 10, 11, 0.86);
+  border: 1px solid var(--c-line-2);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--c-fg);
+}
+.hm-roomtag-k,
+.hm-roomtag-label,
+.hm-roomtag-who {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hm-roomtag-name {
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-size: clamp(1.15rem, 0.9rem + 0.8vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
+}
+.hm-roomtag-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 0.35rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--c-line-2);
+}
+.hm-roomtag-price b {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: clamp(1.2rem, 0.95rem + 0.8vw, 1.7rem);
+  line-height: 1;
+  color: var(--c-fg-2);
+}
+.hm-roomtag.is-end .hm-roomtag-price b { color: var(--brass); }
+.hm-roomtag.is-end .hm-roomtag-k { color: var(--brass); }
+
+/* ---- Figure caption: "Fig. 01" in redline, then the note. ---- */
+.hm-figcap {
+  display: flex;
+  gap: 0.9rem;
+  align-items: baseline;
+  margin-top: 1.5rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  line-height: 1.55;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hm-figcap > span:first-child {
+  flex: 0 0 auto;
+  color: var(--c-signal);
+}
+
+/* ---- Stats: big numerals on a measured strip. ---- */
+.hm-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--cs-gap);
+  margin: 0 0 var(--cs-block);
+}
+.hm-stats.is-five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.hm-stat {
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.75rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--c-line-2);
+}
+.hm-stat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 1px;
+  height: 7px;
+  background: var(--c-fg-3);
+}
+.hm-stat dt {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hm-stat dd {
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 300;
+  font-size: clamp(2.4rem, 1.2rem + 3.6vw, 4.75rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--c-fg);
+}
+.hm-num { font-weight: inherit; }
+
+/* ---- Shared mono label for small parts. ---- */
+.hm-rule-no,
+.hm-route-no,
+.hm-assume-no,
+.hm-annot-no,
+.hm-task-no,
+.hm-person-k,
+.hm-edge-check span,
+.hm-edge-door span,
+.hm-lineup-meta,
+.hm-measure-k {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+.hm-rule-no,
+.hm-route-no,
+.hm-assume-no,
+.hm-annot-no { color: var(--c-signal); }
+
+/* A spec block opened by a tick — the case-panel look. */
+.hm-rule,
+.hm-route,
+.hm-person,
+.hm-assume-item,
+.hm-family,
+.hm-lineup-notes li {
+  position: relative;
+  border-top: 1px solid var(--c-line-2);
+}
+.hm-rule::before,
+.hm-route::before,
+.hm-person::before,
+.hm-assume-item::before,
+.hm-family::before,
+.hm-lineup-notes li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 1px;
+  height: 7px;
+  background: var(--c-fg-3);
+}
+
+/* ================= 3. HERO — THE ESTIMATE BAY ================= */
+.hm-bay {
+  background:
+    radial-gradient(54% 72% at 50% -14%, rgba(255, 246, 234, 0.085), transparent 72%),
+    radial-gradient(38% 46% at 74% 92%, rgba(212, 178, 124, 0.08), transparent 70%),
+    var(--stage);
+}
+.hm-est {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  align-items: center;
+  column-gap: clamp(2rem, 5vw, 5.5rem);
+  width: min(1260px, 100%);
+}
+
+/* ---- The readout: tag, the range, the scale, the assumptions ---- */
+.hm-est-tag {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hm-est-tag span:last-child { color: var(--c-fg); }
+.hm-est-tag i {
+  width: 1.4rem;
+  height: 1px;
+  background: var(--c-line-2);
+}
+.hm-est-range {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.24em;
+  margin-top: clamp(1rem, 2.2vw, 1.6rem);
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 300;
+  font-size: clamp(2.6rem, 0.9rem + 4.6vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--c-fg);
+  white-space: nowrap;
+}
+.hm-est-q {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--c-fg-3);
+  opacity: 0;
+  pointer-events: none;
+}
+.hm-est-v { display: inline-flex; align-items: baseline; }
+.hm-est-cur { font-weight: 200; font-size: 0.6em; margin-right: 0.06em; color: var(--c-fg-2); }
+.hm-est-num { font-weight: 300; }
+.hm-est-u { font-size: 0.52em; font-weight: 300; margin-left: 0.05em; color: var(--c-fg-2); }
+
+/* The "to" between the ends is a dimension line in brass: |<—>| */
+.hm-est-to {
+  position: relative;
+  align-self: center;
+  flex: 0 0 clamp(1.6rem, 4vw, 4.25rem);
+  height: 0.22em;
+  min-height: 11px;
+  margin: 0 0.06em;
+  color: var(--brass);
+  border-left: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+}
+.hm-est-to i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: currentColor;
+  transform-origin: center;
+}
+
+/* ---- The scale: ₹0–6L in lakhs, a tick every ₹10k ---- */
+.hm-scale {
+  --a: 3.4;
+  --b: 4.1;
+  --max: 6;
+  position: relative;
+  height: 3.4rem;
+  margin-top: clamp(1.75rem, 3.4vw, 2.6rem);
+}
+.hm-scale-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0.9rem;
+  height: 13px;
+  transform-origin: left center;
+  background:
+    linear-gradient(var(--c-line-2), var(--c-line-2)) left bottom / 100% 1px no-repeat,
+    repeating-linear-gradient(90deg, var(--c-fg-3) 0 1px, transparent 1px calc(100% / 6)) left bottom / calc(100% + 1px) 13px no-repeat,
+    repeating-linear-gradient(90deg, var(--c-line-2) 0 1px, transparent 1px calc(100% / 60)) left bottom / 100% 5px no-repeat;
+}
+/* The unknown: a hatched fog over the whole scale, before the estimate. */
+.hm-scale-fog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0.35rem;
+  height: 1.3rem;
+  background: repeating-linear-gradient(-45deg, rgba(236, 233, 226, 0.16) 0 1px, transparent 1px 6px);
+  border-left: 1px solid var(--c-fg-3);
+  border-right: 1px solid var(--c-fg-3);
+  opacity: 0;
+}
+/* The answer: a brass band from ₹3.4L to ₹4.1L, capped at both ends. */
+.hm-scale-band {
+  position: absolute;
+  left: calc(var(--a) / var(--max) * 100%);
+  width: calc((var(--b) - var(--a)) / var(--max) * 100%);
+  top: 0.15rem;
+  height: 1.75rem;
+  background: linear-gradient(var(--brass-soft), rgba(212, 178, 124, 0.04));
+  border-left: 1px solid var(--brass);
+  border-right: 1px solid var(--brass);
+  box-shadow: 0 0 22px -4px rgba(212, 178, 124, 0.35);
+}
+.hm-scale-band::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.15rem;
+  height: 2px;
+  background: var(--brass);
+}
+.hm-scale-axis {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 2.15rem;
+  height: 1rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  color: var(--c-fg-3);
+  font-variant-numeric: tabular-nums;
+}
+.hm-scale-axis li {
+  position: absolute;
+  top: 0;
+  translate: -50% 0;
+  white-space: nowrap;
+}
+.hm-scale-axis li:nth-child(1) { left: 0; translate: 0 0; }
+.hm-scale-axis li:nth-child(2) { left: calc(100% / 6); }
+.hm-scale-axis li:nth-child(3) { left: calc(200% / 6); }
+.hm-scale-axis li:nth-child(4) { left: 50%; }
+.hm-scale-axis li:nth-child(5) { left: calc(400% / 6); }
+.hm-scale-axis li:nth-child(6) { left: calc(500% / 6); }
+.hm-scale-axis li:nth-child(7) { left: 100%; translate: -100% 0; }
+.hm-est-note {
+  margin-top: 1.4rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+
+/* ---- The three steps: phones receding into the bay ---- */
+.hm-est-stack {
+  position: relative;
+  aspect-ratio: 1 / 1.1;
+  max-width: 34rem;
+  width: 100%;
+  justify-self: end;
+}
+.hm-est-phone {
+  position: absolute;
+  bottom: 9%;
+  width: 44%;
+  transform-origin: 50% 100%;
+}
+.hm-est-phone.is-3 { right: 4%; z-index: 3; }
+.hm-est-phone.is-2 { right: 26%; z-index: 2; scale: 0.88; }
+.hm-est-phone.is-1 { right: 48%; z-index: 1; scale: 0.76; }
+.hm-est-phone.is-2 .hm-screen { filter: brightness(0.5) saturate(0.85); }
+.hm-est-phone.is-1 .hm-screen { filter: brightness(0.32) saturate(0.7); }
+.hm-est-phone .hm-screen { transition: filter 0.9s var(--ease-soft); }
+/* The floor under the front phone: a lit line and its pool of light. */
+.hm-est-stack::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: -4%;
+  bottom: 3%;
+  height: 12%;
+  background:
+    radial-gradient(50% 100% at 60% 0%, rgba(212, 178, 124, 0.18), transparent 70%),
+    linear-gradient(90deg, transparent, rgba(240, 220, 180, 0.55) 30%, rgba(255, 246, 234, 0.8) 60%, transparent) top / 100% 1px no-repeat;
+  pointer-events: none;
+}
+.hm-est-steps {
+  position: absolute;
+  left: 8%;
+  right: 4%;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 6px;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hm-est-steps li { display: grid; gap: 0.5rem; }
+.hm-est-steps i {
+  position: relative;
+  height: 3px;
+  background: rgba(236, 233, 226, 0.1);
+  overflow: hidden;
+}
+.hm-est-steps i::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--brass);
+  transform: scaleX(var(--fill, 1));
+  transform-origin: left center;
+}
+.hm-est-steps li:last-child span { color: var(--c-fg); }
+
+/* ================= 4. 01 · THE FIRST WALL ================= */
+.hm-look {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: end;
+  column-gap: var(--cs-gap);
+  row-gap: 2.5rem;
+}
+.hm-look-photo {
+  position: relative;
+  margin: 0;
+}
+.hm-look-frame {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 6 / 5;
+}
+.hm-look-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 62%;
+  filter: saturate(0.62) brightness(0.72);
+  transition: filter 1.6s var(--ease-soft);
+}
+.hm-look-photo.is-end .hm-look-frame img { filter: none; }
+/* the bookend waits in the dark until it is reached, then lights up */
+.hm-look-photo.is-end.is-dim .hm-look-frame img { filter: saturate(0.62) brightness(0.72); }
+/* Night falls around the room: the frame fades into the page. */
+.hm-look-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(10, 10, 11, 0.65) 100%),
+    linear-gradient(transparent 62%, rgba(10, 10, 11, 0.55));
+  pointer-events: none;
+}
+.hm-look-photo .hm-roomtag {
+  position: absolute;
+  left: clamp(0.9rem, 2vw, 1.5rem);
+  bottom: clamp(0.9rem, 2vw, 1.5rem);
+  min-width: min(17rem, calc(100% - 2rem));
+}
+.hm-look-copy .case-copy-lg { margin-bottom: 1.5rem; }
+
+/* ---- The wall figure: paths stop at a hatched wall. ---- */
+.hm-wallfig {
+  margin: var(--cs-block) 0 0;
+}
+.hm-wf {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.75fr) minmax(0, 1.5fr) 30px minmax(7rem, 0.75fr);
+  min-height: 15rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--c-line);
+  border-bottom: 1px solid var(--c-line);
+}
+.hm-wf-from,
+.hm-wf-to {
+  align-self: center;
+  display: grid;
+  gap: 0.4rem;
+}
+.hm-wf-from { padding-right: 1.25rem; }
+.hm-wf-to { padding-left: 1.6rem; }
+.hm-wf-k {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hm-wf-v {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 300;
+  font-size: clamp(1rem, 0.85rem + 0.5vw, 1.3rem);
+  line-height: 1.2;
+  color: var(--c-fg);
+}
+.hm-wf-to .hm-wf-v { color: var(--c-fg-3); }
+
+.hm-wf-paths {
+  position: relative;
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+}
+/* The bracket that fans "want" into three paths. */
+.hm-wf-paths::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(100% / 6);
+  bottom: calc(100% / 6);
+  width: 1px;
+  background: var(--c-fg-3);
+}
+.hm-wf-path {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding-left: 1.1rem;
+}
+.hm-wf-path::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0.7rem;
+  height: 1px;
+  background: var(--c-fg-3);
+}
+.hm-wf-label {
+  flex: 0 0 auto;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg);
+}
+.hm-wf-line {
+  position: relative;
+  flex: 1 1 auto;
+  height: 13px;
+}
+.hm-wf-line i {
+  position: absolute;
+  left: 0;
+  right: 4px;
+  top: 6px;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, var(--c-fg-2) 0 6px, transparent 6px 10px);
+  transform-origin: left center;
+}
+/* The stop: a red bar where each path meets the wall (--stop, 0..1,
+   lets the script set it down as each path arrives). */
+.hm-wf-line::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 2px;
+  height: 13px;
+  background: var(--c-signal);
+  box-shadow: 0 0 10px var(--c-signal-soft);
+  opacity: var(--stop, 1);
+}
+
+/* --rise (0..1) builds the wall up from the floor. It clips only the
+   wall's own drawing, never the door or the label hung beside it. */
+.hm-wf-wall {
+  position: relative;
+  margin: -1.25rem 0;
+}
+.hm-wf-wall::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--hatch);
+  border-left: 1.5px solid var(--wall);
+  border-right: 1.5px solid var(--wall);
+  clip-path: inset(calc((1 - var(--rise, 1)) * 100%) 0 0 0);
+}
+.hm-wf-wall-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  rotate: -90deg;
+  padding: 0.35rem 0.7rem;
+  background: var(--c-bg);
+  border: 1px solid var(--c-signal);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--c-signal);
+}
+
+/* ================= 5. 02 · A DOOR IN THE WALL ================= */
+.hm-wallfig.is-door .hm-wf {
+  --open: 1;
+  grid-template-columns: minmax(7rem, 0.75fr) minmax(0, 0.9fr) 30px minmax(0, 1.5fr) minmax(7rem, 0.75fr);
+  border-color: var(--c-line);
+}
+.hm-wf-before,
+.hm-wf-after {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1rem;
+}
+.hm-wf-before { padding: 0 1.25rem 0 0.5rem; }
+/* clear of the door's swing (28% of a ~17.5rem wall) */
+.hm-wf-after { padding: 0 0.5rem 0 6.25rem; }
+.hm-wf-run {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+}
+.hm-wf-run i {
+  position: absolute;
+  inset: 0;
+  background: var(--brass);
+  box-shadow: 0 0 12px rgba(212, 178, 124, 0.45);
+  transform-origin: left center;
+}
+.hm-wf-after .hm-wf-run { left: -30px; }
+.hm-wf-stop {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.55rem 0.8rem 0.6rem;
+  background: var(--c-bg);
+  border: 1px solid var(--brass-line);
+  text-align: left;
+}
+.case-section-alt .hm-wf-stop { background: var(--c-bg-2); }
+.hm-wf-stop b {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: clamp(0.92rem, 0.82rem + 0.3vw, 1.08rem);
+  line-height: 1.2;
+  color: var(--c-fg);
+  white-space: nowrap;
+}
+.hm-wf-stop small {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hm-wf-stop.is-ask { border-color: var(--brass); }
+
+/* The wall, cut: hatch above and below the opening, none in it. */
+.hm-wallfig.is-door .hm-wf-wall::before {
+  -webkit-mask: linear-gradient(#000 0 36%, transparent 36% 64%, #000 64%);
+          mask: linear-gradient(#000 0 36%, transparent 36% 64%, #000 64%);
+}
+.hm-wallfig.is-door .hm-wf-wall::after {
+  /* jambs: the two short returns at the edges of the opening */
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 36%;
+  bottom: 36%;
+  border-top: 1.5px solid var(--wall);
+  border-bottom: 1.5px solid var(--wall);
+  opacity: var(--rise, 1);
+}
+.hm-wallfig.is-door .hm-wf-wall-label {
+  left: calc(100% + 0.75rem);
+  top: auto;
+  bottom: calc(64% + 0.6rem);
+  translate: 0 0;
+  rotate: none;
+  border-color: var(--brass);
+  color: var(--brass);
+  background: var(--c-bg-2);
+}
+/* The door: hinged at the top jamb on the room side, swinging open. */
+.hm-door {
+  position: absolute;
+  left: 100%;
+  top: 36%;
+  height: 28%;
+  aspect-ratio: 1;
+  width: auto;
+  max-width: none;   /* style.css caps svg at its box: the wall is 30px */
+  overflow: visible;
+  z-index: 2;
+}
+.hm-door-arc {
+  fill: none;
+  stroke: var(--brass);
+  stroke-width: 1;
+  stroke-dasharray: 0.03 0.025;
+  vector-effect: non-scaling-stroke;
+  opacity: calc(var(--open, 1) * 0.9);
+}
+.hm-door-leaf {
+  stroke: var(--brass);
+  stroke-width: 2.5;
+  stroke-linecap: square;
+  vector-effect: non-scaling-stroke;
+  transform-box: view-box;
+  transform-origin: 0 0;
+  rotate: calc(var(--open, 1) * -90deg);
+}
+.hm-door-hinge { fill: var(--brass); }
+
+/* ---- The bet: the task and its measures ---- */
+.hm-bet {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  column-gap: var(--cs-gap);
+  row-gap: 3rem;
+  margin-top: var(--cs-block);
+}
+.hm-task-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 0.4rem;
+  border-top: 1px solid var(--c-line-2);
+}
+.hm-task-steps li {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+  padding: 1.35rem 1.25rem 0 0;
+}
+/* A station on the route, and the arrow to the next one. */
+.hm-task-steps li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -4px;
+  width: 7px;
+  height: 7px;
+  background: var(--c-bg-2);
+  border: 1px solid var(--brass);
+  rotate: 45deg;
+}
+.hm-task-steps li:last-child::before { background: var(--brass); }
+.hm-task-no { color: var(--c-fg-3); }
+.hm-task-steps b {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: clamp(1rem, 0.9rem + 0.35vw, 1.2rem);
+  line-height: 1.25;
+  color: var(--c-fg);
+}
+.hm-measure-spec .spec-row { grid-template-columns: minmax(6.5rem, 0.36fr) 1fr; }
+
+/* ================= 6. 03 · TWO SIDES OF THE TABLE ================= */
+.hm-people {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(5.5rem, 11vw, 10rem) minmax(0, 1fr);
+  align-items: start;
+}
+.hm-person {
+  display: grid;
+  align-content: start;
+  gap: 1.6rem;
+  padding-top: clamp(1.25rem, 2vw, 1.6rem);
+}
+.hm-person-head { display: grid; gap: 0.55rem; }
+.hm-person-k { color: var(--c-fg-3); }
+.hm-person-name {
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 1rem + 2.2vw, 3rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  letter-spacing: -0.012em;
+}
+.hm-person-role { color: var(--c-fg-2); font-size: var(--fs-small); }
+.hm-person-quote {
+  position: relative;
+  margin: 0;
+  padding-left: clamp(1rem, 2vw, 1.5rem);
+  border-left: 1px solid var(--c-line-2);
+}
+.hm-person-quote::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 0;
+  width: 1px;
+  height: 2.5rem;
+  background: var(--brass);
+}
+.hm-person-quote p {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 300;
+  font-size: clamp(1.1rem, 0.9rem + 0.7vw, 1.5rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--c-fg);
+  text-wrap: pretty;
+}
+.hm-person-lists {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 1.5rem;
+}
+.hm-person-lists dt {
+  margin-bottom: 0.7rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hm-person-lists li {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 0.95rem;
+  border-top: 1px solid var(--c-line);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--c-fg-2);
+}
+.hm-person-lists li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.05rem;
+  width: 5px;
+  height: 1px;
+  background: var(--c-fg-3);
+}
+
+/* The bridge: a dimension line from one side of the table to the other. */
+.hm-bridge {
+  position: relative;
+  align-self: stretch;
+  min-height: 8rem;
+}
+.hm-bridge-line {
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  top: clamp(9.5rem, 13vw, 12rem);
+  height: 13px;
+  border-left: 1px solid var(--brass);
+  border-right: 1px solid var(--brass);
+}
+.hm-bridge-line i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 6px;
+  height: 1px;
+  background: var(--brass);
+  transform-origin: center;
+}
+.hm-bridge-label {
+  position: absolute;
+  left: 50%;
+  top: calc(clamp(9.5rem, 13vw, 12rem) + 1.25rem);
+  translate: -50% 0;
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  width: max-content;
+  max-width: calc(100% - 1.75rem);
+  text-align: center;
+}
+.hm-bridge-label b {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: 1.05rem;
+  color: var(--brass);
+  white-space: nowrap;
+}
+.hm-bridge-label small {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+
+.hm-share {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  align-items: center;
+  column-gap: var(--cs-gap);
+  row-gap: 1.5rem;
+  max-width: 64rem;
+  margin-top: var(--cs-block);
+}
+.hm-share-crop {
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px var(--c-line-2), 0 26px 50px -24px rgba(0, 0, 0, 0.9);
+}
+
+/* ================= 7. 04 · HOUSE RULES ================= */
+.hm-rules {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--cs-gap);
+  row-gap: 3.5rem;
+}
+.hm-rule {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding-top: clamp(1.1rem, 1.8vw, 1.5rem);
+}
+.hm-rule-no { margin-bottom: 0.6rem; }
+.hm-rule h3 {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: clamp(1.12rem, 0.98rem + 0.45vw, 1.45rem);
+  line-height: 1.2;
+  letter-spacing: -0.008em;
+  color: var(--c-fg);
+}
+.hm-rule > p {
+  font-size: 0.95rem;
+  line-height: 1.66;
+  color: var(--c-fg-2);
+}
+.hm-proof {
+  margin: auto 0 0;
+  padding-top: 1.6rem;
+}
+.hm-proof .hm-crop {
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px var(--c-line-2), 0 24px 48px -26px rgba(0, 0, 0, 0.95);
+}
+.hm-proof figcaption {
+  min-height: 3em;   /* two lines, so every crop above sits on one line */
+  margin-top: 0.9rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+/* The thumb zone: the arc a right thumb sweeps from the bottom corner. */
+.hm-thumbzone {
+  position: absolute;
+  right: -34%;
+  bottom: -88%;
+  width: 150%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(212, 178, 124, 0.32), rgba(212, 178, 124, 0.12) 72%, transparent 100%);
+  border: 1px dashed rgba(122, 90, 38, 0.75);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* ================= 8. 05 · THE FLOOR PLAN (on paper) ================= */
+.hm-sheet { background: var(--c-bg); }
+/* The drawing sheet's border, inset like a printed title block. */
+.hm-sheet::before {
+  content: '';
+  position: absolute;
+  inset: clamp(0.6rem, 1.4vw, 1.25rem);
+  border: 1px solid var(--c-line);
+  pointer-events: none;
+}
+
+.hm-plan { margin: 0; }
+.hm-plan-sheet {
+  position: relative;
+  display: grid;
+  border: 5px solid var(--c-fg);
+  outline: 1px solid var(--c-fg);
+  outline-offset: 3px;
+  background: var(--c-bg);
+}
+.hm-plan-global {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 2rem;
+  padding: 1rem clamp(1rem, 2vw, 1.5rem);
+  border-bottom: 2px solid var(--c-fg);
+  background: repeating-linear-gradient(-45deg, rgba(13, 13, 14, 0.1) 0 1px, transparent 1px 7px);
+}
+.hm-plan-global::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed var(--c-fg-3);
+  pointer-events: none;
+}
+.hm-plan-global .hm-roomtag { position: relative; z-index: 1; }
+.hm-plan-rooms {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.hm-room {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: clamp(0.9rem, 1.4vw, 1.2rem) clamp(0.8rem, 1.2vw, 1.1rem) 2.6rem;
+  border-right: 2px solid var(--c-fg);
+}
+.hm-room:last-child { border-right: 0; }
+.hm-room.is-centre { background: var(--brass-soft); }
+
+.hm-roomtag.is-plan {
+  justify-self: start;
+  padding: 0.55rem 0.7rem 0.6rem;
+  background: var(--c-bg);
+  border: 1px solid var(--c-fg);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  gap: 0.15rem;
+}
+.hm-roomtag.is-plan b {
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 500;
+  font-size: 0.95rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--c-fg);
+}
+.hm-roomtag.is-plan span,
+.hm-roomtag.is-plan em {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  font-style: normal;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hm-roomtag.is-plan em { color: var(--brass); }
+
+.hm-plan-list {
+  display: grid;
+  gap: 0.15rem;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+.hm-plan-list.is-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+}
+.hm-plan-list li {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 0.18rem 0 0.18rem 0.9rem;
+  color: var(--c-fg);
+}
+/* Markers: a filled square is designed, a dashed square is planned,
+   a red hatched square is an edge state, an arrow is a hand-off. */
+.hm-plan-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  background: var(--c-fg);
+}
+.hm-plan-list li.is-planned { color: var(--c-fg-3); }
+.hm-plan-list li.is-planned::before { background: none; border: 1px dashed var(--c-fg-3); }
+.hm-plan-list li.is-edge { color: var(--c-signal); }
+.hm-plan-list li.is-edge::before { background: var(--hatch-red); border: 1px solid var(--c-signal); }
+.hm-plan-list li.is-link { color: var(--c-fg-2); font-style: italic; }
+.hm-plan-list li.is-link::before {
+  width: 6px;
+  height: 6px;
+  background: none;
+  border-top: 1px solid var(--c-fg-2);
+  border-right: 1px solid var(--c-fg-2);
+  rotate: 45deg;
+}
+.hm-plan-list li.is-path::before { display: none; }
+.hm-plan-list li.is-path { padding-left: 0; font-weight: 500; }
+.hm-step {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.55rem;
+  height: 1.15rem;
+  padding: 0 0.25rem;
+  border: 1px solid var(--brass);
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  font-style: normal;
+  line-height: 1;
+  color: var(--brass);
+  font-variant-numeric: tabular-nums;
+  translate: 0 -0.08em;
+}
+
+/* Each room's door onto the hallway: a gap in the wall, a leaf and its swing. */
+.hm-plan-door {
+  position: absolute;
+  left: clamp(0.8rem, 1.2vw, 1.1rem);
+  bottom: -2px;
+  width: 2.2rem;
+  height: 2px;
+  background: var(--c-bg);
+}
+/* --swing (0..1): 0 is shut, the leaf lying across the gap; 1 is open. */
+.hm-plan-door::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 2px;
+  height: 2.2rem;
+  background: var(--brass);
+  transform-origin: 50% 100%;
+  rotate: calc((1 - var(--swing, 1)) * 90deg);
+}
+.hm-plan-door::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-top: 1px dashed var(--brass);
+  border-right: 1px dashed var(--brass);
+  border-top-right-radius: 100%;
+  opacity: var(--swing, 1);
+}
+
+.hm-plan-hall {
+  display: flex;
+  align-items: center;
+  min-height: 3.6rem;
+  padding: 0.6rem clamp(1rem, 2vw, 1.5rem);
+  border-top: 2px solid var(--c-fg);
+  border-bottom: 2px solid var(--c-fg);
+  background:
+    repeating-linear-gradient(90deg, transparent 0 calc(20% - 1px), rgba(13, 13, 14, 0.08) calc(20% - 1px) 20%);
+}
+.hm-plan-hall .hm-roomtag { border-style: dashed; }
+
+.hm-plan-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 2rem;
+  row-gap: 1rem;
+  padding: clamp(1rem, 1.8vw, 1.4rem) clamp(1rem, 2vw, 1.5rem) 3.2rem;
+}
+/* The front door: a gap in the outer wall, the leaf and its swing. */
+.hm-plan-front {
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 3.4rem;
+  height: 5px;
+  background: var(--c-bg);
+  translate: -50% 0;
+}
+.hm-plan-front svg {
+  position: absolute;
+  left: 0;
+  bottom: 5px;
+  width: 3.4rem;
+  max-width: none;
+  height: 3.4rem;
+  overflow: visible;
+  scale: 1 -1;
+}
+.hm-plan-front .hm-door-arc { stroke-dasharray: 0.04 0.03; }
+.hm-plan-front .hm-door-leaf { rotate: none; }
+.hm-plan-front > span {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 0.7rem);
+  translate: -50% 0;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--brass);
+}
+
+.hm-plan-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2rem;
+  margin-top: 3rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-fg-2);
+}
+.hm-plan-legend li { position: relative; display: flex; align-items: center; gap: 0.55rem; }
+.hm-plan-legend li:not(.is-path)::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  background: var(--c-fg);
+}
+.hm-plan-legend li.is-planned::before { background: none; border: 1px dashed var(--c-fg-3); }
+.hm-plan-legend li.is-edge::before { background: var(--hatch-red); border: 1px solid var(--c-signal); }
+
+/* ---- Routes ---- */
+.hm-routes {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--cs-gap);
+  row-gap: 2.5rem;
+}
+.hm-route {
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+  padding-top: 1.2rem;
+}
+.hm-route h4 {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: clamp(1.1rem, 0.95rem + 0.45vw, 1.4rem);
+  line-height: 1.15;
+}
+.hm-route-path {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--c-fg);
+}
+.hm-route-meta {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--c-fg-2);
+}
+
+/* ================= 9. 06 · THE WALKTHROUGH ================= */
+/* Without the runtime: a plain strip, every screen with its caption. */
+.hm-walk { position: relative; }
+.hm-walk-panel,
+.hm-walk-floor { display: none; }
+.hm-walk-view {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 0 var(--gutter) 1.5rem;
+}
+.hm-walk-track {
+  display: flex;
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+.hm-walk-item {
+  flex: 0 0 min(16rem, 64vw);
+  scroll-snap-align: start;
+}
+.hm-walk-cap { margin-top: 2.25rem; }
+.hm-walk-cap-no {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-signal);
+}
+.hm-walk-cap h4 {
+  margin: 0.55rem 0 0.5rem;
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: 1.15rem;
+}
+.hm-walk-cap p:last-child { font-size: 0.9rem; line-height: 1.6; color: var(--c-fg-2); }
+
+/* Live: a sticky stage, the track panned by scroll, one screen in focus. */
+.hm-walk.is-live {
+  --n: 13;
+  --step: 52;                                   /* scroll per screen, in svh */
+  --ph: min(64svh, 44rem);                      /* phone height */
+  --pw: calc(var(--ph) * 0.4621);               /* phone width (390 / 844) */
+  --gap: clamp(2.5rem, 4.6vw, 5rem);
+  height: calc(100vh + (var(--n) - 1) * var(--step) * 1vh);
+  height: calc(100svh + (var(--n) - 1) * var(--step) * 1svh);
+  margin: 0 calc(-1 * var(--gutter));
+}
+.hm-walk.is-live .hm-walk-stage {
+  position: sticky;
+  top: 0;
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.62fr) minmax(0, 1.38fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  height: 100vh;
+  height: 100svh;
+  padding: calc(var(--nav-h) + 0.75rem) var(--gutter) clamp(1rem, 2.6vh, 1.75rem);
+  overflow: clip;
+}
+.hm-walk.is-live .hm-walk-panel {
+  display: grid;
+  align-content: center;
+  gap: 1.1rem;
+  grid-column: 1;
+  grid-row: 1;
+  padding-right: clamp(1rem, 3vw, 3rem);
+  z-index: 2;
+}
+.hm-walk.is-live .hm-walk-view {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  scroll-snap-type: none;
+}
+.hm-walk.is-live .hm-walk-track {
+  gap: var(--gap);
+  will-change: transform;
+}
+/* Beside the caption panel, screens already seen slide out under a
+   soft edge instead of over the text. */
+@media (min-width: 900px) {
+  .hm-walk.is-live .hm-walk-view { clip-path: inset(-14% -100vw -14% 0); }
+  .hm-walk.is-live .hm-walk-view::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -14%;
+    bottom: -14%;
+    width: clamp(2rem, 4vw, 4rem);
+    background: linear-gradient(90deg, var(--c-bg), rgba(10, 10, 11, 0));
+    z-index: 3;
+    pointer-events: none;
+  }
+}
+.hm-walk.is-live .hm-walk-item {
+  --ad: 0;
+  flex: 0 0 var(--pw);
+  opacity: calc(1 - min(var(--ad), 3) * 0.24);
+  scale: calc(1 - min(var(--ad), 2) * 0.06);
+  transform-origin: 50% 70%;
+}
+.hm-walk.is-live .hm-walk-item .hm-screen {
+  filter: brightness(calc(1 - min(var(--ad), 1) * 0.52));
+}
+.hm-walk.is-live .hm-walk-cap {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* The caption panel for the screen in focus. */
+.hm-walk-count {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hm-walk-no {
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 300;
+  font-size: clamp(3rem, 2rem + 3vw, 5.25rem);
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+  color: var(--c-fg);
+}
+.hm-walk-phase,
+.hm-walk-title,
+.hm-walk-text,
+.hm-walk-rule { display: block; overflow: clip; overflow-clip-margin: 0.1em; }
+.hm-walk-phase {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+.hm-walk-title {
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 1rem + 1.8vw, 2.6rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: -0.012em;
+}
+.hm-walk-phase-in,
+.hm-walk-title-in,
+.hm-walk-text-in,
+.hm-walk-rule-in { display: block; }
+.hm-walk-text {
+  max-width: 34ch;
+  font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+  line-height: 1.65;
+  color: var(--c-fg-2);
+  min-height: 6.6em;
+}
+.hm-walk-rule {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+  min-height: 1.5em;
+}
+.hm-walk-rule-in:not(:empty)::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 0.6rem;
+  border: 1px solid var(--brass);
+  rotate: 45deg;
+  translate: 0 -1px;
+}
+
+/* The measured floor: the phases, a tick per screen, the target, you. */
+.hm-walk.is-live .hm-walk-floor {
+  --p: 0;
+  display: block;
+  position: relative;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  height: 3.6rem;
+  margin-top: 1.25rem;
+}
+.hm-walk-phases {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1.4rem;
+}
+.hm-walk-phases li {
+  position: absolute;
+  top: 0;
+  left: calc(var(--from) / 12 * 100%);
+  width: calc((var(--to) - var(--from)) / 12 * 100%);
+  height: 100%;
+  border-left: 1px solid var(--c-fg-3);
+  border-right: 1px solid var(--c-fg-3);
+}
+.hm-walk-phases li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--c-line-2);
+}
+.hm-walk-phases span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  padding: 0 0.6rem;
+  background: var(--c-bg);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--c-fg-3);
+  transition: color 0.5s var(--ease-soft);
+}
+.hm-walk-phases li.is-on span { color: var(--c-fg); }
+.hm-walk-ruler {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 2rem;
+  height: 9px;
+  background:
+    linear-gradient(var(--c-line-2), var(--c-line-2)) left bottom / 100% 1px no-repeat,
+    repeating-linear-gradient(90deg, var(--c-fg-3) 0 1px, transparent 1px calc(100% / 12)) left bottom / calc(100% + 1px) 9px no-repeat;
+}
+/* The ruler fills in brass behind the reader. */
+.hm-walk-ruler::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: calc(var(--p) * 100%);
+  height: 1px;
+  background: var(--brass);
+  box-shadow: 0 0 10px rgba(212, 178, 124, 0.5);
+}
+.hm-walk-target {
+  position: absolute;
+  left: calc(var(--at) / 12 * 100%);
+  top: 1.55rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  translate: -50% 0;
+}
+.hm-walk-target i {
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--brass);
+  background: var(--c-bg);
+  rotate: 45deg;
+}
+.hm-walk-target span {
+  margin-top: 0.55rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--brass);
+}
+.hm-walk-needle {
+  position: absolute;
+  left: calc(var(--p) * 100%);
+  top: 1.6rem;
+  width: 1px;
+  height: 1.4rem;
+  background: var(--c-signal);
+  box-shadow: 0 0 10px rgba(255, 59, 29, 0.55);
+}
+.hm-walk-needle i {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  background: var(--c-signal);
+}
+
+.hm-offpath {
+  display: grid;
+  grid-template-columns: minmax(0, 0.42fr) minmax(0, 1fr);
+  column-gap: var(--cs-gap);
+  margin-top: clamp(2.5rem, 5vw, 4.5rem);
+}
+.hm-offpath-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--cs-gap);
+}
+.hm-offpath-list li {
+  position: relative;
+  padding: 0.8rem 0 0.8rem 1.4rem;
+  border-top: 1px solid var(--c-line);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--c-fg-2);
+}
+/* each a small door: an alternative way through */
+.hm-offpath-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.1rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-top: 1px solid var(--brass);
+  border-right: 1px solid var(--brass);
+  border-top-right-radius: 100%;
+}
+
+/* ================= 10. 07 · HONEST NUMBERS ================= */
+.hm-annot {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  column-gap: clamp(3rem, 7vw, 7rem);
+  align-items: stretch;
+}
+.hm-annot-phone {
+  justify-self: end;
+  align-self: start;
+  width: min(100%, 22rem);
+}
+/* The pins on the screen, numbered like the notes. */
+.hm-annot-list {
+  position: relative;
+  counter-reset: note;
+}
+.hm-annot-list li {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--y) / 844 * 100%);
+  translate: 0 -0.7rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 1rem;
+  row-gap: 0.2rem;
+  max-width: 30rem;
+}
+.hm-annot-no { grid-row: 1 / span 2; padding-top: 0.15rem; }
+.hm-annot-list b {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: 1.05rem;
+  line-height: 1.25;
+  color: var(--c-fg);
+}
+.hm-annot-list span:last-child {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--c-fg-2);
+}
+/* The leader: from the note back to the screen, ending on a brass pin. */
+.hm-annot-list li::before {
+  content: '';
+  position: absolute;
+  right: calc(100% + 1rem);
+  top: 0.7rem;
+  width: calc(clamp(3rem, 7vw, 7rem) - 1rem + 2.4rem);
+  height: 1px;
+  background: linear-gradient(90deg, var(--brass), var(--brass-line));
+}
+.hm-annot-list li::after {
+  content: '';
+  position: absolute;
+  right: calc(100% + 1rem + clamp(3rem, 7vw, 7rem) - 1rem + 2.4rem - 3px);
+  top: calc(0.7rem - 3px);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brass);
+  box-shadow: 0 0 0 3px rgba(212, 178, 124, 0.22);
+}
+
+/* ---- Ranges: each line of the estimate as its own dimension ---- */
+.hm-ranges {
+  --max: 2;
+  margin: 0;
+  max-width: 64rem;
+}
+.hm-ranges-list { border-bottom: 1px solid var(--c-line); }
+.hm-rangerow,
+.hm-ranges-axis {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.9fr) 3.2rem minmax(0, 2fr) 6.5rem;
+  column-gap: clamp(0.9rem, 2vw, 1.75rem);
+  align-items: center;
+}
+.hm-rangerow {
+  padding: 1rem 0;
+  border-top: 1px solid var(--c-line);
+}
+.hm-rangerow-name { font-size: 0.95rem; color: var(--c-fg); }
+.hm-rangerow-share {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  color: var(--c-fg-3);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.hm-rangerow-bar {
+  position: relative;
+  height: 13px;
+  background:
+    linear-gradient(var(--c-line), var(--c-line)) left center / 100% 1px no-repeat,
+    repeating-linear-gradient(90deg, var(--c-line-2) 0 1px, transparent 1px 25%) left center / calc(100% + 1px) 7px no-repeat;
+}
+.hm-rangerow-bar i {
+  position: absolute;
+  left: calc(var(--lo) / var(--max) * 100%);
+  width: calc((var(--hi) - var(--lo)) / var(--max) * 100%);
+  top: 0;
+  height: 13px;
+  border-left: 1.5px solid var(--brass);
+  border-right: 1.5px solid var(--brass);
+  transform-origin: left center;
+}
+.hm-rangerow-bar i::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 5.5px;
+  height: 2px;
+  background: var(--brass);
+  box-shadow: 0 0 10px rgba(212, 178, 124, 0.4);
+}
+.hm-rangerow-val {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-size: 1rem;
+  color: var(--c-fg);
+  text-align: right;
+  white-space: nowrap;
+}
+.hm-rangerow-val b { font-weight: 400; }
+.hm-ranges-axis {
+  padding-top: 0.7rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  color: var(--c-fg-3);
+  font-variant-numeric: tabular-nums;
+}
+.hm-ranges-axis li { grid-column: 3; grid-row: 1; justify-self: start; }
+.hm-ranges-axis li:nth-child(2) { margin-left: 25%; translate: -50% 0; }
+.hm-ranges-axis li:nth-child(3) { margin-left: 50%; translate: -50% 0; }
+.hm-ranges-axis li:nth-child(4) { margin-left: 75%; translate: -50% 0; }
+.hm-ranges-axis li:nth-child(5) { justify-self: end; }
+
+/* The sum check: lights once the page has added the ranges up itself. */
+.hm-sum {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 1.75rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--c-fg-2);
+}
+.hm-sum b { font-weight: 500; color: var(--c-fg); }
+.hm-sum-mark,
+.hm-receipt-check span {
+  position: relative;
+  flex: 0 0 auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 1px solid var(--brass-line);
+  border-radius: 50%;
+}
+.hm-sum-mark::after,
+.hm-receipt-check span::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 0.32rem;
+  height: 0.55rem;
+  border-right: 1.5px solid var(--brass);
+  border-bottom: 1.5px solid var(--brass);
+  translate: -50% -50%;
+  rotate: 45deg;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-soft);
+}
+.is-ok .hm-sum-mark,
+.is-ok .hm-receipt-check span { border-color: var(--brass); background: var(--brass-soft); }
+.is-ok .hm-sum-mark::after,
+.is-ok .hm-receipt-check span::after { opacity: 1; }
+
+/* ---- Ledger: the order money moves in ---- */
+.hm-ledger-intro { margin-bottom: 2rem; }
+.hm-ledger {
+  position: relative;
+  max-width: 64rem;
+}
+/* The rail through the stations. */
+.hm-ledger::before {
+  content: '';
+  position: absolute;
+  left: 0.3rem;
+  top: 1.6rem;
+  bottom: 1.6rem;
+  width: 1px;
+  background: var(--brass-line);
+  transform-origin: top center;
+}
+.hm-ledger-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(8.5rem, 0.32fr) minmax(0, 1fr) 10rem;
+  column-gap: clamp(1rem, 2.4vw, 2rem);
+  align-items: baseline;
+  padding: 1.1rem 0 1.1rem 1.9rem;
+  border-top: 1px solid var(--c-line);
+}
+.hm-ledger-row:last-child { border-bottom: 1px solid var(--c-line); }
+.hm-ledger-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.4rem;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--brass);
+  background: var(--c-bg-2);
+  rotate: 45deg;
+}
+.hm-ledger-row.is-free::before,
+.hm-ledger-row.is-build::before { background: var(--brass); }
+.hm-ledger-when {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hm-ledger-what { display: grid; gap: 0.3rem; }
+.hm-ledger-what b {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: 1.05rem;
+  color: var(--c-fg);
+}
+.hm-ledger-what small { font-size: 0.86rem; line-height: 1.5; color: var(--c-fg-2); }
+.hm-ledger-amt {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 300;
+  font-size: clamp(1.2rem, 0.95rem + 0.8vw, 1.75rem);
+  line-height: 1;
+  color: var(--c-fg);
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.hm-ledger-row.is-free .hm-ledger-amt,
+.hm-ledger-row.is-build .hm-ledger-amt { color: var(--brass); }
+
+/* ---- Receipts ---- */
+.hm-receipts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--cs-gap);
+  align-items: start;
+}
+.hm-receipt {
+  position: relative;
+  display: grid;
+  gap: 1.1rem;
+  padding: 1.4rem 1.4rem 1.25rem;
+  background: var(--c-bg);
+  border: 1px solid var(--c-line-2);
+}
+/* A torn bottom edge, like a slip from a printer: teeth of the slip's
+   own obsidian, each edged in the hairline. */
+.hm-receipt::after {
+  content: '';
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  bottom: -6px;
+  height: 6px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6'%3E%3Cpath d='M0 0h12L6 6z' fill='%230a0a0b'/%3E%3Cpath d='M0 0.5L6 5.6L12 0.5' fill='none' stroke='%23ece9e2' stroke-opacity='0.24'/%3E%3C/svg%3E") left top / 12px 6px repeat-x;
+}
+.hm-receipt-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px dashed var(--c-line-2);
+}
+.hm-receipt-head b {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: 1.05rem;
+}
+.hm-receipt-head span,
+.hm-receipt-check {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hm-receipt-lines { display: grid; gap: 0.55rem; }
+.hm-receipt-lines div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--c-fg-2);
+}
+/* dotted leaders between label and amount */
+.hm-receipt-lines div::after {
+  content: '';
+  order: 1;
+  flex: 1 1 auto;
+  min-width: 1rem;
+  border-bottom: 1px dotted var(--c-fg-4);
+  translate: 0 -0.25em;
+}
+.hm-receipt-lines dd {
+  order: 2;
+  color: var(--c-fg);
+  font-variant-numeric: tabular-nums;
+}
+.hm-receipt-lines .is-total {
+  margin-top: 0.35rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--c-fg-3);
+  color: var(--c-fg);
+}
+.hm-receipt-lines .is-total dd {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+  color: var(--brass);
+}
+.hm-receipt-note { font-size: 0.86rem; line-height: 1.55; color: var(--c-fg-2); }
+.hm-receipt-check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--c-line);
+}
+
+/* ================= 11. 08 · EVERY WALL HAS A DOOR ================= */
+.hm-edge-group + .hm-edge-group { margin-top: var(--cs-block); }
+.hm-edge-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--c-line-2);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg);
+}
+.hm-edge-head small { font-size: inherit; color: var(--c-fg-3); }
+.hm-edges {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 21.5rem), 1fr));
+  gap: clamp(2.25rem, 4vw, 3.25rem) var(--cs-gap);
+  margin-top: 2.25rem;
+}
+.hm-edge {
+  display: grid;
+  grid-template-columns: clamp(6.25rem, 8vw, 7.5rem) minmax(0, 1fr);
+  column-gap: 1.4rem;
+  align-items: start;
+}
+.hm-edge-body { display: grid; gap: 0.7rem; padding-top: 0.2rem; }
+.hm-edge-check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--c-fg);
+}
+.hm-edge-check span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--c-fg-3);
+}
+/* the decision: a diamond, as in the flow diagrams */
+.hm-edge-check span::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--c-signal);
+  rotate: 45deg;
+}
+.hm-edge h4 {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: 1.08rem;
+  line-height: 1.25;
+}
+/* what went wrong: quoted beside a short red wall */
+.hm-edge-says {
+  position: relative;
+  padding-left: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--c-fg);
+}
+.hm-edge-says::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  bottom: 0.15rem;
+  width: 5px;
+  background: var(--hatch-red);
+  border-left: 1px solid var(--c-signal);
+  border-right: 1px solid var(--c-signal);
+}
+/* the way back: behind a small brass door */
+.hm-edge-door {
+  position: relative;
+  display: grid;
+  gap: 0.25rem;
+  padding-left: 1.6rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--c-fg-2);
+}
+.hm-edge-door span { color: var(--brass); }
+.hm-edge-door::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-top: 1px dashed var(--brass);
+  border-right: 1px dashed var(--brass);
+  border-top-right-radius: 100%;
+}
+.hm-edge-door::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  width: 1.5px;
+  height: 0.95rem;
+  background: var(--brass);
+}
+
+/* ================= 12. 09 · BEYOND THE BOOKING ================= */
+.hm-lineup + .hm-lineup { margin-top: var(--cs-block); }
+.hm-lineup-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 1.5rem;
+  row-gap: 0.6rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--c-line-2);
+}
+.hm-lineup-head h3 {
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 400;
+  font-size: clamp(1.3rem, 0.95rem + 1vw, 1.9rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+.hm-lineup-head p:not(.hm-lineup-meta) {
+  flex: 1 1 22rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--c-fg-2);
+}
+.hm-lineup-meta { color: var(--c-fg-3); margin-left: auto; }
+.hm-lineup-row {
+  display: grid;
+  grid-template-columns: repeat(var(--count), minmax(0, 1fr));
+  column-gap: clamp(0.85rem, 1.6vw, 1.5rem);
+  margin-top: 2.25rem;
+}
+.hm-lineup-row > li { min-width: 0; }
+.hm-lineup-cap {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.4rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: var(--c-fg-2);
+}
+.hm-lineup-cap span { color: var(--c-signal); }
+.hm-lineup-notes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  column-gap: var(--cs-gap);
+  row-gap: 1.25rem;
+  margin-top: 2.25rem;
+}
+.hm-lineup-notes li {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--c-fg-2);
+}
+.hm-lineup-notes b {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--c-fg);
+}
+/* Two flows side by side, sized 3 : 5 so every phone matches. */
+.hm-lineup.is-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 5fr);
+  grid-template-rows: auto auto auto;
+  column-gap: clamp(1.75rem, 3.4vw, 3.25rem);
+}
+/* Heads, phones and notes share rows across both flows (subgrid), so
+   the two line-ups stand on one floor. */
+.hm-lineup.is-pair .hm-lineup-block {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+}
+.hm-lineup.is-pair .hm-lineup-head { flex-direction: column; align-items: flex-start; }
+.hm-lineup.is-pair .hm-lineup-head p { flex: none; }
+.hm-lineup.is-pair .hm-lineup-meta { margin-left: 0; }
+.hm-lineup.is-pair .hm-lineup-notes { grid-template-columns: minmax(0, 1fr); align-content: start; }
+
+/* ================= 13. 10 · THE FINISH SCHEDULE ================= */
+.hm-nudge-block {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  column-gap: var(--cs-gap);
+  row-gap: 2rem;
+  align-items: start;
+}
+.hm-nudge { margin: 0; }
+.hm-nudge-rows {
+  position: relative;
+  border-bottom: 1px solid var(--c-line);
+}
+.hm-nudge-row,
+.hm-nudge-axis {
+  display: grid;
+  grid-template-columns: 7.75rem minmax(0, 1fr) 6.75rem;
+  column-gap: 1.25rem;
+  align-items: center;
+}
+.hm-nudge-row {
+  padding: 0.95rem 0;
+  border-top: 1px solid var(--c-line);
+}
+.hm-nudge-name {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--c-fg);
+}
+.hm-nudge-name i {
+  width: 0.85rem;
+  height: 0.85rem;
+  background: var(--c);
+  box-shadow: inset 0 0 0 1px rgba(236, 233, 226, 0.12);
+}
+.hm-nudge-name i + i { margin-right: 0.45rem; }
+/* contrast 2..7 maps to 0..100% of the track */
+.hm-nudge-track {
+  position: relative;
+  height: 15px;
+  background: linear-gradient(var(--c-line), var(--c-line)) left center / 100% 1px no-repeat;
+}
+/* the AA line at 4.5 : 1 */
+.hm-nudge-track::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -0.95rem;
+  bottom: -0.95rem;
+  width: 1px;
+  background: var(--c-signal);
+  opacity: 0.75;
+}
+.hm-nudge-link {
+  position: absolute;
+  top: 7px;
+  left: calc((var(--a) - 2) / 5 * 100%);
+  width: calc((var(--b) - var(--a)) / 5 * 100%);
+  height: 1px;
+  background: var(--brass);
+  transform-origin: left center;
+}
+.hm-nudge-from,
+.hm-nudge-to {
+  position: absolute;
+  top: 2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  translate: -50% 0;
+}
+.hm-nudge-from { left: calc((var(--a) - 2) / 5 * 100%); border: 1px solid var(--c-fg-2); background: var(--c-bg); }
+.hm-nudge-to { left: calc((var(--b) - 2) / 5 * 100%); background: var(--brass); box-shadow: 0 0 0 2px var(--c-bg); }
+.hm-nudge-val {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--c-fg-3);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.hm-nudge-val b { font-weight: 500; color: var(--c-fg); }
+.hm-nudge-axis {
+  padding-top: 0.7rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  color: var(--c-fg-3);
+}
+.hm-nudge-axis ol {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  justify-content: space-between;
+  font-variant-numeric: tabular-nums;
+}
+.hm-nudge-axis li { width: 0; display: flex; justify-content: center; }
+/* the AA line's own label, on a row of its own under the numbers */
+.hm-nudge-aa {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: center;
+  margin-top: 0.55rem;
+  color: var(--c-signal);
+  white-space: nowrap;
+}
+
+.hm-contrast-intro { margin-bottom: 2rem; }
+.hm-contrast th,
+.hm-contrast td { padding-top: 0.62rem; padding-bottom: 0.62rem; }
+.hm-contrast th[scope="row"] {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+.hm-contrast td:nth-child(n+3) {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.hm-contrast td:nth-child(4),
+.hm-contrast td:nth-child(5) { color: var(--c-fg); }
+.hm-contrast tr.is-tight th,
+.hm-contrast tr.is-tight td:nth-child(4) { color: var(--brass); }
+.hm-contrast tr.is-tight th { box-shadow: inset 2px 0 0 var(--brass); padding-left: 0.85rem; }
+
+/* ---- The board: type beside measure ---- */
+.hm-board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: var(--cs-gap);
+  row-gap: var(--cs-block);
+}
+.hm-specimen div {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1rem 0 1.15rem;
+  border-top: 1px solid var(--c-line);
+}
+.hm-specimen dt {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hm-specimen dd { color: var(--c-fg); text-wrap: balance; }
+.hm-specimen .is-serif dd { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-weight: 400; }
+.hm-specimen .is-sans dd { font-family: 'DM Sans', 'Helvetica Neue', Arial, sans-serif; }
+.hm-specimen .is-num dd { font-weight: 600; font-size: clamp(2rem, 1.3rem + 2vw, 2.85rem); line-height: 1.1; color: var(--brass-hi); }
+.hm-specimen .is-serif:not(.is-num):not(.is-italic) dd { font-size: clamp(1.4rem, 1.1rem + 0.9vw, 1.85rem); line-height: 1.2; }
+.hm-specimen .is-italic dd { font-style: italic; font-size: 1.25rem; line-height: 1.35; color: var(--c-fg-2); }
+.hm-specimen .is-sans dd { font-size: 1.05rem; line-height: 1.45; }
+.hm-specimen .is-label dd { font-weight: 600; }
+.hm-specimen .is-caption dd { font-size: 0.85rem; color: var(--c-fg-2); }
+
+.hm-measure { display: grid; align-content: start; gap: 2.75rem; }
+.hm-measure-k { margin-bottom: 1.1rem; color: var(--c-fg-3); }
+/* Spacing: sixteen gauges, each as tall as its step. */
+.hm-space-list {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  align-items: end;
+  column-gap: 4px;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--c-fg-3);
+}
+.hm-space-list li {
+  display: grid;
+  justify-items: center;
+  align-items: end;
+  gap: 0.45rem;
+}
+.hm-space-list i {
+  display: block;
+  width: 100%;
+  max-width: 1.4rem;
+  height: calc(var(--v) * 1.25px);
+  border-left: 1px solid var(--brass-line);
+  border-right: 1px solid var(--brass-line);
+  border-top: 1.5px solid var(--brass);
+  background: linear-gradient(var(--brass-soft), transparent);
+  transform-origin: 50% 100%;
+}
+.hm-space-list span {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.02em;
+  color: var(--c-fg-3);
+  font-variant-numeric: tabular-nums;
+}
+/* Radii: nine corners, drawn at their own size, capped at the tile. */
+.hm-radii-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem 1rem;
+}
+.hm-radii-list li {
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 0.85rem;
+  align-items: start;
+}
+.hm-radii-list i {
+  grid-row: 1 / span 2;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-top: 1.5px solid var(--brass);
+  border-left: 1.5px solid var(--brass);
+  border-top-left-radius: min(calc(var(--r) * 1px), 3.4rem);
+  background: linear-gradient(135deg, var(--brass-soft), transparent 70%);
+}
+.hm-radii-list b {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 300;
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--c-fg);
+}
+.hm-radii-list span {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--c-fg-3);
+}
+
+.hm-families {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  column-gap: var(--cs-gap);
+  row-gap: 2rem;
+}
+.hm-family {
+  display: grid;
+  align-content: start;
+  gap: 0.85rem;
+  padding-top: 1.1rem;
+}
+.hm-family dt {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.hm-family dt span {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--c-fg);
+}
+.hm-family dt b {
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 300;
+  font-size: 1.9rem;
+  line-height: 0.9;
+  color: var(--brass);
+}
+.hm-family dd {
+  font-size: 0.82rem;
+  line-height: 1.75;
+  color: var(--c-fg-2);
+}
+
+/* ================= 14. 11 · STILL TO PROVE + FINALE ================= */
+.hm-assume {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--cs-gap);
+  row-gap: 2.75rem;
+}
+.hm-assume-item {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding-top: 1.2rem;
+}
+.hm-assume-item p {
+  max-width: 28em;
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 300;
+  font-size: clamp(1.15rem, 0.95rem + 0.65vw, 1.55rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--c-fg);
+}
+
+.hm-finale {
+  display: grid;
+  justify-items: center;
+  padding-top: var(--section-pad);
+}
+.hm-look-photo.is-end {
+  width: min(100%, 60rem);
+}
+.hm-look-photo.is-end .hm-look-frame { aspect-ratio: 16 / 10; }
+.hm-look-photo.is-end .hm-look-frame img { object-position: 50% 58%; }
+.hm-look-photo.is-end .hm-roomtag {
+  left: auto;
+  right: clamp(0.9rem, 2vw, 1.5rem);
+  border-color: var(--brass-line);
+}
+.hm-finale .case-closing {
+  margin-top: clamp(3rem, 6vw, 5rem);
+  max-width: 22em;
+  text-align: center;
+}
+
+/* ================= 15. ZOOM ================= */
+.page-homingly .zoom-scroll img {
+  max-width: min(100%, 440px);
+  background: none;
+  box-shadow: none;
+}
+
+/* ================= 16. RESPONSIVE ================= */
+@media (max-width: 1100px) {
+  .hm-rules { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hm-routes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hm-families { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .hm-receipts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hm-plan-rooms { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .hm-room:nth-child(3) { border-right: 0; }
+  .hm-room:nth-child(n+4) { border-top: 2px solid var(--c-fg); }
+  .hm-lineup-row:not([style*="--count: 3"]):not([style*="--count: 5"]) { grid-template-columns: repeat(5, minmax(0, 1fr)); row-gap: 2rem; }
+  .hm-lineup.is-pair { grid-template-columns: minmax(0, 1fr); row-gap: var(--cs-block); }
+  .hm-lineup.is-pair .hm-lineup-row { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .hm-lineup.is-pair .hm-lineup-notes { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .hm-est { grid-template-columns: minmax(0, 1fr); row-gap: 3rem; }
+  .hm-est-stack { justify-self: center; max-width: 26rem; }
+  .hm-look,
+  .hm-bet,
+  .hm-share,
+  .hm-annot,
+  .hm-nudge-block,
+  .hm-board,
+  .hm-offpath { grid-template-columns: minmax(0, 1fr); }
+  .hm-look-copy { order: -1; }
+  .hm-people { grid-template-columns: minmax(0, 1fr); row-gap: 1rem; }
+  .hm-bridge { min-height: 5.5rem; }
+  .hm-bridge-line {
+    left: 0.25rem;
+    right: auto;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 13px;
+    height: auto;
+    border: 0;
+    border-top: 1px solid var(--brass);
+    border-bottom: 1px solid var(--brass);
+  }
+  .hm-bridge-line i { left: 6px; right: auto; top: 0; bottom: 0; width: 1px; height: auto; }
+  .hm-bridge-label {
+    left: 2.25rem;
+    top: 50%;
+    max-width: calc(100% - 2.5rem);
+    translate: 0 -50%;
+    justify-items: start;
+    text-align: left;
+  }
+  .hm-plan-rooms { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hm-room:nth-child(3) { border-right: 2px solid var(--c-fg); }
+  .hm-room:nth-child(2n) { border-right: 0; }
+  .hm-room:nth-child(n+3) { border-top: 2px solid var(--c-fg); }
+  .hm-room:last-child { grid-column: 1 / -1; }
+  .hm-plan-global,
+  .hm-plan-entry { grid-template-columns: minmax(0, 1fr); }
+  .hm-stats.is-five { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 2rem; }
+  .hm-annot-phone { justify-self: center; }
+  .hm-annot-list { display: grid; gap: 1.5rem; margin-top: 2.5rem; }
+  .hm-annot-list li { position: relative; top: auto; translate: none; max-width: none; }
+  .hm-annot-list li::before,
+  .hm-annot-list li::after { display: none; }
+  .hm-receipts { grid-template-columns: minmax(0, 1fr); max-width: 30rem; }
+  .hm-lineup-row:not([style*="--count: 3"]):not([style*="--count: 5"]),
+  .hm-lineup.is-pair .hm-lineup-row,
+  .hm-lineup-row {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1rem;
+    margin-left: calc(-1 * var(--gutter));
+    margin-right: calc(-1 * var(--gutter));
+    padding: 0 var(--gutter) 1rem;
+  }
+  .hm-lineup-row > li { flex: 0 0 min(10.5rem, 40vw); scroll-snap-align: start; }
+}
+
+@media (max-width: 700px) {
+  .hm-wf {
+    grid-template-columns: minmax(0, 1fr) 24px;
+    grid-template-rows: auto minmax(11rem, auto) auto;
+    row-gap: 1.25rem;
+    padding: 1.25rem 0;
+  }
+  .hm-wf-from { grid-column: 1 / -1; grid-row: 1; padding: 0; }
+  .hm-wf-paths { grid-column: 1; grid-row: 2; }
+  .hm-wf-wall { grid-column: 2; grid-row: 2; margin: 0; }
+  .hm-wf-to { grid-column: 1 / -1; grid-row: 3; padding: 0; justify-items: end; text-align: right; }
+  .hm-wallfig.is-door .hm-wf { grid-template-columns: minmax(0, 0.85fr) 24px minmax(0, 1fr); }
+  .hm-wallfig.is-door .hm-wf-before { grid-column: 1; grid-row: 2; flex-direction: column; justify-content: center; padding: 0 0.75rem 0 0; }
+  .hm-wallfig.is-door .hm-wf-wall { grid-column: 2; grid-row: 2; }
+  .hm-wallfig.is-door .hm-wf-after { grid-column: 3; grid-row: 2; flex-direction: column; justify-content: center; align-items: flex-start; gap: 1.6rem; padding: 0 0 0 4.25rem; }
+  .hm-wallfig.is-door .hm-wf-to { grid-column: 1 / -1; grid-row: 3; }
+  .hm-wallfig.is-door .hm-wf-after .hm-wf-run { left: -24px; }
+  .hm-wf-stop b { white-space: normal; }
+  .hm-wallfig.is-door .hm-wf-wall-label { display: none; }
+  .hm-task-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 1.75rem; }
+  .hm-task-steps li:nth-child(n+3) { border-top: 1px solid var(--c-line-2); }
+  .hm-person-lists { grid-template-columns: minmax(0, 1fr); row-gap: 1.25rem; }
+  .hm-offpath-list { grid-template-columns: minmax(0, 1fr); }
+  .hm-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2rem; }
+  .hm-stats.is-five { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hm-rangerow { grid-template-columns: minmax(0, 1fr) auto; row-gap: 0.7rem; }
+  .hm-rangerow-name { grid-column: 1; }
+  .hm-rangerow-share { grid-column: 2; grid-row: 1; }
+  .hm-rangerow-bar { grid-column: 1 / -1; }
+  .hm-rangerow-val { grid-column: 1 / -1; text-align: left; }
+  .hm-ranges-axis { grid-template-columns: minmax(0, 1fr); }
+  .hm-ranges-axis li { grid-column: 1; }
+  .hm-ledger-row { grid-template-columns: minmax(0, 1fr) auto; row-gap: 0.4rem; }
+  .hm-ledger-when { grid-column: 1 / -1; }
+  .hm-nudge-row,
+  .hm-nudge-axis { grid-template-columns: 6.5rem minmax(0, 1fr) 5.5rem; column-gap: 0.75rem; }
+  .hm-radii-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hm-families { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hm-assume { grid-template-columns: minmax(0, 1fr); }
+  .hm-rules { grid-template-columns: minmax(0, 1fr); }
+  .hm-routes { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .hm-est-range { font-size: clamp(2rem, 10.5vw, 3rem); }
+  .hm-plan-rooms { grid-template-columns: minmax(0, 1fr); }
+  .hm-room,
+  .hm-room:nth-child(n) { border-right: 0; }
+  .hm-room:nth-child(n+2) { border-top: 2px solid var(--c-fg); }
+  .hm-edge { grid-template-columns: 5.75rem minmax(0, 1fr); column-gap: 1.1rem; }
+  .hm-families { grid-template-columns: minmax(0, 1fr); }
+  .hm-space-list span { font-size: 0.4375rem; }
+}
+
+/* The walkthrough on narrow screens: the phone above, its caption below. */
+@media (max-width: 900px) {
+  .hm-walk.is-live {
+    --ph: min(54svh, 34rem);
+    --step: 46;
+  }
+  .hm-walk.is-live .hm-walk-stage {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto auto;
+    padding-top: calc(var(--nav-h) + 0.5rem);
+  }
+  .hm-walk.is-live .hm-walk-view { grid-column: 1; grid-row: 1; }
+  .hm-walk.is-live .hm-walk-panel {
+    grid-column: 1;
+    grid-row: 2;
+    gap: 0.45rem;
+    padding: 1rem 0 0;
+    align-content: start;
+  }
+  .hm-walk-no { font-size: 2.25rem; }
+  .hm-walk-count { gap: 0.45rem; }
+  .hm-walk-title { font-size: 1.35rem; }
+  .hm-walk-text { min-height: 4.95em; font-size: 0.9rem; line-height: 1.55; }
+  .hm-walk-rule { display: none; }
+  .hm-walk.is-live .hm-walk-floor { grid-row: 3; height: 2.6rem; margin-top: 0.5rem; }
+  .hm-walk-phases span { font-size: 0.5rem; letter-spacing: 0.08em; padding: 0 0.3rem; }
+  /* three labels won't fit a phone's floor: only the current phase is named */
+  .hm-walk-phases li:not(.is-on) span { opacity: 0; }
+  .hm-walk-target span { display: none; }
+}
+
+/* Short landscape phones: the plain strip, never a pin. */
+@media (max-height: 539px) and (max-width: 899px) {
+  .hm-walk.is-live { height: auto; margin: 0; }
+  .hm-walk.is-live .hm-walk-stage { position: static; display: block; height: auto; padding: 0; overflow: visible; }
+  .hm-walk.is-live .hm-walk-panel,
+  .hm-walk.is-live .hm-walk-floor { display: none; }
+  .hm-walk.is-live .hm-walk-view { overflow-x: auto; margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter) 1.5rem; scroll-snap-type: x mandatory; }
+  .hm-walk.is-live .hm-walk-item { flex: 0 0 min(14rem, 46vw); opacity: 1; scale: 1; }
+  .hm-walk.is-live .hm-walk-item .hm-screen { filter: none; }
+  .hm-walk.is-live .hm-walk-cap { position: static; width: auto; height: auto; margin: 2.25rem 0 0; overflow: visible; clip: auto; white-space: normal; }
+}
+
+/* ================= 17. REDUCED MOTION ================= */
+@media (prefers-reduced-motion: reduce) {
+  .hm-screen img,
+  .hm-look-frame img,
+  .hm-est-phone .hm-screen,
+  .hm-sum-mark::after,
+  .hm-receipt-check span::after,
+  .hm-walk-phases span { transition-duration: 0.01ms !important; }
+}

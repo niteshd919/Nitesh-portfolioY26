@@ -235,6 +235,11 @@
 }
 .bf-rstep a:hover,
 .bf-rstep a:focus-visible { color: var(--c-fg); }
+/* The step you are on, whatever its state: name in signal red. */
+.bf-rstep.is-current .bf-rstep-name {
+  color: var(--c-signal);
+  transition: color 0.5s var(--ease-soft);
+}
 .bf-rstep a:focus-visible { outline-offset: 2px; }
 
 .bf-rail-foot { display: grid; row-gap: 0.6rem; font-size: 0.5625rem; }

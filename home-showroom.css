@@ -1,7 +1,7 @@
 /* ==================================================================
    HOME · SHOWROOM — the selected work as a private viewing.
 
-   Six bays on one track, each split down a ruled centre line: the
+   Seven bays on one track, each split down a ruled centre line: the
    build sheet on the left, the car under studio light on the right.
 
    ≥ 900px wide, or ≥ 540px tall (with JS): the section is a tall
@@ -24,7 +24,7 @@
 
 /* ================= 1. SECTION ================= */
 .showroom {
-  --bays: 6;
+  --bays: 6;             /* 7 with Homingly; that bay is disconnected for now */
   --seg: 0.9;            /* scroll for one bay change, × viewport height */
   --dwell: 0.2;          /* held on the first and last bay, × viewport height */
   --band-top: calc(var(--nav-h) + clamp(2.25rem, 5.6vh, 3.5rem));
@@ -1012,6 +1012,176 @@
   .bfb-steps { display: none; }
   .bfb-btn { justify-self: stretch; text-align: center; }
 }
+
+/* ---- 5g. Homingly — the estimator at work. The phone runs through
+   its three steps (Room & size, Scope & finish, Estimate) while the
+   readout beside it holds "₹ ?" over a hatched scale; on the third,
+   the hatch closes onto ₹3.4L – ₹4.1L. Without .is-known the price
+   is still unknown. Brass (#d4b27c) is the study's colour. ---- */
+.media-homingly { --stage: #070606; }
+.media-homingly .bay-stage {
+  background:
+    radial-gradient(55% 45% at 66% 106%, rgba(212, 178, 124, 0.12), transparent 70%),
+    linear-gradient(to bottom, #060505 0%, #0b0a09 62%, #080707 100%);
+}
+.hmb-panel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: clamp(1rem, 6cqw, 3rem);
+  width: min(90cqw, 46rem);
+  translate: -50% -50%;
+}
+.hmb-read { display: grid; row-gap: clamp(0.6rem, 3.2cqh, 1.15rem); min-width: 0; }
+.hmb-tag {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.7rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hmb-tag i { width: 1rem; height: 1px; background: var(--c-line-2); }
+.hmb-tag span:last-child { color: var(--c-fg); }
+.hmb-range {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.18em;
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 300;
+  font-size: clamp(1.35rem, 6.4cqw, 2.9rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--c-fg);
+  white-space: nowrap;
+}
+.hmb-range small { font-size: 0.55em; font-weight: 200; color: var(--c-fg-2); }
+.hmb-q {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--c-fg-3);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-soft);
+}
+.hmb-v,
+.hmb-to { transition: opacity 0.6s var(--ease-soft); }
+.hmb-to {
+  align-self: center;
+  flex: 0 0 clamp(0.9rem, 5cqw, 2.4rem);
+  height: 9px;
+  border-left: 1px solid #d4b27c;
+  border-right: 1px solid #d4b27c;
+  background: linear-gradient(#d4b27c, #d4b27c) center / 100% 1px no-repeat;
+}
+.hmb-scale {
+  position: relative;
+  display: block;
+  height: 1.4rem;
+  background:
+    linear-gradient(var(--c-line-2), var(--c-line-2)) left bottom / 100% 1px no-repeat,
+    repeating-linear-gradient(90deg, var(--c-fg-3) 0 1px, transparent 1px calc(100% / 6)) left bottom / calc(100% + 1px) 9px no-repeat,
+    repeating-linear-gradient(90deg, var(--c-line-2) 0 1px, transparent 1px calc(100% / 60)) left bottom / 100% 4px no-repeat;
+}
+.hmb-fog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0.15rem;
+  bottom: 0.45rem;
+  background: repeating-linear-gradient(-45deg, rgba(236, 233, 226, 0.16) 0 1px, transparent 1px 6px);
+  border-left: 1px solid var(--c-fg-3);
+  border-right: 1px solid var(--c-fg-3);
+  opacity: 0;
+  transition: clip-path 1s var(--ease-in-out), opacity 0.6s var(--ease-soft) 0.6s;
+  clip-path: inset(0 31.67% 0 56.67%);
+}
+.hmb-band {
+  position: absolute;
+  left: 56.67%;
+  width: 11.67%;
+  top: 0;
+  bottom: 0.3rem;
+  background: rgba(212, 178, 124, 0.14);
+  border-left: 1px solid #d4b27c;
+  border-right: 1px solid #d4b27c;
+  box-shadow: 0 0 18px -4px rgba(212, 178, 124, 0.4);
+  transition: opacity 0.7s var(--ease-soft) 0.55s, scale 0.8s var(--ease-out) 0.55s;
+}
+.hmb-band::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: #d4b27c;
+}
+.hmb-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 4px;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.hmb-steps li {
+  padding-top: 0.5rem;
+  border-top: 3px solid rgba(236, 233, 226, 0.1);
+  transition: border-color 0.5s var(--ease-soft), color 0.5s var(--ease-soft);
+}
+.hmb-steps li.is-done { border-color: rgba(212, 178, 124, 0.45); }
+.hmb-steps li.is-on { border-color: #d4b27c; color: var(--c-fg); }
+
+/* While the price is unknown: "₹ ?" and the hatch over the whole scale. */
+.hmb-panel:not(.is-known) .hmb-q { opacity: 1; }
+.hmb-panel:not(.is-known) .hmb-v,
+.hmb-panel:not(.is-known) .hmb-to { opacity: 0; }
+.hmb-panel:not(.is-known) .hmb-fog {
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.01s linear, opacity 0.4s var(--ease-soft);
+}
+.hmb-panel:not(.is-known) .hmb-band { opacity: 0; scale: 0.3 1; transition-delay: 0s; }
+
+.hmb-phone {
+  container-type: inline-size;
+  width: clamp(5.25rem, min(30cqw, 27cqh), 14rem);
+}
+.hmb-screen {
+  position: relative;
+  display: block;
+  aspect-ratio: 390 / 844;
+  overflow: hidden;
+  border-radius: 10.26cqw;
+  background: #0e0e10;
+  box-shadow:
+    0 0 0 2.4cqw #0e0e10,
+    0 0 0 calc(2.4cqw + 1px) rgba(236, 233, 226, 0.13),
+    0 18cqw 34cqw -10cqw rgba(0, 0, 0, 0.92);
+}
+.hmb-screen img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+  transition: opacity 0.7s var(--ease-soft);
+}
+.hmb-screen img.is-on { opacity: 1; }
 
 /* ================= 6. HUD — the bay selector ================= */
 .showroom-selector { display: none; }

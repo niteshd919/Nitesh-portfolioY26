@@ -578,8 +578,22 @@ window.CASE_STUDIES = {
     tags: ['UX Research', 'Design Systems', 'Accessibility'],
     gradient: 'linear-gradient(135deg,#8fb4ff,#1a1a1a)',
     accent: '#8fb4ff',
+    next: 'suspension', // 'homingly' once that case is reconnected
+  },
+  /* Homingly, disconnected for now (case-homingly.* is kept):
+  homingly: {
+    slug: 'homingly',
+    href: 'case-homingly.html',
+    title: 'Homingly',
+    subtitle: 'Home interiors app',
+    tagline: 'Pricing is the first wall. The estimate is the door.',
+    year: '2021',
+    tags: ['Product Design', 'Mobile', 'Design Systems'],
+    gradient: 'linear-gradient(135deg,#d4b27c,#1a1a1a)',
+    accent: '#d4b27c',
     next: 'suspension',
   },
+  */
 
   /* ================================================================ */
   hmi: {

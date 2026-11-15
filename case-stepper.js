@@ -392,7 +392,7 @@
   function render() {
     const k = chargeOf();
     const states = steps.map((s, i) => stateOf(i));
-    const sig = states.join('') + fill.map((f) => Math.round(f * 400)).join(',');
+    const sig = `${cur}|` + states.join('') + fill.map((f) => Math.round(f * 400)).join(',');
     const full = k >= 0.999;
 
     if (Math.abs(k - shown.k) > 0.0005) {
@@ -426,10 +426,12 @@
     if (sig !== shown.sig) {
       shown.sig = sig;
       railSteps.forEach((r, i) => {
-        r.li.className = `bf-rstep is-${states[i]}`;
+        // "Current" is tracked apart from the state, so a completed step
+        // you scroll back to still reads as the one you are on.
+        r.li.className = `bf-rstep is-${states[i]}${i === cur ? ' is-current' : ''}`;
         r.a.style.setProperty('--f', fill[i].toFixed(3));
         if (r.state) r.state.textContent = STATE_TEXT[states[i]];
-        if (states[i] === 'now') r.a.setAttribute('aria-current', 'step');
+        if (i === cur) r.a.setAttribute('aria-current', 'step');
         else r.a.removeAttribute('aria-current');
       });
       cellSets.forEach((c) => c.cells.forEach((cell, i) => {

@@ -336,7 +336,7 @@
 
     <!-- region:work ================================================= -->
     <!--
-      SHOWROOM — six bays on one track (home-showroom.css / .js).
+      SHOWROOM — six bays on one track (Homingly, the seventh, is parked below) (home-showroom.css / .js).
       Wide screens: a sticky stage pans the track as the page scrolls.
       Narrow screens: a native swipe strip. Without JS: stacked bays.
     -->
@@ -641,6 +641,62 @@
             </article>
           </li>
 
+          <!-- Bay 07 · Homingly — home interiors app.
+               DISCONNECTED for now: the bay is parked in this comment and
+               case-homingly.* is kept. To restore, uncomment it and the
+               "07 Homingly" selector button below, set the bays variable back
+               to 7 in home-showroom.css, return the counts to 07, and point
+               stepper's `next` at 'homingly' in case-study-data.js.
+          <li class="bay" data-short="Homingly">
+            <article class="bay-body" aria-labelledby="bay-homingly">
+              <div class="bay-details">
+                <p class="bay-meta"><span class="bay-case">Case 07 / 07</span><span class="bay-meta-tick" aria-hidden="true"></span><span>Model year 2021</span></p>
+                <h3 class="bay-title" id="bay-homingly">Homingly</h3>
+                <p class="bay-sub">Home interiors app · Product design</p>
+                <p class="bay-desc">A mobile app that tells people what their room will cost before they hire anyone, then books the interior designer who fits the number.</p>
+                <div class="bay-specs">
+                  <p class="bay-spec-head">Build</p>
+                  <dl class="bay-spec">
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">13</dt><dd class="bay-spec-label">Screens from first open to booked</dd></div>
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">3</dt><dd class="bay-spec-label">Minutes to a first estimate, the target</dd></div>
+                    <div class="bay-spec-cell"><dt class="bay-spec-val">24/24</dt><dd class="bay-spec-label">Colour pairs pass AA, Light and Dark</dd></div>
+                  </dl>
+                </div>
+                <div class="bay-foot">
+                  <a class="bay-cta" href="case-homingly.html" data-transition data-transition-label="Homingly" data-transition-eyebrow="Case 07 / 07" data-cursor="View">
+                    <span class="bay-cta-text">View case study</span>
+                    <span class="bay-cta-dim" aria-hidden="true"><i></i></span>
+                  </a>
+                  <p class="bay-tags">Product Design · Mobile · Design Systems</p>
+                </div>
+              </div>
+              <figure class="bay-media media-homingly" data-cursor="View">
+                <div class="bay-stage">
+                  <div class="hmb-panel is-known" role="img" aria-label="The Homingly estimator: a phone on its third step, an estimate of ₹3.4L to ₹4.1L for a medium living room with a premium finish, beside the same range marked on a scale from ₹0 to ₹6L.">
+                    <div class="hmb-read hmb-rise" aria-hidden="true">
+                      <p class="hmb-tag"><span class="hmb-tag-k">Your estimate</span><i></i><span>Living room · Premium</span></p>
+                      <p class="hmb-range"><span class="hmb-q">₹&#8202;?</span><span class="hmb-v"><small>₹</small>3.4<small>L</small></span><i class="hmb-to"></i><span class="hmb-v"><small>₹</small>4.1<small>L</small></span></p>
+                      <span class="hmb-scale"><i class="hmb-fog"></i><i class="hmb-band"></i></span>
+                      <ol class="hmb-steps"><li class="is-done">Room &amp; size</li><li class="is-done">Scope &amp; finish</li><li class="is-on">Estimate</li></ol>
+                    </div>
+                    <div class="hmb-phone hmb-rise" aria-hidden="true">
+                      <span class="hmb-screen">
+                        <img src="assets/homingly/a06-400.webp" width="400" height="866" alt="" loading="lazy" decoding="async" />
+                        <img src="assets/homingly/a07-400.webp" width="400" height="866" alt="" loading="lazy" decoding="async" />
+                        <img class="is-on" src="assets/homingly/a08-400.webp" width="400" height="866" alt="" loading="lazy" decoding="async" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <span class="bay-sweep" aria-hidden="true"><i></i></span>
+                <span class="bay-scanline" aria-hidden="true"></span>
+                <figcaption class="bay-cap">Fig. 07 — Three steps to one honest range</figcaption>
+              </figure>
+              <span class="bay-split" aria-hidden="true"></span>
+            </article>
+          </li>
+          /Bay 07 · Homingly -->
+
         </ol>
 
         <div class="showroom-selector" role="group" aria-label="Cases">
@@ -651,6 +707,9 @@
             <li><button class="showroom-seg" type="button" data-showroom-go="3"><span class="sr-only">Show case </span><span class="showroom-seg-num">04</span> <span class="showroom-seg-name">Codeflow</span></button></li>
             <li><button class="showroom-seg" type="button" data-showroom-go="4"><span class="sr-only">Show case </span><span class="showroom-seg-num">05</span> <span class="showroom-seg-name">Search</span></button></li>
             <li><button class="showroom-seg" type="button" data-showroom-go="5"><span class="sr-only">Show case </span><span class="showroom-seg-num">06</span> <span class="showroom-seg-name">Stepper</span></button></li>
+            <!-- Homingly, disconnected for now:
+            <li><button class="showroom-seg" type="button" data-showroom-go="6"><span class="sr-only">Show case </span><span class="showroom-seg-num">07</span> <span class="showroom-seg-name">Homingly</span></button></li>
+            -->
           </ol>
           <span class="showroom-scale" aria-hidden="true"><i class="showroom-needle"></i></span>
           <p class="showroom-hint" aria-hidden="true">Swipe for the next case</p>
@@ -713,7 +772,7 @@
             <div class="spec-row">
               <dt>Fuel</dt>
               <dd>
-                Tokens<span class="coda-mark">*</span> — burned gladly on great ideas, so they go from sketch to street sooner, and better built.
+                Tokens<span class="coda-mark">*</span> burned gladly on great ideas, so they go from sketch to street sooner, and better built.
                 <span class="fuel" role="img" aria-label="Fuel gauge: full"><span class="fuel-end">E</span><span class="fuel-bar"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="fuel-end">F</span></span>
               </dd>
             </div>
