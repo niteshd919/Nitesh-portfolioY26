@@ -54,6 +54,7 @@
   let master = null;
   let verb = null;
   let noise = null;
+  let dead = false;   // the browser refused us a context: stay silent, stop trying
 
   function impulse(seconds, decay) {
     const rate = ctx.sampleRate;
@@ -106,8 +107,10 @@
   // A context made inside a gesture can start running without ever
   // firing statechange, so the toggle is repainted here as well.
   function unlock() {
-    if (!enabled) return Promise.resolve();
-    if (!ctx) build();
+    if (!enabled || dead) return Promise.resolve();
+    if (!ctx) {
+      try { build(); } catch (err) { ctx = null; dead = true; return Promise.resolve(); }
+    }
     if (ctx.state === 'running' || document.hidden || !ctx.resume) {
       paint();
       return Promise.resolve();
@@ -401,7 +404,8 @@
 
   // Scroll and this loop tick in separate frames, so some frames see no
   // movement at all: velocity is smoothed over a few of them, and the
-  // voice only stops once the page has been still for a moment.
+  // voice only stops once the page has been still for a moment. Muted
+  // (or hidden) stops it at once; it must not start again on the way down.
   function frame(now) {
     raf = 0;
     const y = Site.scroll.y;
@@ -421,7 +425,7 @@
     const tau = target > level ? 90 : 380;
     level += (target - level) * (1 - Math.exp(-dt / tau));
 
-    if (level < 0.003 && (still > 400 || !live() || !onRoad.size)) {
+    if (!live() || (level < 0.003 && (still > 400 || !onRoad.size))) {
       level = 0;
       stopCar();
       return;
@@ -465,7 +469,7 @@
     if (on) {
       enabled = true;
       unlock().then(() => {
-        if (!enabled) return;
+        if (!enabled || !ctx) return;
         const t = ctx.currentTime;
         hold(master.gain, t);
         master.gain.setTargetAtTime(VOLUME, t, 0.04);
