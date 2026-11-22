@@ -23,7 +23,7 @@
    pinned: the billboards are cards in the page (CSS default).
    ================================================================== */
 (function () {
-  const section = document.getElementById('publications');
+  const section = document.getElementById('writings');
   if (!section) return;
   const stage = section.querySelector('.pd-stage');
   const boards = [...section.querySelectorAll('.bb')];

@@ -43,7 +43,7 @@
   // (CASE_SERIES in case-study-data.js).
   const series = window.CASE_SERIES ? window.CASE_SERIES(SLUG) : null;
   const sequence = series ? series.sequence : [SLUG];
-  const nextNoun = (s) => (series && series.noun(s) === 'publication' ? 'publication' : 'project');
+  const nextNoun = (s) => (series && series.noun(s) === 'publication' ? 'writing' : 'project');
   const caseIndex = Math.max(0, sequence.indexOf(SLUG));
   const caseNo = (s) => (series ? series.no(s) : `Case ${pad(sequence.indexOf(s) + 1)} / ${pad(sequence.length)}`);
   const fullName = (d) => (/\s/.test(d.title.trim()) ? d.title : `${d.title} — ${d.subtitle}`);

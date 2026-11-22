@@ -709,7 +709,7 @@ window.CASE_STUDIES = {
    chain from that series' first entry.
      const S = CASE_SERIES('stepper');
      S.sequence        // ['search', 'stepper']
-     S.no('stepper')   // "Publication 02 / 02"
+     S.no('stepper')   // "Writing 02 / 02"
      S.noun('hmi')     // "case"
    ================================================================== */
 window.CASE_SERIES = function (slug) {
@@ -729,7 +729,7 @@ window.CASE_SERIES = function (slug) {
   const noun = (s) => (kindOf(s) === 'publication' ? 'publication' : 'case');
   const no = (s) => {
     const seq = series(kindOf(s));
-    const word = noun(s) === 'publication' ? 'Publication' : 'Case';
+    const word = noun(s) === 'publication' ? 'Writing' : 'Case';
     return `${word} ${pad(seq.indexOf(s) + 1)} / ${pad(seq.length)}`;
   };
   return { sequence: series(kindOf(slug)), no, noun, kind: kindOf(slug) };
