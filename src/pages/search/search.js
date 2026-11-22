@@ -1,3 +1,5 @@
+import { CASE_STUDIES, CASE_SERIES } from '../../data/caseStudies.js';
+
 /* ==================================================================
    NITESH DIXIT — PORTFOLIO 2026 · case study · "The First Query"
    A bespoke study on the same chrome as case-study.html, told as a
@@ -20,8 +22,7 @@
    Reduced     final states everywhere; no loops; a still sky.
    ================================================================== */
 
-(function () {
-  const Site = window.Site;
+export default function init(Site) {
   const A = Site && Site.anime;
   const { animate, createTimeline, stagger, utils } = A || {};
   const ease = A ? Site.motion.ease : {};
@@ -38,38 +39,21 @@
         loop through CASE_STUDIES that case-study.js walks.
   ---------------------------------------------------------------- */
   const SLUG = 'search';
-  const store = window.CASE_STUDIES || {};
+  const store = CASE_STUDIES || {};
   const data = store[SLUG] || { title: 'The First Query', year: '2026', next: 'suspension' };
   // Numbered within its own series, cases or publications
   // (CASE_SERIES in case-study-data.js).
-  const series = window.CASE_SERIES ? window.CASE_SERIES(SLUG) : null;
+  const series = CASE_SERIES ? CASE_SERIES(SLUG) : null;
   const sequence = series ? series.sequence : [SLUG];
-  const nextNoun = (s) => (series && series.noun(s) === 'publication' ? 'publication' : 'project');
   const caseIndex = Math.max(0, sequence.indexOf(SLUG));
   const caseNo = (s) => (series ? series.no(s) : `Case ${pad(sequence.indexOf(s) + 1)} / ${pad(sequence.length)}`);
-  const fullName = (d) => (/\s/.test(d.title.trim()) ? d.title : `${d.title} — ${d.subtitle}`);
 
   if (Site && Site.transition) Site.transition.setLabel(data.title, caseNo(SLUG));
 
+  // The case number, hero ruler and next link are rendered by React
+  // from the same data (components/CaseParts.jsx); the hero animates them.
   const caseNoEl = byId('caseNo');
-  if (caseNoEl) caseNoEl.innerHTML = `<b>${caseNo(SLUG)}</b><i aria-hidden="true"></i><span>${data.published ? `Published ${data.published}` : `Model year ${data.year}`}</span>`;
   const heroRuler = document.querySelector('.case-hero-ruler');
-  if (heroRuler) {
-    heroRuler.style.setProperty('--case-i', caseIndex);
-    heroRuler.style.setProperty('--case-n', sequence.length || 1);
-  }
-
-  const nextData = store[data.next];
-  const nextLink = byId('caseNextLink');
-  if (nextData && nextLink) {
-    nextLink.setAttribute('href', nextData.href || `case-study.html?p=${nextData.slug || data.next}`);
-    nextLink.setAttribute('data-transition-label', fullName(nextData));
-    nextLink.setAttribute('data-transition-eyebrow', `Next · ${caseNo(data.next)}`);
-    nextLink.setAttribute('aria-label', `Next ${nextNoun(data.next)}: ${fullName(nextData)}`);
-    byId('caseNextTitle').textContent = nextData.title;
-    const nextEyebrow = document.querySelector('.case-next-eyebrow');
-    if (nextEyebrow) nextEyebrow.textContent = `Next ${nextNoun(data.next)} · ${caseNo(data.next)}`;
-  }
 
   /* ----------------------------------------------------------------
      1. THE PROFILE — stages sit at equal steps along the route; each
@@ -271,7 +255,7 @@
     const summit = m >= MAX - 0.5;
     if (summit !== atSummit) { atSummit = summit; altEl.classList.toggle('is-summit', summit); }
   }
-  const request = () => { if (!frame) frame = requestAnimationFrame(update); };
+  const request = () => { if (!frame) frame = Site.life.raf(update); };
 
   /* ----------------------------------------------------------------
      3. THE SEARCH LOOP — six stations in a grid, wired by script so
@@ -369,12 +353,12 @@
       });
     }
     draw();
-    if ('ResizeObserver' in window) new ResizeObserver(draw).observe(grid);
+    if ('ResizeObserver' in window) new Site.life.ResizeObserver(draw).observe(grid);
 
     function hit(k) {
       const n = node(k);
       n.classList.add('is-hit');
-      setTimeout(() => n.classList.remove('is-hit'), 700);
+      Site.life.timeout(() => n.classList.remove('is-hit'), 700);
     }
 
     let j = 0;
@@ -438,11 +422,11 @@
   measure();
   update();
   if (Site && Site.scroll) Site.scroll.on(request);
-  else window.addEventListener('scroll', request, { passive: true });
+  else Site.life.on(window, 'scroll', request, { passive: true });
   const remeasure = () => { measure(); request(); };
-  window.addEventListener('resize', remeasure);
-  window.addEventListener('load', remeasure);
-  if ('ResizeObserver' in window) new ResizeObserver(remeasure).observe(byId('main'));
+  Site.life.on(window, 'resize', remeasure);
+  Site.life.on(window, 'load', remeasure);
+  if ('ResizeObserver' in window) new Site.life.ResizeObserver(remeasure).observe(byId('main'));
 
   /* ----------------------------------------------------------------
      4. MOTION — everything below runs on the shared runtime. Without
@@ -483,10 +467,10 @@
       running = true;
       tl = run(() => {
         running = false;
-        timer = setTimeout(start, gap);
+        timer = Site.life.timeout(start, gap);
       });
     };
-    new IntersectionObserver(([entry]) => {
+    new Site.life.IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
       if (visible) {
         if (running && tl) tl.play();
@@ -618,7 +602,7 @@
       .add(R.car, { opacity: [0, 1], duration: 700, ease: 'out(2)' }, 0)
       .add(o, { t: [0, 1], duration: 11000, ease: 'inOut(1.3)', onUpdate: place }, 0)
       .add(R.car, { opacity: [1, 0], duration: 900, ease: 'in(2)' }, 10200);
-    new IntersectionObserver(([entry]) => (entry.isIntersecting ? drive.play() : drive.pause())).observe(R.route);
+    new Site.life.IntersectionObserver(([entry]) => (entry.isIntersecting ? drive.play() : drive.pause())).observe(R.route);
   }
 
   /* ----------------------------------------------------------------
@@ -802,7 +786,7 @@
       const press = (k) => {
         if (!k) return;
         k.classList.add('is-press');
-        setTimeout(() => k.classList.remove('is-press'), 200);
+        Site.life.timeout(() => k.classList.remove('is-press'), 200);
       };
       const run = (done) => {
         const tl = createTimeline({ onComplete: done });
@@ -986,7 +970,7 @@
   function ready() {
     const waits = [];
     if (document.fonts && document.fonts.ready) waits.push(document.fonts.ready);
-    return Promise.race([Promise.all(waits), new Promise((resolve) => setTimeout(resolve, 2600))]);
+    return Promise.race([Promise.all(waits), new Promise((resolve) => Site.life.timeout(resolve, 2600))]);
   }
 
   prepareHero();
@@ -1008,4 +992,4 @@
       Site.emit('intro:done');
       remeasure();
     });
-})();
+}

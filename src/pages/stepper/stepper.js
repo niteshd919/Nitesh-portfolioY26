@@ -1,3 +1,5 @@
+import { CASE_STUDIES, CASE_SERIES } from '../../data/caseStudies.js';
+
 /* ==================================================================
    NITESH DIXIT — PORTFOLIO 2026 · case study · "Built to Finish"
    A bespoke study on the same chrome as case-study.html. It is built
@@ -25,8 +27,7 @@
                 reader.
    ================================================================== */
 
-(function () {
-  const Site = window.Site;
+export default function init(Site) {
   const A = Site && Site.anime;
   const { animate, createTimeline, stagger, utils } = A || {};
   const ease = A ? Site.motion.ease : {};
@@ -43,38 +44,21 @@
         loop through CASE_STUDIES that case-study.js walks.
   ---------------------------------------------------------------- */
   const SLUG = 'stepper';
-  const store = window.CASE_STUDIES || {};
+  const store = CASE_STUDIES || {};
   const data = store[SLUG] || { title: 'Built to Finish', year: '2026', next: 'suspension' };
   // Numbered within its own series, cases or publications
   // (CASE_SERIES in case-study-data.js).
-  const series = window.CASE_SERIES ? window.CASE_SERIES(SLUG) : null;
+  const series = CASE_SERIES ? CASE_SERIES(SLUG) : null;
   const sequence = series ? series.sequence : [SLUG];
-  const nextNoun = (s) => (series && series.noun(s) === 'publication' ? 'publication' : 'project');
   const caseIndex = Math.max(0, sequence.indexOf(SLUG));
   const caseNo = (s) => (series ? series.no(s) : `Case ${pad(sequence.indexOf(s) + 1)} / ${pad(sequence.length)}`);
-  const fullName = (d) => (/\s/.test(d.title.trim()) ? d.title : `${d.title} — ${d.subtitle}`);
 
   if (Site && Site.transition) Site.transition.setLabel(data.title, caseNo(SLUG));
 
+  // The case number, hero ruler and next link are rendered by React
+  // from the same data (components/CaseParts.jsx); the hero animates them.
   const caseNoEl = byId('caseNo');
-  if (caseNoEl) caseNoEl.innerHTML = `<b>${caseNo(SLUG)}</b><i aria-hidden="true"></i><span>${data.published ? `Published ${data.published}` : `Model year ${data.year}`}</span>`;
   const heroRuler = document.querySelector('.case-hero-ruler');
-  if (heroRuler) {
-    heroRuler.style.setProperty('--case-i', caseIndex);
-    heroRuler.style.setProperty('--case-n', sequence.length || 1);
-  }
-
-  const nextData = store[data.next];
-  const nextLink = byId('caseNextLink');
-  if (nextData && nextLink) {
-    nextLink.setAttribute('href', nextData.href || `case-study.html?p=${nextData.slug || data.next}`);
-    nextLink.setAttribute('data-transition-label', fullName(nextData));
-    nextLink.setAttribute('data-transition-eyebrow', `Next · ${caseNo(data.next)}`);
-    nextLink.setAttribute('aria-label', `Next ${nextNoun(data.next)}: ${fullName(nextData)}`);
-    byId('caseNextTitle').textContent = nextData.title;
-    const nextEyebrow = document.querySelector('.case-next-eyebrow');
-    if (nextEyebrow) nextEyebrow.textContent = `Next ${nextNoun(data.next)} · ${caseNo(data.next)}`;
-  }
 
   /* ----------------------------------------------------------------
      1. THE STEPS — the hero is step one, done on arrival; each other
@@ -166,8 +150,8 @@
       localStorage.setItem(STORE, JSON.stringify({ v: 1, at: Date.now(), cover: cover.map((list) => list.map(([a, b]) => [round(a), round(b)])) }));
     } catch (err) { /* full or blocked */ }
   }
-  const saveSoon = () => { if (!saveTimer) saveTimer = setTimeout(save, 700); };
-  window.addEventListener('pagehide', save);
+  const saveSoon = () => { if (!saveTimer) saveTimer = Site.life.timeout(save, 700); };
+  Site.life.on(window, 'pagehide', save);
 
   /* ----------------------------------------------------------------
      3. POSITION — where the reading line is, which step it is in, and
@@ -201,7 +185,7 @@
 
   // A link to anywhere on the page is a jump: what it passes isn't read.
   // Capture phase, so it runs before core.js starts the scroll.
-  document.addEventListener('click', (e) => {
+  Site.life.on(document, 'click', (e) => {
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     const a = e.target.closest && e.target.closest('a[href^="#"]');
     if (!a) return;
@@ -216,7 +200,7 @@
     const heading = target.closest && target.closest('[data-step]') && target.querySelector('h1, h2');
     if (heading) {
       if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
-      setTimeout(() => heading.focus({ preventScroll: true }), reduced ? 60 : 1900);
+      Site.life.timeout(() => heading.focus({ preventScroll: true }), reduced ? 60 : 1900);
     }
   }, true);
 
@@ -507,13 +491,13 @@
     if (completed && storageOK && railSaved) {
       railSaved.classList.add('is-shown');
       clearTimeout(savedFlash);
-      savedFlash = setTimeout(() => railSaved.classList.remove('is-shown'), 1600);
+      savedFlash = Site.life.timeout(() => railSaved.classList.remove('is-shown'), 1600);
     }
   }
-  const request = () => { if (!frame) frame = requestAnimationFrame(update); };
+  const request = () => { if (!frame) frame = Site.life.raf(update); };
 
   // Time on each step, counted while the page is in view.
-  setInterval(() => {
+  Site.life.interval(() => {
     if (document.visibilityState !== 'visible') return;
     if (cur >= 1 && cur < N) dwell[cur] += 1;
     if (finaleInView) renderSession();
@@ -536,7 +520,7 @@
     if (next) {
       if (scroller) scroller.stop();
       const target = rail.querySelector('a[aria-current]') || rail.querySelector('a');
-      setTimeout(() => target && target.focus({ preventScroll: true }), reduced ? 0 : 120);
+      Site.life.timeout(() => target && target.focus({ preventScroll: true }), reduced ? 0 : 120);
     } else {
       // The menu may have opened over the sheet: leave its scroll lock alone.
       if (scroller && !(Site.menu && Site.menu.isOpen)) scroller.start();
@@ -553,8 +537,8 @@
   const menuBtn = byId('menuBtn');
   if (menuBtn) menuBtn.addEventListener('click', () => setSheet(false));
   if (scrim) scrim.addEventListener('click', () => setSheet(false));
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && sheetOpen) setSheet(false); });
-  if (narrow.addEventListener) narrow.addEventListener('change', syncNarrow);
+  Site.life.on(document, 'keydown', (e) => { if (e.key === 'Escape' && sheetOpen) setSheet(false); });
+  Site.life.on(narrow, 'change', syncNarrow);
   syncNarrow();
 
   /* ----------------------------------------------------------------
@@ -666,14 +650,14 @@
   measure();
   update();
   if (Site && Site.scroll) Site.scroll.on(request);
-  else window.addEventListener('scroll', request, { passive: true });
+  else Site.life.on(window, 'scroll', request, { passive: true });
   const remeasure = () => { measure(); request(); };
-  window.addEventListener('resize', remeasure);
-  window.addEventListener('load', remeasure);
-  if ('ResizeObserver' in window) new ResizeObserver(remeasure).observe(byId('main'));
+  Site.life.on(window, 'resize', remeasure);
+  Site.life.on(window, 'load', remeasure);
+  if ('ResizeObserver' in window) new Site.life.ResizeObserver(remeasure).observe(byId('main'));
   if (Site && Site.on) Site.on('intro:done', () => { if (jumpUntil === Infinity) jumpUntil = performance.now() + 2200; });
   if (finaleEl && 'IntersectionObserver' in window) {
-    new IntersectionObserver(([entry]) => {
+    new Site.life.IntersectionObserver(([entry]) => {
       finaleInView = entry.isIntersecting;
       if (finaleInView) renderSession();
     }).observe(finaleEl);
@@ -814,7 +798,7 @@
       tl.call(() => {
         el.dataset.rolling = '1';
         Site.odometer(el, { value: el.textContent.trim(), duration: 1500, turns: 1 });
-        setTimeout(() => { delete el.dataset.rolling; shown.k = -1; shown.head = ''; render(); }, 1700);
+        Site.life.timeout(() => { delete el.dataset.rolling; shown.k = -1; shown.head = ''; render(); }, 1700);
       }, 150 + i * 110);
     });
     // Each node lights as the line reaches it: the clip eases out(2),
@@ -856,7 +840,7 @@
         Site.observe(readout, () => {
           utils.set(readout, { opacity: 1 });
           Site.odometer(finaleNum, { value: String(pct(chargeOf())), duration: 2300, turns: 1, stagger: 90 });
-          setTimeout(() => { finaleRolled = true; }, 2500);
+          Site.life.timeout(() => { finaleRolled = true; }, 2500);
         });
       }
     }
@@ -1025,7 +1009,7 @@
 
     // The three checks light in turn, and the flow reaches the stepper.
     once(document.querySelector('.bf-checks'), () => {}, (el) => {
-      $$('.bf-check', el).forEach((c, i) => setTimeout(() => c.classList.add('is-lit'), 600 + i * 650));
+      $$('.bf-check', el).forEach((c, i) => Site.life.timeout(() => c.classList.add('is-lit'), 600 + i * 650));
     });
 
     // The event log writes itself, one event at a time.
@@ -1049,7 +1033,7 @@
   function ready() {
     const waits = [];
     if (document.fonts && document.fonts.ready) waits.push(document.fonts.ready);
-    return Promise.race([Promise.all(waits), new Promise((resolve) => setTimeout(resolve, 2600))]);
+    return Promise.race([Promise.all(waits), new Promise((resolve) => Site.life.timeout(resolve, 2600))]);
   }
 
   prepareHero();
@@ -1071,4 +1055,4 @@
       Site.emit('intro:done');
       remeasure();
     });
-})();
+}

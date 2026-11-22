@@ -1,3 +1,5 @@
+import { CASE_STUDIES, CASE_SERIES } from '../../data/caseStudies.js';
+
 /* ==================================================================
    NITESH DIXIT — PORTFOLIO 2026 · case study · "Homingly"
    A bespoke study on the same chrome as case-study.html, drawn as an
@@ -19,8 +21,7 @@
                 the scroll, without easing or rolling.
    ================================================================== */
 
-(function () {
-  const Site = window.Site;
+export default function init(Site) {
   const A = Site && Site.anime;
   const { animate, createTimeline, stagger, utils } = A || {};
   const ease = A ? Site.motion.ease : {};
@@ -37,38 +38,20 @@
         loop through CASE_STUDIES that case-study.js walks.
   ---------------------------------------------------------------- */
   const SLUG = 'homingly';
-  const store = window.CASE_STUDIES || {};
+  const store = CASE_STUDIES || {};
   const data = store[SLUG] || { title: 'Homingly', year: '2021', next: 'suspension' };
   // Numbered within its own series, cases or publications
   // (CASE_SERIES in case-study-data.js).
-  const series = window.CASE_SERIES ? window.CASE_SERIES(SLUG) : null;
+  const series = CASE_SERIES ? CASE_SERIES(SLUG) : null;
   const sequence = series ? series.sequence : [SLUG];
-  const nextNoun = (s) => (series && series.noun(s) === 'publication' ? 'publication' : 'project');
-  const caseIndex = Math.max(0, sequence.indexOf(SLUG));
   const caseNo = (s) => (series ? series.no(s) : `Case ${pad(sequence.indexOf(s) + 1)} / ${pad(sequence.length)}`);
-  const fullName = (d) => (/\s/.test(d.title.trim()) ? d.title : `${d.title} — ${d.subtitle}`);
 
   if (Site && Site.transition) Site.transition.setLabel(data.title, caseNo(SLUG));
 
+  // The case number, hero ruler and next link are rendered by React
+  // from the same data (components/CaseParts.jsx); the hero animates them.
   const caseNoEl = byId('caseNo');
-  if (caseNoEl) caseNoEl.innerHTML = `<b>${caseNo(SLUG)}</b><i aria-hidden="true"></i><span>${data.published ? `Published ${data.published}` : `Model year ${data.year}`}</span>`;
-  const heroRuler = $('.case-hero-ruler');
-  if (heroRuler) {
-    heroRuler.style.setProperty('--case-i', caseIndex);
-    heroRuler.style.setProperty('--case-n', sequence.length || 1);
-  }
-
-  const nextData = store[data.next];
-  const nextLink = byId('caseNextLink');
-  if (nextData && nextLink) {
-    nextLink.setAttribute('href', nextData.href || `case-study.html?p=${nextData.slug || data.next}`);
-    nextLink.setAttribute('data-transition-label', fullName(nextData));
-    nextLink.setAttribute('data-transition-eyebrow', `Next · ${caseNo(data.next)}`);
-    nextLink.setAttribute('aria-label', `Next ${nextNoun(data.next)}: ${fullName(nextData)}`);
-    byId('caseNextTitle').textContent = nextData.title;
-    const nextEyebrow = $('.case-next-eyebrow');
-    if (nextEyebrow) nextEyebrow.textContent = `Next ${nextNoun(data.next)} · ${caseNo(data.next)}`;
-  }
+  const heroRuler = document.querySelector('.case-hero-ruler');
 
   /* ----------------------------------------------------------------
      1. HONEST SUMS — the page adds its own numbers up and only says
@@ -375,7 +358,7 @@
       el.classList.add('is-dim');
       utils.set($('.hm-roomtag', el), { opacity: 0, translateY: 14 });
     }, (el) => {
-      setTimeout(() => el.classList.remove('is-dim'), 350);
+      Site.life.timeout(() => el.classList.remove('is-dim'), 350);
       animate($('.hm-roomtag', el), { opacity: [0, 1], translateY: [14, 0], duration: 1100, delay: 1100, ease: ease.out });
     });
 
@@ -467,7 +450,7 @@
       animate(lines, { opacity: [0, 1], duration: 400, delay: stagger(140, { start: 350 }), ease: 'out(2)' });
       const total = $('dd[data-total]', el);
       Site.odometer(total, { value: total.dataset.value, delay: 350 + lines.length * 140, duration: 1300, turns: 1 });
-      setTimeout(() => checkReceipt(el), 350 + lines.length * 140 + 1400);
+      Site.life.timeout(() => checkReceipt(el), 350 + lines.length * 140 + 1400);
     }, checkReceipt));
 
     // ---- Line-ups: the phones of a flow come up in order. ----
@@ -641,7 +624,7 @@
       pos = p;
       place(p);
     }
-    const request = () => { if (!frame) frame = requestAnimationFrame(update); };
+    const request = () => { if (!frame) frame = Site.life.raf(update); };
     const remeasure = () => { measure(); pos = -1; request(); };
 
     // Tabbing to a screen brings it into focus.
@@ -659,10 +642,10 @@
     measure();
     update();
     Site.scroll.on(request);
-    window.addEventListener('resize', remeasure);
-    window.addEventListener('load', remeasure);
-    if (pin.addEventListener) pin.addEventListener('change', remeasure);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
+    Site.life.on(window, 'resize', remeasure);
+    Site.life.on(window, 'load', remeasure);
+    Site.life.on(pin, 'change', remeasure);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (!Site.life.disposed) remeasure(); });
   }
 
   /* ----------------------------------------------------------------
@@ -688,7 +671,7 @@
           ease: ease.inOut,
         });
       };
-      const io = new IntersectionObserver(([en]) => {
+      const io = new Site.life.IntersectionObserver(([en]) => {
         if (en.isIntersecting) {
           if (anim) anim.play();
           else if (img.complete && img.naturalHeight) start();
@@ -720,6 +703,8 @@
     box.setAttribute('data-lenis-prevent', '');
     box.innerHTML = '<button type="button" class="zoom-close" aria-label="Close preview">Close</button><div class="zoom-scroll"><img alt="" /></div>';
     document.body.appendChild(box);
+    // The overlay lives on <body>, outside the page: it leaves with the route.
+    Site.life.add(() => box.remove());
 
     const img = $('img', box);
     const scroller = $('.zoom-scroll', box);
@@ -753,7 +738,7 @@
     function close() {
       if (!isOpen()) return;
       box.classList.remove('is-open');
-      hideTimer = setTimeout(() => {
+      hideTimer = Site.life.timeout(() => {
         box.hidden = true;
         img.removeAttribute('src');
       }, 250);
@@ -765,12 +750,12 @@
       const el = e.target.closest && e.target.closest('img[data-zoom]');
       return el && !box.contains(el) ? el : null;
     };
-    document.addEventListener('click', (e) => {
+    Site.life.on(document, 'click', (e) => {
       const el = zoomTarget(e);
       if (el) open(el);
     });
     box.addEventListener('click', (e) => { if (e.target !== img) close(); });
-    document.addEventListener('keydown', (e) => {
+    Site.life.on(document, 'keydown', (e) => {
       if (isOpen()) {
         if (e.key === 'Escape') close();
         else if (e.key === 'Tab') {
@@ -785,8 +770,8 @@
       e.preventDefault();
       open(el);
     });
-    document.addEventListener('mouseover', (e) => { if (zoomTarget(e)) Site.cursor.set('Zoom'); });
-    document.addEventListener('mouseout', (e) => {
+    Site.life.on(document, 'mouseover', (e) => { if (zoomTarget(e)) Site.cursor.set('Zoom'); });
+    Site.life.on(document, 'mouseout', (e) => {
       const el = zoomTarget(e);
       if (el && !(e.relatedTarget && el.contains(e.relatedTarget))) Site.cursor.reset();
     });
@@ -800,10 +785,10 @@
   function ready() {
     const waits = (media ? $$('img', media) : []).map((img) => (img.decode ? img.decode().catch(() => {}) : null));
     if (document.fonts && document.fonts.load) {
-      waits.push(document.fonts.load('300 1em Archivo').catch(() => {}));
-      waits.push(document.fonts.load('400 1em "Martian Mono"').catch(() => {}));
+      waits.push(document.fonts.load('300 1em "Archivo Variable"').catch(() => {}));
+      waits.push(document.fonts.load('400 1em "Martian Mono Variable"').catch(() => {}));
     }
-    return Promise.race([Promise.all(waits), new Promise((resolve) => setTimeout(resolve, 2600))]);
+    return Promise.race([Promise.all(waits), new Promise((resolve) => Site.life.timeout(resolve, 2600))]);
   }
 
   initWalk();
@@ -825,4 +810,4 @@
       animateHeroMedia();
       Site.emit('intro:done');
     });
-})();
+}

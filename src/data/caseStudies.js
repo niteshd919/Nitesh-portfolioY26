@@ -1,10 +1,11 @@
 /* ==================================================================
    NITESH — PORTFOLIO 2025
-   Case study content. Keyed by the `p` query param used in
-   case-study.html?p=<slug>. Consumed by case-study.js.
+   Case study content. Keyed by slug; each entry is a page at caseHref(slug)
+   (see routes.js). Consumed by the case-study template and the
+   bespoke pages.
    ================================================================== */
 
-window.CASE_STUDIES = {
+export const CASE_STUDIES = {
 
   /* ================================================================ */
   suspension: {
@@ -22,7 +23,7 @@ window.CASE_STUDIES = {
     /* The real IVI screen as the cover. `hotspots` (x / y in % of the
        image) become sensor pings on the four wheels, with a hover label. */
     heroImage: {
-      image: 'assets/suspension/cover.png',
+      image: '/assets/suspension/cover.png',
       alt: 'The suspension diagnostics screen, parked: a wireframe 3D SUV with all four wheels highlighted, per-corner readouts for air pressure, spring life, damper life and temperature, a suspension health score of 97, a trip summary and the ride-height selector.',
       ratio: '1912 / 931',
       hotspots: [
@@ -82,7 +83,7 @@ window.CASE_STUDIES = {
       intro: 'Reading about a suspension is one thing. Drive it, watch the terrain come in, and see how the screen responds in the moment.',
       cta: 'Take me to playground',
       url: 'https://suspension-hud.vercel.app/',
-      image: 'assets/suspension/cover.png',
+      image: '/assets/suspension/cover.png',
       badge: 'Interactive prototype',
     },
 
@@ -125,11 +126,11 @@ window.CASE_STUDIES = {
 
     /* ---------------- 1. Cover ---------------- */
     heroScreens: [
-      { code: 'F3', title: 'Two start dates split the year', image: 'assets/offpeak/f3.png',
+      { code: 'F3', title: 'Two start dates split the year', image: '/assets/offpeak/f3.png',
         alt: 'Step 1 of 4, periods: a year ribbon split into Off-peak and Peak, with the start dates editable and the end dates filled in automatically.' },
-      { code: 'F1', title: 'Intro', image: 'assets/offpeak/f1.png',
+      { code: 'F1', title: 'Intro', image: '/assets/offpeak/f1.png',
         alt: 'The intro screen: “Charge when electricity is cheapest”, a 24-hour price bar, the three questions the flow will ask, and a Start button.' },
-      { code: 'F4', title: 'Days as two groups', image: 'assets/offpeak/f4.png',
+      { code: 'F4', title: 'Days as two groups', image: '/assets/offpeak/f4.png',
         alt: 'Step 2 of 4, days: Monday to Thursday in group 1 and Friday to Sunday in group 2, one tap to move a day between groups.' },
     ],
 
@@ -174,13 +175,13 @@ window.CASE_STUDIES = {
     /* ---------------- 4. A few screens, as a ticker ---------------- */
     ticker: {
       screens: [
-        { code: 'F1', title: 'Intro', image: 'assets/offpeak/f1.png',
+        { code: 'F1', title: 'Intro', image: '/assets/offpeak/f1.png',
           alt: 'The intro screen: “Charge when electricity is cheapest”, a 24-hour price bar, the three questions the flow will ask, and a Start button.' },
-        { code: 'F2', title: 'Does your price change during the year?', image: 'assets/offpeak/f2.png',
+        { code: 'F2', title: 'Does your price change during the year?', image: '/assets/offpeak/f2.png',
           alt: 'Step 1 of 4, periods: a yes/no choice between one set of prices all year and two periods, Peak and Off-peak.' },
-        { code: 'F3', title: 'Two start dates split the year', image: 'assets/offpeak/f3.png',
+        { code: 'F3', title: 'Two start dates split the year', image: '/assets/offpeak/f3.png',
           alt: 'Step 1 of 4, periods: a year ribbon split into Off-peak and Peak, with the start dates editable and the end dates filled in automatically.' },
-        { code: 'F4', title: 'Days as two groups', image: 'assets/offpeak/f4.png',
+        { code: 'F4', title: 'Days as two groups', image: '/assets/offpeak/f4.png',
           alt: 'Step 2 of 4, days: Monday to Thursday in group 1 and Friday to Sunday in group 2, one tap to move a day between groups.' },
       ],
     },
@@ -233,13 +234,13 @@ window.CASE_STUDIES = {
 
     /* Everything below mirrors the pages of the Figma file, in order:
        Cover, Context, Research, Foundations, Components, Design. Screens
-       are 2x exports from Figma (assets/codeflow/), shown 16:10 unless a
+       are 2x exports from Figma (/assets/codeflow/), shown 16:10 unless a
        `ratio` says otherwise; `full` lets a tall screen span both columns. */
     wideScreens: true,
     order: ['overview', 'problem', 'personas', 'solution', 'research', 'foundation', 'system', 'flow', 'whats-next', 'figma-file'],
 
     heroImage: {
-      image: 'assets/codeflow/cover.png',
+      image: '/assets/codeflow/cover.png',
       alt: 'Codeflow cover: “Make coding a daily habit.” beside the daily challenge card, weekly streak and class leaderboard.',
       ratio: '16 / 9',
     },
@@ -340,7 +341,7 @@ window.CASE_STUDIES = {
     /* ---------------- Research · Streak based motivation ---------------- */
     research: {
       board: {
-        image: 'assets/codeflow/research-playbook.png',
+        image: '/assets/codeflow/research-playbook.png',
         alt: 'The Streak Playbook: research on a page. It covers why people come back, the fragile moment and the recovery ladder.',
         label: 'The Streak Playbook: research on a page',
         ratio: '3200 / 2554',
@@ -353,16 +354,16 @@ window.CASE_STUDIES = {
       components: [
         { title: 'Color tokens',
           desc: 'Backgrounds, text, borders and icons, each a semantic token that aliases a primitive: bg/canvas → sand/100, bg/flame → flame/500, text/brand → indigo/800. Flame = streak & primary action. Indigo = XP, rank and “you”. Ice = freeze protection.',
-          board: { image: 'assets/codeflow/fnd-color.png', alt: 'Colour tokens: backgrounds, text, borders and icons.', label: 'Color tokens', ratio: '3040 / 3098' } },
+          board: { image: '/assets/codeflow/fnd-color.png', alt: 'Colour tokens: backgrounds, text, borders and icons.', label: 'Color tokens', ratio: '3040 / 3098' } },
         { title: 'Typography',
           desc: 'Bricolage Grotesque for display and stats, IBM Plex Sans for headings, body, labels and captions, and JetBrains Mono for code. Seventeen styles, from Display/Stat at 52 down to Caption and Overline at 12.',
-          board: { image: 'assets/codeflow/fnd-typography.png', alt: 'Type styles from Display/XL to Code/S.', label: 'Typography', ratio: '1800 / 2332' } },
+          board: { image: '/assets/codeflow/fnd-typography.png', alt: 'Type styles from Display/XL to Code/S.', label: 'Typography', ratio: '1800 / 2332' } },
         { title: 'Spacing & radius',
           desc: 'Spacing runs 4 · 8 · 12 · 16 · 20 · 24 · 32 · 40 · 48 · 64. Radius runs 6 · 10 · 14 · 20 · 24, plus full for pills and dots.',
-          board: { image: 'assets/codeflow/fnd-spacing.png', alt: 'Spacing and radius scales.', label: 'Spacing & radius', ratio: '1280 / 2008' } },
+          board: { image: '/assets/codeflow/fnd-spacing.png', alt: 'Spacing and radius scales.', label: 'Spacing & radius', ratio: '1280 / 2008' } },
         { title: 'Icons',
           desc: 'A 25-icon set on a 24 px grid: flame, zap, clock, snowflake, arrows, check, sparkle, lightbulb, code and the error and offline states.',
-          board: { image: 'assets/codeflow/fnd-icons.png', alt: 'The Codeflow icon set.', label: 'Icons', ratio: '2000 / 304' } },
+          board: { image: '/assets/codeflow/fnd-icons.png', alt: 'The Codeflow icon set.', label: 'Icons', ratio: '2000 / 304' } },
       ],
     },
 
@@ -371,19 +372,19 @@ window.CASE_STUDIES = {
       components: [
         { title: 'Challenge card',
           desc: 'The home hero. Desktop and mobile sizes, with Default, Done and Error states for the desktop card.',
-          board: { image: 'assets/codeflow/cmp-challenge-card.png', alt: 'Challenge card in desktop and mobile sizes, with default, done and error states.', label: 'Challenge card', ratio: '4000 / 2032' } },
+          board: { image: '/assets/codeflow/cmp-challenge-card.png', alt: 'Challenge card in desktop and mobile sizes, with default, done and error states.', label: 'Challenge card', ratio: '4000 / 2032' } },
         { title: 'Button',
           desc: 'Primary, Dark, Secondary and Ghost styles, each in Large and Medium.',
-          board: { image: 'assets/codeflow/cmp-button.png', alt: 'Button styles and sizes.', label: 'Button', ratio: '1440 / 752' } },
+          board: { image: '/assets/codeflow/cmp-button.png', alt: 'Button styles and sizes.', label: 'Button', ratio: '1440 / 752' } },
         { title: 'Day dot',
           desc: 'The streak’s day marker: Solved, Freeze, Today and Upcoming, in Large and Small.',
-          board: { image: 'assets/codeflow/cmp-day-dot.png', alt: 'Day dot states.', label: 'Day dot', ratio: '968 / 248' } },
+          board: { image: '/assets/codeflow/cmp-day-dot.png', alt: 'Day dot states.', label: 'Day dot', ratio: '968 / 248' } },
         { title: 'Leaderboard row',
           desc: 'Default and You rows, each in Compact and Full density.',
-          board: { image: 'assets/codeflow/cmp-leaderboard-row.png', alt: 'Leaderboard row variants.', label: 'Leaderboard row', ratio: '1648 / 616' } },
+          board: { image: '/assets/codeflow/cmp-leaderboard-row.png', alt: 'Leaderboard row variants.', label: 'Leaderboard row', ratio: '1648 / 616' } },
         { title: 'Info banner',
           desc: 'Seven tones: Freeze, Hint, Personalised, Neutral, Success, Error and Warning.',
-          board: { image: 'assets/codeflow/cmp-info-banner.png', alt: 'Info banner tones.', label: 'Info banner', ratio: '928 / 918' } },
+          board: { image: '/assets/codeflow/cmp-info-banner.png', alt: 'Info banner tones.', label: 'Info banner', ratio: '928 / 918' } },
       ],
       more: {
         title: 'There are more on the Figma file',
@@ -399,19 +400,19 @@ window.CASE_STUDIES = {
         intro: `From the homepage to the challenge, the reward, the leaderboard and the
           streak itself, and what happens when a day is missed.`,
         screens: [
-          { code: 'A1', title: 'Home', ratio: '1440 / 1365', image: 'assets/codeflow/ex-home.png', alt: 'Codeflow home: the daily challenge hero, streak card, weekly leaderboard, quests and topic strengths.',
+          { code: 'A1', title: 'Home', ratio: '1440 / 1365', image: '/assets/codeflow/ex-home.png', alt: 'Codeflow home: the daily challenge hero, streak card, weekly leaderboard, quests and topic strengths.',
             desc: 'One dark hero card is the only thing asking for a decision: today’s challenge, why it was picked for you, the language remembered from last time and a single “Start challenge” button. Beside it, the streak shows a dashed, not-yet-lit flame, the week so far, a freeze that’s ready and the next badge. Below the fold: this week’s board, weekly quests and the topics the dailies are tuned to.' },
-          { code: 'A2', title: 'Workspace · problem', image: 'assets/codeflow/ex-workspace-1.png', alt: 'The workspace with the problem, example and constraints beside the code editor.',
+          { code: 'A2', title: 'Workspace · problem', image: '/assets/codeflow/ex-workspace-1.png', alt: 'The workspace with the problem, example and constraints beside the code editor.',
             desc: 'Problem, example and constraints on the left, a dark editor with language tabs on the right. The header keeps the stakes in view (“Solve to light day 13”, “60 XP on the table”) and says plainly that it’s untimed. Run tests and Submit are separate, and the footer explains how.' },
-          { code: 'A3', title: 'Workspace · hints', image: 'assets/codeflow/ex-workspace-2.png', alt: 'The hints tab, offering hint 1 for 5 XP.',
+          { code: 'A3', title: 'Workspace · hints', image: '/assets/codeflow/ex-workspace-2.png', alt: 'The hints tab, offering hint 1 for 5 XP.',
             desc: 'Hints live in their own tab and cost 5 XP each. The banner above them says the thing a stuck student needs to hear: the streak counts the moment a correct solution is submitted, with or without hints.' },
-          { code: 'A4', title: 'Solved · the reward', ratio: '1440 / 932', image: 'assets/codeflow/ex-leaderboard-2.png', alt: 'A celebration over the leaderboard: Day 13, still burning, with the XP breakdown and new rank.',
+          { code: 'A4', title: 'Solved · the reward', ratio: '1440 / 932', image: '/assets/codeflow/ex-leaderboard-2.png', alt: 'A celebration over the leaderboard: Day 13, still burning, with the XP breakdown and new rank.',
             desc: '“Day 13. Still burning.” The XP is itemised (+30 medium, +10 first submit, +10 no hint, +10 for a 10+ day streak, +60 total), the rank moves up two places and names who was passed. The close is a reminder for tomorrow, at the time the student usually solves.' },
-          { code: 'A5', title: 'Leaderboard', ratio: '1440 / 932', image: 'assets/codeflow/ex-leaderboard-1.png', alt: 'The leaderboard with class, department, college and league scopes.',
+          { code: 'A5', title: 'Leaderboard', ratio: '1440 / 932', image: '/assets/codeflow/ex-leaderboard-1.png', alt: 'The leaderboard with class, department, college and league scopes.',
             desc: 'Class, Department, College and League as scopes, opening on class. The student’s own rank leads with a distance (“Top 3 is 30 XP away”) rather than a verdict. The side column adds a section race, a most-improved board that anyone can top, and a plain explanation of how ranking works.' },
-          { code: 'A6', title: 'Streak', ratio: '1440 / 1282', image: 'assets/codeflow/ex-streak.png', alt: 'The streak page with the current streak, a monthly calendar, milestones and streak freezes.',
+          { code: 'A6', title: 'Streak', ratio: '1440 / 1282', image: '/assets/codeflow/ex-streak.png', alt: 'The streak page with the current streak, a monthly calendar, milestones and streak freezes.',
             desc: 'The streak page: current streak, longest ever (kept forever) and days solved this month. A calendar marks solved, freeze-used and missed days, so a covered day reads as protected rather than lost. Milestones run from Spark at 3 days to Galaxy at 365, with “How streaks work” and the freezes alongside.' },
-          { code: 'A7', title: 'Streak paused', ratio: '1440 / 1024', image: 'assets/codeflow/ex-streak-missed.png', alt: 'An overlay on the home screen: “Yesterday slipped by. It happens.” with a repair quest.',
+          { code: 'A7', title: 'Streak paused', ratio: '1440 / 1024', image: '/assets/codeflow/ex-streak-missed.png', alt: 'An overlay on the home screen: “Yesterday slipped by. It happens.” with a repair quest.',
             desc: '“Yesterday slipped by. It happens.” The streak is paused, not gone: a seven-day strip shows what happened, and a two-challenge repair quest with a visible clock offers the way back. The 21-day best stays on the profile either way, and “Start fresh from Day 1” is there as the quieter option.' },
         ],
       },
@@ -419,15 +420,15 @@ window.CASE_STUDIES = {
         eyebrow: 'Flow · Day 1',
         title: 'Day 1: a new student starts their streak',
         screens: [
-          { code: 'D1', title: 'Habit setup', image: 'assets/codeflow/d1-1-setup.png', alt: 'Habit setup: language, a reminder time and a first goal.',
+          { code: 'D1', title: 'Habit setup', image: '/assets/codeflow/d1-1-setup.png', alt: 'Habit setup: language, a reminder time and a first goal.',
             desc: 'Three choices in 30 seconds: language, a reminder slot (the cue) and a short first goal. “Commit to 7 days” uses commitment wording: it measurably lifts Day-7 retention.' },
-          { code: 'D2', title: 'Home, Day 0', ratio: '1440 / 1274', image: 'assets/codeflow/d1-2-home.png', alt: 'The home screen on day zero, with honest empty states.',
+          { code: 'D2', title: 'Home, Day 0', ratio: '1440 / 1274', image: '/assets/codeflow/d1-2-home.png', alt: 'The home screen on day zero, with honest empty states.',
             desc: 'Every module has an honest empty state: 0-day streak with a dashed “today” ring, a board slot that says how to join, and a topic map that is visibly calibrating. The first challenge is an Easy warm-up.' },
-          { code: 'D3', title: 'First challenge', image: 'assets/codeflow/d1-3-challenge.png', alt: 'The workspace with a one-time coachmark.',
+          { code: 'D3', title: 'First challenge', image: '/assets/codeflow/d1-3-challenge.png', alt: 'The workspace with a one-time coachmark.',
             desc: 'One-time coachmarks (max 3, skippable) explain the single rule that confuses newcomers most: Run is free and unlimited; Submit is what counts.' },
-          { code: 'D4', title: 'First solve', image: 'assets/codeflow/d1-4-solve.png', alt: 'The first-solve reward screen.',
+          { code: 'D4', title: 'First solve', image: '/assets/codeflow/d1-4-solve.png', alt: 'The first-solve reward screen.',
             desc: 'The first reward is bigger than usual (+10 first-challenge bonus) and introduces the board gently: “You joined at #29”, plus the next small goal, Spark in 2 days.' },
-          { code: 'D5', title: 'Home, after the solve', ratio: '1440 / 1173', image: 'assets/codeflow/d1-5-home-after.png', alt: 'The home screen after the first solve, with the hero switched to Done.',
+          { code: 'D5', title: 'Home, after the solve', ratio: '1440 / 1173', image: '/assets/codeflow/d1-5-home-after.png', alt: 'The home screen after the first solve, with the hero switched to Done.',
             desc: 'The hero switches to Done: confirms the lit day, counts down to Day 2 and offers optional practice, never a second mandatory task. Every card on the page has moved one step.' },
         ],
       },
@@ -435,17 +436,17 @@ window.CASE_STUDIES = {
         eyebrow: 'States · Workspace',
         title: 'Workspace: run & submit scenarios',
         screens: [
-          { code: 'S1', title: 'Run · in progress', image: 'assets/codeflow/st-1-running.png', alt: 'Tests running, each case reporting as it finishes.',
+          { code: 'S1', title: 'Run · in progress', image: '/assets/codeflow/st-1-running.png', alt: 'Tests running, each case reporting as it finishes.',
             desc: 'Each case reports as it finishes, so a slow case never looks like a frozen page. Both buttons are disabled to stop double-runs; the code is already saved.' },
-          { code: 'S2', title: 'Run · all samples passed', image: 'assets/codeflow/st-2-passed.png', alt: 'All sample cases passed, prompting a submit.',
+          { code: 'S2', title: 'Run · all samples passed', image: '/assets/codeflow/st-2-passed.png', alt: 'All sample cases passed, prompting a submit.',
             desc: 'A successful run is not a solve. The console says so plainly and makes “Submit solution” the obvious next step, while warning that hidden cases test edge inputs.' },
-          { code: 'S3', title: 'Run · a sample failed', image: 'assets/codeflow/st-3-failed.png', alt: 'A failed sample case showing expected against actual output.',
+          { code: 'S3', title: 'Run · a sample failed', image: '/assets/codeflow/st-3-failed.png', alt: 'A failed sample case showing expected against actual output.',
             desc: 'Expected vs. actual side by side, with the wrong value in red and stdout shown. The failing line is tinted in the editor. Runs are free, so the message is “fix and run again”, not a penalty.' },
-          { code: 'S4', title: 'Submit · wrong answer', image: 'assets/codeflow/st-4-wrong.png', alt: 'A wrong-answer result showing 9 of 15 cases.',
+          { code: 'S4', title: 'Submit · wrong answer', image: '/assets/codeflow/st-4-wrong.png', alt: 'A wrong-answer result showing 9 of 15 cases.',
             desc: 'Shows the score (9/15) and reveals the first failing hidden case. Retry is primary; a hint is the secondary path. The key line: your streak is safe until midnight. Only the first-try bonus is lost.' },
-          { code: 'S5', title: 'Compile / syntax error', image: 'assets/codeflow/st-5-compile.png', alt: 'A parsed compile error with a line number and a go-to-line action.',
+          { code: 'S5', title: 'Compile / syntax error', image: '/assets/codeflow/st-5-compile.png', alt: 'A parsed compile error with a line number and a go-to-line action.',
             desc: 'Parsed error, not a raw stack dump: line number, caret and a “Go to line 4” jump. Syntax errors never count as an attempt, so nobody is punished for a typo.' },
-          { code: 'S6', title: 'Time limit exceeded', image: 'assets/codeflow/st-6-tle.png', alt: 'A time-limit-exceeded result explaining which case was too slow.',
+          { code: 'S6', title: 'Time limit exceeded', image: '/assets/codeflow/st-6-tle.png', alt: 'A time-limit-exceeded result explaining which case was too slow.',
             desc: 'Says which case was too slow and why (input size vs. limit), then names the complexity problem in plain words. It’s coaching, not just a verdict.' },
         ],
       },
@@ -453,13 +454,13 @@ window.CASE_STUDIES = {
         eyebrow: 'States · Errors',
         title: 'Technical errors & failure cases',
         screens: [
-          { code: 'T1', title: 'Offline during submit', image: 'assets/codeflow/err-1-offline.png', alt: 'An offline warning bar with the submit queued.',
+          { code: 'T1', title: 'Offline during submit', image: '/assets/codeflow/err-1-offline.png', alt: 'An offline warning bar with the submit queued.',
             desc: 'A page-level warning bar plus the console state. The three promises that matter: the code is saved, the submit is queued and sends itself, and the timestamp protects today’s streak even if the connection returns after midnight.' },
-          { code: 'T2', title: 'Code runner down (503)', image: 'assets/codeflow/err-2-runner.png', alt: 'The code runner unavailable, retrying with a countdown.',
+          { code: 'T2', title: 'Code runner down (503)', image: '/assets/codeflow/err-2-runner.png', alt: 'The code runner unavailable, retrying with a countdown.',
             desc: 'Leads with “this isn’t your code”, retries automatically with a visible countdown, doesn’t count attempts during the outage, and gives a reference ID for support. Streak protection is stated explicitly.' },
-          { code: 'T3', title: 'Challenge failed to load', ratio: '1440 / 1221', image: 'assets/codeflow/err-3-load.png', alt: 'The home screen where the challenge card failed to load.',
+          { code: 'T3', title: 'Challenge failed to load', ratio: '1440 / 1221', image: '/assets/codeflow/err-3-load.png', alt: 'The home screen where the challenge card failed to load.',
             desc: 'The hero card keeps its size (no layout jump) and switches to State=Error: retry, a past-challenge fallback, and an automatic excuse if the outage outlasts the day. The rest of Home keeps working.' },
-          { code: 'T4', title: 'Streak ended', image: 'assets/codeflow/err-4-streak-ended.png', alt: 'The streak-ended screen with a new first goal.',
+          { code: 'T4', title: 'Streak ended', image: '/assets/codeflow/err-4-streak-ended.png', alt: 'The streak-ended screen with a new first goal.',
             desc: 'The hardest moment in the product. No blame language, the 21-day best and all XP are kept, and the screen turns the loss into a new first goal (Spark at 3) plus the safeguard that prevents a repeat: earn a freeze by Day 7.' },
         ],
       },
@@ -556,7 +557,7 @@ window.CASE_STUDIES = {
     slug: 'search',
     kind: 'publication',
     published: 'Oct 2026',
-    href: 'case-search.html',
+    href: '/publications/search',
     title: 'The First Query',
     subtitle: 'In-app search research',
     tagline: 'Most people search once. This is how to make that once count.',
@@ -574,7 +575,7 @@ window.CASE_STUDIES = {
     slug: 'stepper',
     kind: 'publication',
     published: 'Aug 2026',
-    href: 'case-stepper.html',
+    href: '/publications/stepper',
     title: 'Built to Finish',
     subtitle: 'Stepper UX research',
     tagline: 'People don’t finish the indicator. They finish the steps.',
@@ -587,7 +588,7 @@ window.CASE_STUDIES = {
   /* Homingly, disconnected for now (case-homingly.* is kept):
   homingly: {
     slug: 'homingly',
-    href: 'case-homingly.html',
+    href: '/work/homingly',
     title: 'Homingly',
     subtitle: 'Home interiors app',
     tagline: 'Pricing is the first wall. The estimate is the door.',
@@ -613,9 +614,9 @@ window.CASE_STUDIES = {
     accent: '#4ba82e',
     wideScreens: true,
 
-    /* 2x export of the Cover page of the Figma file (assets/hmi/). */
+    /* 2x export of the Cover page of the Figma file (/assets/hmi/). */
     heroImage: {
-      image: 'assets/hmi/cover.png',
+      image: '/assets/hmi/cover.png',
       alt: 'Cockpit Experience cover: Škoda in-car experience across Virtual Cockpit, AR Head-Up Display, 13" infotainment and Laura voice, with the four parts of the Figma file.',
       ratio: '16 / 9',
     },
@@ -641,16 +642,16 @@ window.CASE_STUDIES = {
 
     flow: [
       { title: 'Virtual Cockpit', desc: 'The instrument cluster behind the wheel: the surface a driver reads most often, and the one that sets the visual language for the rest.',
-        image: 'assets/hmi/ic-parked.png', ratio: '8 / 3',
+        image: '/assets/hmi/ic-parked.png', ratio: '8 / 3',
         alt: 'Virtual Cockpit, parked and ready: a Good afternoon greeting, READY in large type with the prompt to press brake and select D, and the battery, range and gear selector on the right.' },
       { title: 'AR Head-Up Display', desc: 'Information placed on the windshield, in the line of sight, so the driver does not have to look away from the road to get it.',
-        image: 'assets/hmi/hud-driving.png', ratio: '3 / 1',
+        image: '/assets/hmi/hud-driving.png', ratio: '3 / 1',
         alt: 'AR Head-Up Display while driving: speed at 48 km/h on the left, a right-turn arrow with 300 m in the centre and the adaptive cruise control telltale on the right.' },
       { title: '13" infotainment screen', desc: 'The central IVI: navigation, media and vehicle functions, designed as the place for everything that does not need to be glanced at while driving.',
-        image: 'assets/hmi/ivi-parked.png', ratio: '16 / 9',
+        image: '/assets/hmi/ivi-parked.png', ratio: '16 / 9',
         alt: '13-inch infotainment screen, parked: a media player, eight shortcut tiles for navigation, phone, climate, seats, charging, vehicle, apps and settings, an energy card and a persistent climate bar.' },
       { title: 'Laura', desc: 'Škoda’s voice assistant, so the driver can ask for something without taking a hand off the wheel or an eye off the road.',
-        image: 'assets/hmi/laura-parked.png', ratio: '16 / 9', inset: true,
+        image: '/assets/hmi/laura-parked.png', ratio: '16 / 9', inset: true,
         alt: 'Laura voice prompt: “Hi Petr — home, or the office?”' },
     ],
 
@@ -712,8 +713,8 @@ window.CASE_STUDIES = {
      S.no('stepper')   // "Publication 02 / 02"
      S.noun('hmi')     // "case"
    ================================================================== */
-window.CASE_SERIES = function (slug) {
-  const store = window.CASE_STUDIES || {};
+export function CASE_SERIES(slug) {
+  const store = CASE_STUDIES;
   const kindOf = (s) => (store[s] && store[s].kind) || 'case';
   const pad = (n) => String(n).padStart(2, '0');
   const cache = {};
@@ -733,4 +734,28 @@ window.CASE_SERIES = function (slug) {
     return `${word} ${pad(seq.indexOf(s) + 1)} / ${pad(seq.length)}`;
   };
   return { sequence: series(kindOf(slug)), no, noun, kind: kindOf(slug) };
+}
+
+/* Studies whose page is kept but which are out of the series for now
+   (see the parked Homingly entry above). Their pages still open by
+   URL and read these stand-ins, as they always did. */
+export const PARKED = {
+  homingly: { slug: 'homingly', title: 'Homingly', subtitle: 'Home interiors app', year: '2021', next: 'suspension' },
 };
+
+/** The study's data, or its parked stand-in. */
+export const studyData = (slug) => CASE_STUDIES[slug] || PARKED[slug];
+
+/** A study's place in its own series: "Case 02 / 04", ruler index and count. */
+export function caseNumbers(slug) {
+  const series = CASE_SERIES(slug);
+  return {
+    series,
+    index: Math.max(0, series.sequence.indexOf(slug)),
+    count: series.sequence.length || 1,
+    no: series.no(slug),
+  };
+}
+
+/** "Suspension Diagnostics", or "HMI — <subtitle>" for one-word titles. */
+export const fullName = (d) => (/\s/.test(d.title.trim()) ? d.title : `${d.title} — ${d.subtitle}`);

@@ -42,9 +42,9 @@
   --c-line-strong: var(--c-line-2);
 
   /* ---- Type ---- */
-  --f-display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
-  --f-body: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
-  --f-mono: 'Martian Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --f-display: 'Archivo Variable', 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --f-body: 'Archivo Variable', 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --f-mono: 'Martian Mono Variable', 'Martian Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
   --wd-display: 125%;       /* Archivo Expanded — badge capitals */
   --wd-text: 100%;
   --wd-mono: 87.5%;         /* Martian Mono, slightly condensed */

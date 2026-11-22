@@ -22,19 +22,15 @@
    Without the shared runtime, or with reduced motion, nothing is
    pinned: the billboards are cards in the page (CSS default).
    ================================================================== */
-(function () {
+export default function init(Site) {
   const section = document.getElementById('publications');
   if (!section) return;
   const stage = section.querySelector('.pd-stage');
-  const boards = [...section.querySelectorAll('.bb')];
-
-  const Site = window.Site;
-  const A = Site && Site.anime;
+  const boards = [...section.querySelectorAll('.bb')];  const A = Site && Site.anime;
   const reduced = !A || Site.reduced;
 
   const clamp01 = (v) => Math.min(1, Math.max(0, v));
   const smooth = (v) => v * v * (3 - 2 * v);
-  const lerp = (a, b, t) => a + (b - a) * t;
   const pad = (n) => String(n).padStart(2, '0');
 
   /* ------------------------------------------------------------------
@@ -388,7 +384,7 @@
      7. BOOT
   ------------------------------------------------------------------ */
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver((entries) => {
+    new Site.life.IntersectionObserver((entries) => {
       inView = entries[0].isIntersecting;
       stage.classList.toggle('is-parked', !inView);
       update();
@@ -404,8 +400,8 @@
   measure();
   update();
   Site.scroll.on(update);
-  window.addEventListener('resize', remeasure);
-  window.addEventListener('load', remeasure);
-  if (narrow.addEventListener) narrow.addEventListener('change', remeasure);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
-})();
+  Site.life.on(window, 'resize', remeasure);
+  Site.life.on(window, 'load', remeasure);
+  Site.life.on(narrow, 'change', remeasure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (!Site.life.disposed) remeasure(); });
+}

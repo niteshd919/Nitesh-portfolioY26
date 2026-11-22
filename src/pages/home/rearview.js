@@ -22,11 +22,9 @@
    Without the shared runtime nothing happens here: the section stays a
    strip of photographs that scrolls sideways (CSS default).
    ================================================================== */
-(function () {
+export default function init(Site) {
   const section = document.getElementById('rearview');
-  if (!section) return;
-  const Site = window.Site;
-  const A = Site && Site.anime;
+  if (!section) return;  const A = Site && Site.anime;
   if (!A) return;
 
   const frames = [...section.querySelectorAll('.rv-frame')];
@@ -134,9 +132,9 @@
 
   section.classList.add('is-live');
   fitPhases();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitPhases);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (!Site.life.disposed) fitPhases(); });
   let fitTimer = 0;
-  window.addEventListener('resize', () => { clearTimeout(fitTimer); fitTimer = setTimeout(fitPhases, 150); });
+  Site.life.on(window, 'resize', () => { clearTimeout(fitTimer); fitTimer = Site.life.timeout(fitPhases, 150); });
   utils.set(frames, { opacity: 0 });
   frames.forEach((f, i) => f.setAttribute('aria-hidden', i === 0 ? 'false' : 'true'));
   frames[0].classList.add('is-current');
@@ -161,7 +159,7 @@
     }
     return new Promise((resolve) => {
       const done = () => { clearTimeout(t); resolve(); };
-      const t = setTimeout(done, 1600);
+      const t = Site.life.timeout(done, 1600);
       img.addEventListener('load', done, { once: true });
       img.addEventListener('error', done, { once: true });
     });
@@ -194,7 +192,7 @@
         swap(to, dir, o.quick);
       });
     };
-    if (o.defer || burst) swapTimer = setTimeout(run, 170);
+    if (o.defer || burst) swapTimer = Site.life.timeout(run, 170);
     else run();
   }
 
@@ -335,10 +333,10 @@
     last = t;
     if (elapsed >= CRUISE_MS) go(index + 1, { dir: 1 });
     gauge(Math.min(1, elapsed / CRUISE_MS));
-    raf = requestAnimationFrame(tick);
+    raf = Site.life.raf(tick);
   }
   function loop() {
-    if (!raf && running()) { last = 0; raf = requestAnimationFrame(tick); }
+    if (!raf && running()) { last = 0; raf = Site.life.raf(tick); }
   }
   function setEngaged(on) {
     engaged = on;
@@ -354,7 +352,7 @@
   function brake() { if (engaged) setEngaged(false); }
 
   cruiseBtn.addEventListener('click', () => setEngaged(!engaged));
-  document.addEventListener('visibilitychange', loop);
+  Site.life.on(document, 'visibilitychange', loop);
 
   /* ------------------------------------------------------------------
      6. HANDS ON — buttons, keys, the glass, the day.
@@ -363,7 +361,7 @@
   nextBtn.addEventListener('click', () => go(index + 1, { dir: 1, manual: true }));
 
   // ← → while the section has the screen (the ruler handles its own keys).
-  document.addEventListener('keydown', (e) => {
+  Site.life.on(document, 'keydown', (e) => {
     if (!inView || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
     if (Site.menu && Site.menu.isOpen) return;
     const t = e.target;
@@ -496,17 +494,17 @@
      8. ON SCREEN — cruise only runs while the section has the screen,
         and engages by itself the first time it does.
   ------------------------------------------------------------------ */
-  const io = new IntersectionObserver((entries) => {
+  const io = new Site.life.IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       inView = entry.isIntersecting && entry.intersectionRatio >= 0.55;
       if (inView && !everEngaged && !reduced) {
         // Let the glass finish unfolding before the first change.
         everEngaged = true;
-        setTimeout(() => { if (!engaged && !touched && inView) setEngaged(true); }, 1200);
+        Site.life.timeout(() => { if (!engaged && !touched && inView) setEngaged(true); }, 1200);
       }
       if (!inView) hidePeek();
       loop();
     });
   }, { threshold: [0, 0.55, 0.8] });
   io.observe(section);
-})();
+}

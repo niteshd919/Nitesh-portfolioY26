@@ -10,8 +10,7 @@
         has no hover), and the mailto link does the rest.
    ================================================================== */
 
-(function () {
-  const Site = window.Site;
+export default function init(Site) {
   const btn = document.querySelector('.ignition');
   if (!Site || !btn) return;
   const { animate, createTimeline, utils } = Site.anime;
@@ -41,7 +40,7 @@
     else breath.pause();
   }
 
-  new IntersectionObserver((entries) => {
+  new Site.life.IntersectionObserver((entries) => {
     onScreen = entries[entries.length - 1].isIntersecting;
     syncBreath();
   }).observe(btn);
@@ -103,8 +102,8 @@
   btn.addEventListener('click', () => {
     rev(1);
     clearTimeout(fallTimer);
-    fallTimer = setTimeout(() => {
+    fallTimer = Site.life.timeout(() => {
       if (!btn.matches(':hover') && !btn.matches(':focus-visible')) rev(0);
     }, 1500);
   });
-})();
+}

@@ -17,14 +17,12 @@
    rise, the spec figures roll, the CTA rule draws, the media is
    scanned in and one pass of studio light crosses it.
    ================================================================== */
-(function () {
+export default function init(Site) {
   const section = document.getElementById('work');
   if (!section || !section.classList.contains('showroom')) return;
 
   // Without the shared runtime (a library failed to load) fall back to
-  // stacked bays rather than a pinned track that cannot move.
-  const Site = window.Site;
-  if (!Site || !Site.anime) {
+  // stacked bays rather than a pinned track that cannot move.  if (!Site || !Site.anime) {
     section.classList.add('is-static');
     return;
   }
@@ -184,7 +182,7 @@
       }
       if (armed) {
         clearTimeout(settleTimer);
-        settleTimer = setTimeout(settle, 160);
+        settleTimer = Site.life.timeout(settle, 160);
       }
 
       const next = utils.clamp(Math.round(pos), 0, N - 1);
@@ -216,7 +214,7 @@
       if (pinned) readout(box, vh);
     }
     const request = () => {
-      if (!frame) frame = requestAnimationFrame(update);
+      if (!frame) frame = Site.life.raf(update);
     };
 
     /* ------------------------------------------------------------------
@@ -457,7 +455,7 @@
       if (Math.abs(pos - target) > 0.002) goTo(target, { duration: 0.9 });
     }
 
-    window.addEventListener('touchstart', () => {
+    Site.life.on(window, 'touchstart', () => {
       touching = true;
       armed = false;
       clearTimeout(settleTimer);
@@ -466,10 +464,10 @@
       touching = false;
       armed = true;
       clearTimeout(settleTimer);
-      settleTimer = setTimeout(settle, 160);
+      settleTimer = Site.life.timeout(settle, 160);
     };
-    window.addEventListener('touchend', release, { passive: true });
-    window.addEventListener('touchcancel', release, { passive: true });
+    Site.life.on(window, 'touchend', release, { passive: true });
+    Site.life.on(window, 'touchcancel', release, { passive: true });
 
     /* ------------------------------------------------------------------
        8. IMAGES — load every bay before the stage arrives, so nothing
@@ -478,7 +476,7 @@
     ------------------------------------------------------------------ */
     const imgs = [...section.querySelectorAll('img[loading="lazy"]')];
     if (imgs.length && 'IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
+      const io = new Site.life.IntersectionObserver((entries) => {
         if (!entries.some((en) => en.isIntersecting)) return;
         io.disconnect();
         imgs.forEach((img) => { img.loading = 'eager'; });
@@ -499,13 +497,13 @@
       measure();
       request();
     };
-    window.addEventListener('resize', remeasure);
-    window.addEventListener('load', remeasure);
-    if (pin.addEventListener) pin.addEventListener('change', remeasure);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
+    Site.life.on(window, 'resize', remeasure);
+    Site.life.on(window, 'load', remeasure);
+    Site.life.on(pin, 'change', remeasure);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (!Site.life.disposed) remeasure(); });
     Site.when('intro:done').then(() => {
       introDone = true;
       remeasure();
     });
   }
-})();
+}

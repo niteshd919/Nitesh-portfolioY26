@@ -12,8 +12,7 @@
                 the brand wall is CSS.)
    ================================================================== */
 
-(function () {
-  const Site = window.Site;
+export default function init(Site) {
   if (!Site) return;
   const { animate, createTimeline, stagger, splitText, utils } = Site.anime;
   const spring = Site.anime.spring || Site.anime.createSpring;   // v4.5 renamed it
@@ -75,7 +74,7 @@
       if (lines.length && !risen) rise();
     });
     Site.scroll.on(paint);
-    window.addEventListener('resize', paint);
+    Site.life.on(window, 'resize', paint);
   }
 
   /* ------------------------------------------------------------------
@@ -270,4 +269,4 @@
   initPlate(document.querySelector('.plate'));
   initCoda(document.querySelector('.about-coda'));
   initCluster(document.querySelector('.cluster'));
-})();
+}

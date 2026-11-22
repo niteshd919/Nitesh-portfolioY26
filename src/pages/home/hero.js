@@ -12,8 +12,7 @@
      returning     the shutter opens on the parked car → lights on
      reduced       no preloader, final states, 'intro:done' at once
    ================================================================== */
-(function () {
-  const Site = window.Site;
+export default function init(Site) {
   const hero = document.getElementById('top');
   if (!Site || !hero) return;
 
@@ -57,7 +56,7 @@
   const SEEN_KEY = 'nd:ignition';
   const FLOOR = 2200;        // the self test never feels rushed…
   const CEIL = 4000;         // …and never holds anyone hostage
-  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const wait = (ms) => new Promise((resolve) => Site.life.timeout(resolve, ms));
 
   let seen = false;
   try { seen = sessionStorage.getItem(SEEN_KEY) === '1'; } catch (err) { seen = false; }
@@ -149,7 +148,7 @@
     animate(drive, { speed: [0, 1], duration: 2800, ease: 'inOut(2)' });
   }
 
-  const driveIO = new IntersectionObserver(([entry]) => {
+  const driveIO = new Site.life.IntersectionObserver(([entry]) => {
     drive.inView = entry.isIntersecting;
     if (!drive.timer) return;
     if (drive.inView) {
@@ -304,7 +303,7 @@
     const fonts = document.fonts && document.fonts.ready ? document.fonts.ready.catch(() => {}) : Promise.resolve();
     const load = document.readyState === 'complete'
       ? Promise.resolve()
-      : new Promise((resolve) => window.addEventListener('load', resolve, { once: true }));
+      : new Promise((resolve) => Site.life.on(window, 'load', resolve, { once: true }));
     const images = [...hero.querySelectorAll('img')].map((img) => (img.decode ? img.decode().catch(() => {}) : Promise.resolve()));
     return Promise.race([Promise.all([fonts, load, ...images]), wait(limit)]);
   }
@@ -494,7 +493,7 @@
   }
 
   fitLeaders();
-  if (phone.addEventListener) phone.addEventListener('change', fitLeaders);
+  Site.life.on(phone, 'change', fitLeaders);
 
   if (reduced) {
     dropPreloader();
@@ -513,7 +512,7 @@
     prime({ parked: true });
     Site.transition.reveal().then(() => {
       entrance({ parked: true });
-      setTimeout(() => Site.emit('intro:done'), 650);
+      Site.life.timeout(() => Site.emit('intro:done'), 650);
     });
     return;
   }
@@ -533,4 +532,4 @@
   } else {
     ignition();
   }
-})();
+}

@@ -2442,8 +2442,8 @@ html.has-cursor img[data-zoom] { cursor: none; }
   color: var(--c-fg-3);
 }
 .hm-specimen dd { color: var(--c-fg); text-wrap: balance; }
-.hm-specimen .is-serif dd { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-weight: 400; }
-.hm-specimen .is-sans dd { font-family: 'DM Sans', 'Helvetica Neue', Arial, sans-serif; }
+.hm-specimen .is-serif dd { font-family: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif; font-weight: 400; }
+.hm-specimen .is-sans dd { font-family: 'DM Sans Variable', 'DM Sans', 'Helvetica Neue', Arial, sans-serif; }
 .hm-specimen .is-num dd { font-weight: 600; font-size: clamp(2rem, 1.3rem + 2vw, 2.85rem); line-height: 1.1; color: var(--brass-hi); }
 .hm-specimen .is-serif:not(.is-num):not(.is-italic) dd { font-size: clamp(1.4rem, 1.1rem + 0.9vw, 1.85rem); line-height: 1.2; }
 .hm-specimen .is-italic dd { font-style: italic; font-size: 1.25rem; line-height: 1.35; color: var(--c-fg-2); }
