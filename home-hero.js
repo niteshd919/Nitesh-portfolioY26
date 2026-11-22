@@ -169,6 +169,7 @@
   ------------------------------------------------------------------ */
   function scrollOut() {
     if (reduced) return;
+    Site.sound.road(hero);   // scrolling here is heard as the car moving
     const observer = onScroll({
       target: hero,
       enter: 'top top',        // '<viewport edge> <hero edge>'

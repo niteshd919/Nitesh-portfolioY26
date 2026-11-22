@@ -23,6 +23,8 @@
      Site.menu             { open(), close(), isOpen }
      Site.rules(scope)     arm any new [data-rule] dividers
      Site.reveals(scope)   arm any new [data-reveal] elements
+     Site.sound            { play(), road(), rev(), set() } — silent
+                           stubs here; sound.js fills them in
    ================================================================== */
 
 (function () {
@@ -71,6 +73,9 @@
     (handlers.get(name) || []).forEach((fn) => fn(detail));
   }
   const when = (name) => new Promise((resolve) => on(name, resolve));
+
+  // Sound: callable from anywhere, silent until sound.js loads.
+  const soundApi = { play() {}, road() {}, rev() {}, set() {}, enabled: false };
 
   /* ------------------------------------------------------------------
      2. SCROLL — Lenis on capable devices, native when motion is reduced.
@@ -461,6 +466,8 @@
       if (key === currentKey) return;
       const first = currentKey === null;
       currentKey = key;
+      // The counter clicks over, but only where the readout can be seen.
+      if (!first && readout.getClientRects().length) soundApi.play('section');
 
       const next = document.createElement('span');
       next.textContent = name;
@@ -555,6 +562,7 @@
       open = next;
       btn.setAttribute('aria-expanded', String(open));
       root.classList.toggle('menu-open', open);
+      soundApi.play(open ? 'menu-open' : 'menu-close');
       if (tl) tl.pause();
 
       if (open) {
@@ -660,6 +668,7 @@
     cursor: cursorApi,
     nav: navApi,
     menu: menuApi,
+    sound: soundApi,
   };
   window.Site = Site;
 

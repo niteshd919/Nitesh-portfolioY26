@@ -674,6 +674,58 @@ html.menu-open .menu-btn-label span { transform: translateY(-100%); }
 html.menu-open .menu-btn-icon i:first-child { top: 3.5px; transform: rotate(45deg) scaleX(0.8); }
 html.menu-open .menu-btn-icon i:last-child { top: 3.5px; width: 100%; transform: rotate(-45deg) scaleX(0.8); }
 
+/* Sound — sound.js puts the switch beside Menu. The bars are a level
+   meter: flat when muted, standing still while the browser waits for a
+   first click, moving once audio is actually running. */
+.nav-end {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 2.4vw, 2.25rem);
+}
+.sound-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.4s var(--ease-soft);
+}
+.sound-toggle:hover,
+.sound-toggle:focus-visible { opacity: 1; }
+.sound-toggle-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 9px;
+}
+.sound-toggle-bars i {
+  width: 1px;
+  height: 100%;
+  background: currentColor;
+  transform-origin: 50% 100%;
+  transform: scaleY(0.12);
+  transition: transform 0.6s var(--ease-in-out);
+}
+.sound-toggle-bars i:nth-child(1) { --h: 0.45; --d: -0.3s; }
+.sound-toggle-bars i:nth-child(2) { --h: 0.9; --d: -0.9s; }
+.sound-toggle-bars i:nth-child(3) { --h: 0.6; --d: -0.5s; }
+.sound-toggle-bars i:nth-child(4) { --h: 0.75; --d: -1.2s; }
+.sound-toggle[aria-pressed="true"] .sound-toggle-bars i { transform: scaleY(var(--h)); }
+html.sound-live .sound-toggle[aria-pressed="true"] .sound-toggle-bars i {
+  animation: sound-level 1.5s var(--ease-in-out) var(--d) infinite alternate;
+}
+@keyframes sound-level {
+  from { transform: scaleY(0.25); }
+  to { transform: scaleY(1); }
+}
+
 /* ================= MENU — opens behind a closing grille ================= */
 .menu {
   position: fixed;
@@ -947,6 +999,7 @@ html.is-transitioning button { pointer-events: none; }
   .rule-line { display: none; }
   .rule-meta { grid-column: 3; }
   .menu-meta { display: none; }
+  .sound-toggle-label { display: none; }
   .menu-link { grid-template-columns: 2.25rem 1fr; }
   .menu-spec { grid-template-columns: 1fr; }
   .menu-spec .spec-row { grid-template-columns: minmax(6rem, 0.4fr) 1fr; }
@@ -958,4 +1011,5 @@ html.is-transitioning button { pointer-events: none; }
     scroll-behavior: auto !important;
   }
   .cursor-ring, .cursor-label, .menu-dim, .menu-name, .link { transition-duration: 0.01ms !important; }
+  html.sound-live .sound-toggle[aria-pressed="true"] .sound-toggle-bars i { animation: none; }
 }

@@ -82,9 +82,11 @@
     }
     const span = Math.abs(to - lit.v);
     const up = to > lit.v;
+    const duration = up ? 250 + 950 * span : 200 + 650 * span;
+    if (span > 0.05) Site.sound.rev(to, duration);
     litAnim = animate(lit, {
       v: to,
-      duration: up ? 250 + 950 * span : 200 + 650 * span,
+      duration,
       ease: up ? EASE.inOut : 'out(3)',
       onUpdate: paintLit,
     });
@@ -101,6 +103,7 @@
   ------------------------------------------------------------------ */
   btn.addEventListener('touchstart', () => {}, { passive: true });
   btn.addEventListener('click', () => {
+    Site.sound.play('ignite');
     rev(1);
     clearTimeout(fallTimer);
     fallTimer = setTimeout(() => {

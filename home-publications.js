@@ -288,10 +288,13 @@
   let inView = false;
   let read = '';
   let navName = '';
+  let pNow = 0;
+  const PASS = 0.75;   // a billboard's t as it rushes past: the whoosh
 
   function update() {
     const box = section.getBoundingClientRect();
     const p = clamp01(-box.top / travelPx);
+    pNow = p;
 
     // The road
     const d = travel(p);
@@ -311,6 +314,11 @@
       const [a, z] = WIN[i];
       const t = (p - a) / (z - a);
       place(b, t);
+      // Heard as it goes by, panned to its side of the road.
+      if (inView && b.lastT != null && (b.lastT - PASS) * (t - PASS) < 0 && Math.abs(t - b.lastT) < 0.25) {
+        Site.sound.play('passby', { side: b.side, dir: Math.sign(t - b.lastT) });
+      }
+      b.lastT = t;
       const live = inView && t > 0.12 && t < 0.86;
       if (live && !b.loops) b.loops = makeLoops(b);
       if (b.loops && live !== b.live) {
@@ -404,6 +412,9 @@
   measure();
   update();
   Site.scroll.on(update);
+  // Scrolling the drive is heard at the road's own pace: it eases off
+  // while a billboard is read and dies away as the car leaves.
+  Site.sound.road(section, () => speed(pNow));
   window.addEventListener('resize', remeasure);
   window.addEventListener('load', remeasure);
   if (narrow.addEventListener) narrow.addEventListener('change', remeasure);

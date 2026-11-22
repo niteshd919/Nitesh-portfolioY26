@@ -111,6 +111,7 @@
   function go(url, opts = {}) {
     if (busy) return;
     busy = true;
+    Site.sound.play('shutter');
     const path = url.split('#')[0].split('?')[0];
     const toHome = path === '' || path === '/' || path === './' || /(^|\/)index\.html$/.test(path);
     if (toHome) {
