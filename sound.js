@@ -15,22 +15,29 @@
      ignite      pressing Engine start: a thock and a two-tone ready chime
      on / off    the toggle: the light signature as an arpeggio / one note down
 
-   Two continuous voices, both silent until something moves them:
+   Continuous voices, each silent until something moves it:
      road        scrolling while a road is on screen (the hero, the drive)
                  is heard as driving: tyre roar and a faint motor whine
                  that follow your speed, and the road's own speed on the drive
      rev         the Engine start button: an electric spool that follows
                  its lit scale up on hover and back down on leave
+     engine      the loading screen: a six turned over by the starter,
+                 revving wherever the needle goes, fading as the layer splits
 
-   Browsers allow audio only after a gesture, so the page stays silent
-   until the visitor first clicks, taps or presses a key. Sound is on by
-   default; the nav toggle is remembered in localStorage ('nd:sound').
+   Sound is on by default and starts with the page wherever the browser
+   allows it: once the visitor has clicked, tapped or typed anywhere on
+   the site in this tab, every page after that opens with sound. Before
+   that first gesture every browser holds back audio (scrolling and
+   hovering don't count), so it starts on the first one. The nav toggle
+   is remembered in localStorage ('nd:sound').
 
    Site.sound
      play(name, opts)    one-shot sounds from the list above
      road(el, speed?)    scrolling while el is on screen is driving;
                          speed() may return 0 … 1 for the road's own pace
      rev(level, ms)      spool the motor toward level (0 … 1) over ms
+     engine(level)       run the engine at level (0 … 1, idle to redline),
+                         called every frame it moves; engine(null) keys it off
      set(on) / enabled   switch sound, read the switch
    ================================================================== */
 (function () {
@@ -46,9 +53,10 @@
   try { if (localStorage.getItem(KEY) === '0') enabled = false; } catch (err) { /* private mode */ }
 
   /* ------------------------------------------------------------------
-     1. ENGINE — one context, built on the first gesture: a master
-        gain into a limiter (a safety, not a sound), a short dark
-        reverb (a padded cabin, not a hall) and a buffer of noise.
+     1. CONTEXT — one, built as the page loads (or on the first gesture
+        if the browser won't have one yet): a master gain into a limiter
+        (a safety, not a sound), a short dark reverb (a padded cabin,
+        not a hall) and a buffer of noise.
   ------------------------------------------------------------------ */
   let ctx = null;
   let master = null;
@@ -117,6 +125,20 @@
     }
     const p = ctx.resume();
     return (p && p.then ? p.catch(() => {}) : Promise.resolve()).then(paint);
+  }
+
+  // Start with the page. A browser that already trusts it (the visitor
+  // clicked, tapped or typed on this site earlier in the tab, or allowed
+  // it sound) runs the context straight away; any other holds it until
+  // the first gesture, when unlock() resumes it. Where the browser can
+  // say in advance that it will refuse, no context is made yet, which
+  // spares the console its warning.
+  function wake() {
+    if (!enabled || dead || ctx) return;
+    try {
+      if (navigator.getAutoplayPolicy && navigator.getAutoplayPolicy('audiocontext') === 'disallowed') return;
+    } catch (err) { /* an older shape of the API: just try */ }
+    unlock();
   }
 
   // Hold an automated value where it is right now, so a new move can
@@ -342,7 +364,192 @@
   }
 
   /* ------------------------------------------------------------------
-     5. ROAD — while a road is on screen, scrolling is driving. Speed is
+     5. ENGINE — the loading screen. A six: a saw at the firing rate,
+        a second at half of it for the lope of each crank turn, a throb
+        on the level and a wander in the pitch, because combustion is
+        never quite even. That is driven into a soft clip and through an
+        exhaust's fixed resonances, so the harmonics sweep through them
+        as the revs climb. The throttle is read from how fast the revs
+        move: climbing opens it (louder, brighter, breathing through the
+        intake), falling shuts it (dark and lumpy, on the overrun).
+  ------------------------------------------------------------------ */
+  const IDLE = 850;    // rpm
+  const RED = 7000;
+  const fireAt = (rpm) => rpm / 20;   // six cylinders fire three times a turn
+  const clamp01 = (x) => Math.min(1, Math.max(0, x));
+  let eng = null;      // the voice, while it sounds
+  let keyedAt = 0;     // when the key went on (0 = off)
+  let crunch = null;   // the clip's curve, made once
+
+  function engineStart(level, cold) {
+    if (!ctx.createConstantSource) return;
+    const t = ctx.currentTime;
+    if (!crunch) {
+      crunch = new Float32Array(1024);
+      for (let i = 0; i < 1024; i++) crunch[i] = Math.tanh(4 * (i / 511.5 - 1));
+    }
+
+    // One control sets the firing rate; everything pitched follows it.
+    const fire = ctx.createConstantSource();
+    fire.offset.value = fireAt(IDLE);
+    const half = ctx.createGain();
+    half.gain.value = 0.5;
+    fire.connect(half);
+    const saw = ctx.createOscillator();
+    saw.type = 'sawtooth';
+    saw.frequency.value = 0;
+    fire.connect(saw.frequency);
+    const lope = ctx.createOscillator();
+    lope.type = 'sawtooth';
+    lope.frequency.value = 0;
+    half.connect(lope.frequency);
+    const lopeGain = ctx.createGain();
+    lopeGain.gain.value = 0.55;
+    const throb = ctx.createOscillator();
+    throb.frequency.value = 0;
+    half.connect(throb.frequency);
+    const depth = ctx.createGain();
+    depth.gain.value = 0.3;
+    throb.connect(depth);
+
+    // Noise, twice over: slowed into the pitch wander, and opened up
+    // into the rush of the intake.
+    const breath = ctx.createBufferSource();
+    breath.buffer = noise;
+    breath.loop = true;
+    const slow = ctx.createBiquadFilter();
+    slow.type = 'lowpass';
+    slow.frequency.value = 25;
+    const wander = ctx.createGain();
+    wander.gain.value = 400;   // about ±10 cents
+    breath.connect(slow);
+    slow.connect(wander);
+    wander.connect(saw.detune);
+    wander.connect(lope.detune);
+    const intakeF = ctx.createBiquadFilter();
+    intakeF.type = 'bandpass';
+    intakeF.frequency.value = 900;
+    intakeF.Q.value = 0.9;
+    const intake = ctx.createGain();
+    intake.gain.value = 0;
+    breath.connect(intakeF);
+    intakeF.connect(intake);
+
+    const body = ctx.createGain();
+    body.gain.value = 0.75;
+    depth.connect(body.gain);
+    saw.connect(body);
+    lope.connect(lopeGain);
+    lopeGain.connect(body);
+    const drive = ctx.createGain();
+    drive.gain.value = 0.15;
+    const clip = ctx.createWaveShaper();
+    clip.curve = crunch;
+    clip.oversample = '2x';
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = 320;
+    lp.Q.value = 1.2;
+    body.connect(drive);
+    drive.connect(clip);
+    clip.connect(lp);
+    let tail = lp;
+    [[110, 1.2, 5], [380, 1.8, 6], [1150, 2.5, 4]].forEach(([f, q, db]) => {
+      const peak = ctx.createBiquadFilter();
+      peak.type = 'peaking';
+      peak.frequency.value = f;
+      peak.Q.value = q;
+      peak.gain.value = db;
+      tail.connect(peak);
+      tail = peak;
+    });
+    const hp = ctx.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 45;
+    tail.connect(hp);
+    const out = outlet({ wet: 0.12 }, t, t);
+    out.gain.value = 0;
+    hp.connect(out);
+    intake.connect(out);
+
+    const sources = [fire, saw, lope, throb, breath];
+    sources.forEach((s) => s.start(t));
+    eng = { fire, drive, lp, depth, intake, out, sources, level: clamp01(level), lastT: t, slope: 0, until: 0 };
+
+    if (cold) {
+      // The starter turns it over against compression; it catches and
+      // flares before the needle takes over.
+      const caught = t + 0.32;
+      fire.offset.setValueAtTime(fireAt(190), t);
+      fire.offset.linearRampToValueAtTime(fireAt(240), caught);
+      fire.offset.setTargetAtTime(fireAt(IDLE * 1.5), caught, 0.05);
+      drive.gain.value = 0.35;     // each compression a distinct chuff
+      lp.frequency.value = 600;
+      out.gain.setValueAtTime(0.009, t);
+      out.gain.setTargetAtTime(0.011, caught, 0.04);
+      eng.until = caught + 0.06;
+      tone({ f: 330, to: 420, glide: 0.3, type: 'triangle', gain: 0.009, attack: 0.03, release: 0.29 });
+      air({ f: 1100, to: 1500, q: 2.5, gain: 0.04, attack: 0.04, release: 0.28 });
+    }
+  }
+
+  function engineSet(level) {
+    const t = ctx.currentTime;
+    level = clamp01(level);
+    const slope = (level - eng.level) / Math.max(1 / 240, t - eng.lastT);
+    eng.level = level;
+    eng.lastT = t;
+    if (t < eng.until) return;   // still on the starter
+    eng.slope += (slope - eng.slope) * 0.3;
+    const thr = clamp01(0.3 + eng.slope * 0.35);
+    eng.fire.offset.setTargetAtTime(fireAt(IDLE + (RED - IDLE) * level), t, 0.03);
+    eng.drive.gain.setTargetAtTime(0.15 + 0.35 * thr, t, 0.05);
+    eng.lp.frequency.setTargetAtTime(320 + 2200 * level * (0.4 + 0.6 * thr), t, 0.05);
+    eng.depth.gain.setTargetAtTime(0.12 + 0.28 * (1 - thr), t, 0.08);
+    eng.intake.gain.setTargetAtTime(0.9 * thr * level, t, 0.05);
+    eng.out.gain.setTargetAtTime((0.014 + 0.014 * level) * (0.6 + 0.4 * thr), t, 0.05);
+  }
+
+  // Keyed off it lifts and dies away; cut (muted, hidden) it stops at once.
+  function engineStop(fade) {
+    if (!eng) return;
+    const e = eng;
+    eng = null;
+    const t = ctx.currentTime;
+    hold(e.out.gain, t);
+    e.out.gain.setTargetAtTime(0, t, fade ? 0.28 : 0.025);
+    if (fade) {
+      e.fire.offset.setTargetAtTime(fireAt(IDLE), t, 0.15);
+      e.lp.frequency.setTargetAtTime(320, t, 0.15);
+    }
+    const end = t + (fade ? 1.5 : 0.12);
+    e.sources.forEach((s) => s.stop(end));
+    e.sources[0].onended = () => e.out.disconnect();
+  }
+
+  // The starter plays if sound is running by the time the revs first
+  // move (a new context takes a moment to start); sound that arrives
+  // later, with a first click mid-way, joins at the revs.
+  function engine(level) {
+    if (level == null) {
+      keyedAt = 0;
+      if (ctx) engineStop(true);
+      return;
+    }
+    const now = performance.now();
+    if (!keyedAt) keyedAt = now;
+    if (!live()) {
+      if (eng) engineStop(false);
+      return;
+    }
+    try {
+      if (!eng) engineStart(level, level < 0.1 && now - keyedAt < 500);
+      if (eng) engineSet(level);
+    } catch (err) { /* sound must never break the page */ }
+  }
+
+  /* ------------------------------------------------------------------
+     6. ROAD — while a road is on screen, scrolling is driving. Speed is
         the scroll's own, smoothed, times the road's pace where it has
         one; the voice exists only while there is something to hear.
   ------------------------------------------------------------------ */
@@ -450,11 +657,13 @@
   Site.scroll.on(drive);
 
   /* ------------------------------------------------------------------
-     6. THE SWITCH — remembered; switching on plays the light signature,
+     7. THE SWITCH — remembered; switching on plays the light signature,
         switching off plays one note down and lets the cabin go quiet.
   ------------------------------------------------------------------ */
   let toggle = null;
   let restTimer = 0;
+  let held = false;     // sound was on but held by the browser as this press began
+  let nudged = false;   // the switch has already been used to start held sound
 
   function paint() {
     if (toggle) toggle.setAttribute('aria-pressed', String(enabled));
@@ -480,6 +689,7 @@
       if (live()) SOUNDS.off();
       enabled = false;
       stopCar();
+      engineStop(false);
       if (ctx) {
         const t = ctx.currentTime;
         hold(master.gain, t);
@@ -504,11 +714,20 @@
     toggle.innerHTML = '<span class="sound-toggle-label">Sound</span><span class="sound-toggle-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>';
     end.appendChild(toggle);
     end.appendChild(menuBtn);
-    toggle.addEventListener('click', () => set(!enabled));
+    // Pressed while the browser still holds the sound, the switch is being
+    // reached for because nothing can be heard: start it, don't mute it.
+    toggle.addEventListener('click', () => {
+      if (enabled && held && !nudged) {
+        nudged = true;
+        unlock().then(() => play('on'));
+        return;
+      }
+      set(!enabled);
+    });
   }
 
   /* ------------------------------------------------------------------
-     7. HANDS ON — the first gesture wakes the context; hovering and
+     8. HANDS ON — the first gesture wakes the context; hovering and
         pressing anything pressable sound it. Plain links inside running
         text stay quiet so reading never ticks. Keyboard presses sound
         too (a click with no pointer behind it).
@@ -531,6 +750,7 @@
 
   window.addEventListener('pointerdown', (e) => {
     pressedAt = performance.now();
+    held = enabled && !dead && !live();
     const el = e.button === 0 ? find(e.target, PRESSABLE) : null;
     unlock().then(() => { if (el && !el.closest(OWN)) play('press'); });
   }, true);
@@ -543,7 +763,13 @@
     if (el && !el.closest(OWN)) play('press');
   }, true);
 
-  ['keydown', 'touchend'].forEach((type) => window.addEventListener(type, () => { unlock(); }, { capture: true, passive: true }));
+  // Every event a browser counts as a gesture wakes it: a touch only
+  // counts as it lifts, and a click can arrive with no pointer at all.
+  window.addEventListener('keydown', () => {
+    held = enabled && !dead && !live();
+    unlock();
+  }, { capture: true, passive: true });
+  ['pointerup', 'touchend', 'click'].forEach((type) => window.addEventListener(type, () => { unlock(); }, { capture: true, passive: true }));
 
   document.addEventListener('visibilitychange', () => {
     if (!ctx) return;
@@ -557,7 +783,8 @@
   // Back/forward restores a page as it was left, sound and all.
   window.addEventListener('pageshow', (e) => { if (e.persisted) paint(); });
 
-  Object.assign(Site.sound, { play, road, rev, set });
+  Object.assign(Site.sound, { play, road, rev, engine, set });
   Object.defineProperty(Site.sound, 'enabled', { get: () => enabled, configurable: true });
   paint();
+  wake();
 })();

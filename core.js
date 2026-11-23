@@ -23,7 +23,7 @@
      Site.menu             { open(), close(), isOpen }
      Site.rules(scope)     arm any new [data-rule] dividers
      Site.reveals(scope)   arm any new [data-reveal] elements
-     Site.sound            { play(), road(), rev(), set() } — silent
+     Site.sound            { play(), road(), rev(), engine(), set() } — silent
                            stubs here; sound.js fills them in
    ================================================================== */
 
@@ -75,7 +75,7 @@
   const when = (name) => new Promise((resolve) => on(name, resolve));
 
   // Sound: callable from anywhere, silent until sound.js loads.
-  const soundApi = { play() {}, road() {}, rev() {}, set() {}, enabled: false };
+  const soundApi = { play() {}, road() {}, rev() {}, engine() {}, set() {}, enabled: false };
 
   /* ------------------------------------------------------------------
      2. SCROLL — Lenis on capable devices, native when motion is reduced.

@@ -313,7 +313,18 @@
   /* ------------------------------------------------------------------
      8. IGNITION — power-on, needle sweep to the redline and back onto
         the live speed, 000 → 100 km/h tied to readiness, launch timer.
+        Heard as an engine (sound.js): the starter turns it over, the
+        sweep revs it to the redline and it follows the needle from
+        there until the layer splits.
   ------------------------------------------------------------------ */
+  let keyedOff = false;
+  const revs = (level) => { if (!keyedOff) Site.sound.engine(level); };
+  const keyOff = () => {
+    if (keyedOff) return;
+    keyedOff = true;
+    Site.sound.engine(null);
+  };
+
   function ignition() {
     const cluster = pre.querySelector('.pre-cluster');
     const corners = [...pre.querySelectorAll('.pre-corner')];
@@ -409,6 +420,7 @@
           if (n < 0) { n = 0; nv = 0; }
         }
 
+        revs(n / MAX);
         dial.needle.setAttribute('transform', `rotate(${angleOf(n).toFixed(2)})`);
         dial.trail.setAttribute('stroke-dasharray', `${Math.max(0, n / MAX).toFixed(4)} 1`);
         const s = Math.round(v);
@@ -462,6 +474,18 @@
     const dy = Math.max(-mid, Math.min(mid - 2, roadY - mid));
     const SPLIT = 880;
 
+    // A later load skips the self test, so the engine starts here and
+    // blips once as the light flares.
+    if (!ctx.loop) {
+      const blip = { v: 0 };
+      revs(0);
+      animate(blip, {
+        v: [{ to: 0.55, duration: 240, ease: 'out(2)' }, { to: 0.04, duration: 420, ease: 'inOut(2)' }],
+        delay: 360,
+        onUpdate: () => revs(blip.v),
+      });
+    }
+
     createTimeline()
       .add(segs, { opacity: [0, 1], scaleY: [0.3, 1], duration: 300, ease: 'out(3)', delay: stagger(22, { from: 'center' }) }, 0)
       .add(bloom, { opacity: [0, 1], scaleX: [0.2, 1], duration: 900, ease: 'out(3)' }, 120)
@@ -479,6 +503,7 @@
         Site.scroll.start();
         entrance({ groundAt: 760 });
       }, SPLIT + 40)
+      .call(keyOff, SPLIT + 200)
       .add(core, { opacity: 0, duration: 380, ease: 'out(2)' }, SPLIT + 1150)
       .call(() => Site.emit('intro:done'), SPLIT + 1100)
       .call(() => {
