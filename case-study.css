@@ -1665,7 +1665,9 @@
   aspect-ratio: 16 / 10;
   border-radius: 0;
 }
-.case-wide-screens .screen-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* A flow chapter can set its own column count (`cols`), e.g. two across
+   for dense dashboard screenshots; the breakpoints below still override. */
+.case-wide-screens .screen-grid { grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); }
 .case-wide-screens .case-hero-device-wrap.is-row { max-width: 1120px; }
 .case-wide-screens .case-hero-screens .screen-slot { flex: 0 1 300px; }
 .case-wide-screens .case-hero-screens .screen-slot.is-center { flex-basis: 420px; }
@@ -2090,6 +2092,226 @@
   border-color: var(--c-fg);
   background: var(--c-fg);
   color: var(--c-ink);
+}
+
+/* ================= 11b. EXPLORE A BOARD =================
+   A file the reader can open, laid out like a community listing: the
+   source, title, meta and the way in on the left, then what's inside as
+   spec rows; a gallery of previews on the right. Each preview sits on a
+   light, dotted canvas, the way the board does in FigJam. */
+.case-explore {
+  --explore-canvas: #ecebe7;
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.5fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'info gallery'
+    'body gallery';
+  column-gap: clamp(2rem, 5vw, 5rem);
+  row-gap: clamp(2.25rem, 4vw, 3.25rem);
+  align-items: start;
+}
+.case-explore-info { grid-area: info; display: flex; flex-direction: column; align-items: flex-start; }
+.case-explore-gallery { grid-area: gallery; }
+.case-explore-body { grid-area: body; }
+
+.case-explore-source,
+.case-explore-meta,
+.case-explore-cta,
+.case-explore-note,
+.case-explore-count,
+.case-explore-thumb-label {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+/* The source line: a glyph tile and the file type, like an author row. */
+.case-explore-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  color: var(--c-fg-2);
+}
+.case-explore-glyph {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid color-mix(in srgb, var(--cs-accent) 40%, transparent);
+  background: color-mix(in srgb, var(--cs-accent) 9%, transparent);
+  color: var(--cs-accent-hi);
+}
+.case-explore-info h3 {
+  margin: clamp(1.25rem, 2.4vw, 1.75rem) 0 0.9rem;
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 0.85rem + 2.3vw, 3.1rem);
+  line-height: 1.02;
+  letter-spacing: -0.014em;
+  text-transform: uppercase;
+  color: var(--c-fg);
+  text-wrap: balance;
+}
+.case-explore-meta { display: flex; flex-wrap: wrap; color: var(--c-fg-3); }
+/* Separators trail their item, so a wrapped line never opens on one. */
+.case-explore-meta span:not(:last-child)::after { content: '·'; margin: 0 0.65rem; }
+
+/* The way in: a filled button in the project colour, and a square one
+   that opens the current preview full size. */
+.case-explore-actions { display: flex; gap: 0.6rem; margin-top: clamp(1.5rem, 2.8vw, 2.1rem); }
+.case-explore-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  height: 3rem;
+  padding: 0 1.4rem;
+  background: var(--cs-accent);
+  color: var(--c-ink);
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  transition: background 0.4s var(--ease-soft);
+}
+.case-explore-cta svg { transition: transform 0.6s var(--ease-out); }
+.case-explore-cta:hover,
+.case-explore-cta:focus-visible { background: var(--cs-accent-hi); }
+.case-explore-cta:hover svg,
+.case-explore-cta:focus-visible svg { transform: translate(2px, -2px); }
+.case-explore-expand {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: 1px solid var(--c-line-2);
+  background: transparent;
+  color: var(--c-fg);
+  cursor: pointer;
+  transition: border-color 0.4s var(--ease-soft), background 0.4s var(--ease-soft);
+}
+.case-explore-expand:hover,
+.case-explore-expand:focus-visible { border-color: var(--c-fg-2); background: rgba(236, 233, 226, 0.06); }
+.case-explore-cta:focus-visible,
+.case-explore-expand:focus-visible,
+.case-explore-thumb:focus-visible { outline: 2px solid var(--cs-accent-hi); outline-offset: 3px; }
+.case-explore-note { margin-top: 0.9rem; color: var(--c-fg-3); }
+
+/* What's on the board: a short lead, then one spec row per zone. */
+.case-explore-body > p {
+  max-width: 46ch;
+  margin-bottom: 1.4rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--c-fg-2);
+}
+.case-explore-list .spec-row {
+  grid-template-columns: 7.25rem minmax(0, 1fr);
+  padding: 0.75rem 0;
+}
+.case-explore-list dd { line-height: 1.5; }
+
+/* The gallery: one large view on the canvas, thumbnails beneath. */
+.case-explore-stage { margin: 0; }
+.case-explore-frame,
+.case-explore-thumb-frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background-color: var(--explore-canvas);
+  background-image: radial-gradient(rgba(13, 13, 14, 0.13) 1px, transparent 1.4px);
+  background-size: 16px 16px;
+}
+.case-explore-frame {
+  box-shadow:
+    0 0 0 1px rgba(236, 233, 226, 0.14),
+    0 50px 110px -60px color-mix(in srgb, var(--cs-accent) 45%, transparent);
+}
+.case-explore-frame img,
+.case-explore-thumb-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.case-explore-frame img {
+  padding: clamp(0.9rem, 2.4vw, 1.75rem);
+  filter: drop-shadow(0 8px 22px rgba(13, 13, 14, 0.16));
+  transition: opacity 0.35s var(--ease-soft);
+}
+.case-explore-frame img.is-swapping { opacity: 0; }
+.case-explore-stage figcaption {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-top: 0.95rem;
+}
+.case-explore-count { flex: none; color: var(--c-signal); font-variant-numeric: tabular-nums; }
+.case-explore-caption { font-size: 0.9rem; line-height: 1.5; color: var(--c-fg-2); }
+
+.case-explore-thumbs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.6rem, 1.2vw, 1rem);
+  margin-top: clamp(1.25rem, 2.2vw, 1.75rem);
+}
+.case-explore-thumb {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--c-fg-3);
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.35s var(--ease-soft);
+}
+.case-explore-thumb-frame {
+  box-shadow: 0 0 0 1px var(--c-line-2);
+  transition: box-shadow 0.35s var(--ease-soft);
+}
+.case-explore-thumb-frame img {
+  padding: 7%;
+  opacity: 0.62;
+  transition: opacity 0.35s var(--ease-soft);
+}
+.case-explore-thumb:hover,
+.case-explore-thumb.is-active { color: var(--c-fg); }
+.case-explore-thumb:hover .case-explore-thumb-frame img,
+.case-explore-thumb.is-active .case-explore-thumb-frame img { opacity: 1; }
+.case-explore-thumb.is-active .case-explore-thumb-frame { box-shadow: 0 0 0 2px var(--cs-accent); }
+
+/* The contents list runs longer than the gallery, so on screens tall
+   enough to hold it the gallery stays in view while the list scrolls by. */
+@media (min-width: 901px) and (min-height: 820px) {
+  .case-explore-gallery { position: sticky; top: 6.5rem; }
+}
+@media (max-width: 900px) {
+  .case-explore {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    grid-template-areas: 'info' 'gallery' 'body';
+  }
+}
+@media (max-width: 560px) {
+  .case-explore-thumbs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .case-explore-list .spec-row { grid-template-columns: minmax(0, 1fr); row-gap: 0.3rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .case-explore-frame img,
+  .case-explore-thumb,
+  .case-explore-thumb-frame,
+  .case-explore-thumb-frame img,
+  .case-explore-cta,
+  .case-explore-cta svg,
+  .case-explore-expand { transition-duration: 0.01ms !important; }
 }
 
 /* ================= 12. NEXT PROJECT =================

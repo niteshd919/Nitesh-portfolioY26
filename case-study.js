@@ -106,7 +106,10 @@
   }
 
   // The spec sheet: .spec rows (style.css), each opened by a tick.
+  // Status leads, so a reader knows up front whether this shipped or is
+  // a concept, and reads the outcome section accordingly.
   const metaFields = [
+    ['Status', data.status],
     ['Role', data.role],
     ['Timeline', data.timeline],
     ['Platform', data.platform],
@@ -471,7 +474,7 @@
             </div>
             ${chapter.intro ? `<p class="reveal-text">${chapter.intro}</p>` : ''}
           </div>
-          <div class="screen-grid">${chapter.screens.map((s) => screenSlotHTML(s)).join('')}</div>
+          <div class="screen-grid"${chapter.cols ? ` style="--cols:${chapter.cols};"` : ''}>${chapter.screens.map((s) => screenSlotHTML(s)).join('')}</div>
         </div>
       `).join('');
   } else {
@@ -832,6 +835,103 @@
       </div>`;
   }
 
+  /* A board or file the reader can open, laid out like a community
+     listing: source, title, meta and the way in on the left, then what's
+     inside as spec rows; a preview gallery on the right. The thumbnails
+     swap the main view, and the main view opens full size. */
+  const exploreIcons = {
+    board: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" fill="currentColor" stroke="none" /><circle cx="17" cy="17" r="3.5" /><path d="M10.5 7H17v6.5" /><path d="M15 11.5l2 2 2-2" /></svg>',
+    open: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" /></svg>',
+    expand: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" /></svg>',
+  };
+
+  function exploreHTML(e) {
+    const first = e.views[0];
+    return `
+      <div class="case-explore">
+        <div class="case-explore-info case-reveal">
+          <span class="case-explore-source"><span class="case-explore-glyph">${exploreIcons.board}</span>${e.source}</span>
+          <h3>${e.title}</h3>
+          ${e.meta ? `<p class="case-explore-meta">${e.meta.map((m) => `<span>${m}</span>`).join('')}</p>` : ''}
+          <div class="case-explore-actions">
+            <a class="case-explore-cta" href="${e.url}" target="_blank" rel="noopener noreferrer" data-cursor="Open">
+              <span>${e.cta}</span>${exploreIcons.open}
+            </a>
+            <button type="button" class="case-explore-expand" data-cursor="Zoom" aria-label="Open the preview full size">${exploreIcons.expand}</button>
+          </div>
+          ${e.note ? `<p class="case-explore-note">${e.note}</p>` : ''}
+        </div>
+        <div class="case-explore-gallery case-reveal">
+          <figure class="case-explore-stage">
+            <div class="case-explore-frame">
+              <img class="case-explore-main" src="${first.image}" alt="${first.alt}" loading="lazy" data-zoom />
+            </div>
+            <figcaption>
+              <span class="case-explore-count">${pad(1)} / ${pad(e.views.length)}</span>
+              <span class="case-explore-caption" aria-live="polite">${first.caption}</span>
+            </figcaption>
+          </figure>
+          <div class="case-explore-thumbs" role="group" aria-label="Board views">
+            ${e.views.map((v, i) => `
+              <button type="button" class="case-explore-thumb${i ? '' : ' is-active'}" aria-pressed="${i ? 'false' : 'true'}" data-cursor="View">
+                <span class="case-explore-thumb-frame"><img src="${v.thumb}" alt="" loading="lazy" /></span>
+                <span class="case-explore-thumb-label">${v.label}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+        <div class="case-explore-body case-reveal">
+          <p>${e.intro}</p>
+          <dl class="case-explore-list spec">
+            ${e.items.map((item) => `<div class="spec-row"><dt>${item.label}</dt><dd>${item.text}</dd></div>`).join('')}
+          </dl>
+        </div>
+      </div>`;
+  }
+
+  function initExplore(e) {
+    const section = byId('explore');
+    if (!section || section.hidden) return;
+    const main = section.querySelector('.case-explore-main');
+    const caption = section.querySelector('.case-explore-caption');
+    const count = section.querySelector('.case-explore-count');
+    const thumbs = Array.from(section.querySelectorAll('.case-explore-thumb'));
+    const settle = () => main.classList.remove('is-swapping');
+    main.addEventListener('load', settle);
+    main.addEventListener('error', settle);
+
+    function show(i) {
+      const view = e.views[i];
+      if (main.getAttribute('src') === view.image) return;
+      thumbs.forEach((thumb, j) => {
+        thumb.classList.toggle('is-active', j === i);
+        thumb.setAttribute('aria-pressed', String(j === i));
+      });
+      main.classList.add('is-swapping');
+      main.src = view.image;
+      main.alt = view.alt;
+      // The zoom labels the first view on load; keep that label in step.
+      if (main.hasAttribute('aria-label')) main.setAttribute('aria-label', `${view.alt} (open full size)`);
+      caption.textContent = view.caption;
+      count.textContent = `${pad(i + 1)} / ${pad(e.views.length)}`;
+    }
+
+    thumbs.forEach((thumb, i) => {
+      thumb.addEventListener('click', () => show(i));
+      // Fetch the full-size view while the pointer or focus is on its way.
+      const warm = () => { new Image().src = e.views[i].image; };
+      thumb.addEventListener('pointerenter', warm, { once: true });
+      thumb.addEventListener('focus', warm, { once: true });
+    });
+
+    const expand = section.querySelector('.case-explore-expand');
+    if (expand) expand.addEventListener('click', () => main.click());
+  }
+
+  if (data.explore) {
+    fillSection('explore', exploreHTML(data.explore));
+    initExplore(data.explore);
+  }
   if (data.framing) fillSection('framing', framingHTML(data.framing));
   if (data.personas) fillSection('personas', personasHTML(data.personas));
   if (data.solution) fillSection('solution', solutionHTML(data.solution));

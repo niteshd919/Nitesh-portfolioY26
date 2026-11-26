@@ -11,10 +11,15 @@ window.CASE_STUDIES = {
     slug: 'suspension',
     title: 'Suspension Diagnostics',
     subtitle: 'Sensor based suspension diagnostic system on IVI',
-    tagline: 'See what the suspension sees, before the terrain does.',
+    tagline: 'One clear decision, at the moment the driver can make it.',
     year: '2025',
-    platform: 'In-car · Center infotainment display',
-    scope: 'IVI concept for a next-generation SUV or electric off-road vehicle',
+    status: 'Concept · not yet tested with drivers',
+    role: 'Product designer · self-initiated',
+    timeline: '45-minute whiteboard, then two prototype iterations',
+    team: 'Solo',
+    platform: 'In-car · Center display, cluster and voice',
+    scope: 'Problem framing · Severity model · Alert flow · IVI screens · Working prototype',
+    tools: 'FigJam · coded web prototype',
     tags: ['HMI', 'Automotive', 'Diagnostics'],
     gradient: 'linear-gradient(135deg,#17e0c0,#04110f)',
     accent: '#2ef2d0',
@@ -33,53 +38,204 @@ window.CASE_STUDIES = {
       ],
     },
 
-    /* ---------------- 1. What is this about? ---------------- */
-    overview: `Predictive Suspension Intelligence is an IVI concept for suspension diagnostics
-      on the center infotainment display of a next-generation SUV or electric off-road
-      vehicle. It gives the driver a clear, visual picture of what the suspension is
-      doing: what the vehicle’s sensors detect on the terrain ahead, how the suspension
-      is expected to respond, whether it has adjusted, and when the vehicle needs attention.`,
+    /* Everything below follows the FigJam board "Whiteboard: Predictive
+       Suspension Intelligence": the 45-minute whiteboard, then Iteration 1
+       (25 Nov 2026) and Iteration 2 (26 Nov 2026). The page tells the story
+       up to the problem statement, hands the working over to the board
+       (`explore`), then picks up again at the screens. It's a concept, so
+       the outcome is a simulation with its caveats plus a test plan. */
+    wideScreens: true,
+    order: ['overview', 'problem', 'explore', 'flow', 'testing', 'impact', 'whats-next', 'playground'],
+
+    /* ---------------- The short version ---------------- */
+    overview: `The problem statement asked for a predictive suspension health experience
+      on a car’s center display. After 45 minutes at the whiteboard I had a different
+      answer. A moving driver can’t read a screen of suspension data. They need to know
+      if it’s serious and what to do, at a moment when they can act.`,
 
     overviewMore: [
-      `The experience covers the whole journey. Before the drive, a readiness check confirms
-        the system can assist. During the drive, glanceable status shows terrain predictions,
-        automatic ride-height adjustments, and clear warnings when conditions turn hazardous.
-        After the drive, a detailed health summary covers suspension and underbody events.`,
-      `At its center is a real-time 3D vehicle visualization. Animated terrain, independently
-        articulating wheels, and a moving suspension are all driven by one simulation, so
-        prediction, physical response, and on-screen guidance always stay in sync.`,
+      `So the center display stays quiet while the car moves. Most findings wait until
+        the car is parked and arrive as a single card: what’s happening, what it means,
+        what to do, and why the car thinks so. Only a critical fault interrupts a drive,
+        through the instrument cluster, a chime and a voice.`,
+      `I then built it as a working IVI prototype and reworked it twice. The first
+        iteration turned the whiteboard into code, and seeing it run overturned one of my
+        own rules. The second added line guidance on rough ground: the car shows which way
+        to steer, how far and how soon, so the suspension takes fewer hits.`,
+      `This is a concept. Nothing has shipped and no driver has used it yet, so the page
+        ends with the plan to test it, starting with usability testing.`,
     ],
 
-    /* ---------------- 2. What problem does it solve? ---------------- */
+    /* ---------------- What’s broken today ----------------
+       Context first, then the problem statement: who, what breaks, what it
+       costs them, and the goal with its testable limit. */
     problem: {
-      copy: `Suspension health is mostly invisible to drivers today. Problems show up as a
-        scrape, a hard impact, or a generic warning light, often with no explanation and
-        after damage is done. Adaptive suspension systems adjust silently, so drivers
-        can’t tell whether the car is handling a situation or needs their help.`,
-      contextLabel: 'This concept turns suspension diagnostics into something drivers can understand and act on',
-      contextNumbered: true,
-      contextCols: 3,
-      context: [
-        { title: 'From reactive to predictive', desc: 'Drivers see upcoming terrain, which wheel will be affected, and whether clearance may be limited before they reach it.' },
-        { title: 'Making automation visible', desc: 'Ride-height changes show clear “preparing → adjusting → adjusted” states. A failed adjustment is never shown as a success.' },
-        { title: 'Honest about uncertainty', desc: 'When sensors are obscured, data conflicts, or an actuator fails, the system explains the limitation and gives the safest next step. It doesn’t stay in a reassuring state.' },
-        { title: 'Safe water guidance', desc: 'Floodwater or unknown water depth triggers a conservative “Do not enter. Turn around when safe.” message. Raising the suspension is never presented as a reason to cross.' },
-        { title: 'Diagnostics that make sense to drivers', desc: 'Raw telemetry becomes plain-language health insights and clear inspection recommendations, without needing a workshop scan tool.' },
+      copy: `Today the car has one amber warning light and a fixed service schedule.
+        Suspension wears out gradually, and faster on India’s speed breakers, potholes and
+        monsoon roads, so drivers get used to it and stop noticing. When the light does
+        come on, it says nothing about how serious things are. Some drivers panic. Others
+        ignore it. For the carmaker, late catches mean more breakdowns and warranty claims.`,
+      brief: {
+        label: 'Problem statement',
+        text: 'Owner-drivers can’t tell when suspension wear starts to matter, so they find out late: from a scrape, a breakdown or a bigger repair bill. How might the car’s center display give them warnings they trust, in time to act, without taking their eyes off the road for more than 2 seconds?',
+      },
+    },
+
+    /* ---------------- Explore the journey yourself ----------------
+       The working between the problem statement and the screens lives on
+       the board. One row per zone, in the order the board reads, so nothing
+       on it goes unmentioned. Previews are exports of the board itself. */
+    explore: {
+      source: 'FigJam board',
+      title: 'Explore the journey yourself.',
+      meta: ['45-minute whiteboard', '8 steps', '2 iterations'],
+      cta: 'Open in FigJam',
+      url: 'https://www.figma.com/board/v9LTQjbC1MvnnNToJBNvwJ/Whiteboard---suspension-diagnostics?node-id=0-1&t=jpWTXSg0PppW5Me7-1',
+      note: 'Opens in a new tab',
+      intro: 'The full working is on one board, read left to right in the order it happened. Here’s what you’ll find:',
+      items: [
+        { label: 'Clarify', text: 'Five assumptions, the reframe and the problem statement.' },
+        { label: 'Users', text: 'Who it’s for, their pains, three moments and the job to be done.' },
+        { label: 'Principles', text: 'Four rules, the 2-second limit and the severity model.' },
+        { label: 'Flow', text: 'Three checks before any alert, then booking, snoozing and closing the loop.' },
+        { label: 'Screens', text: 'Five lo-fi screens and the card pattern they share.' },
+        { label: 'Edge cases', text: 'Five edge cases and two trade-offs, with what each costs.' },
+        { label: 'Metrics', text: 'A north star, adoption, three guardrails and the business number.' },
+        { label: 'Wrap-up', text: 'The recap, who I’d bring in, what I’d test and what’s open.' },
+        { label: 'Iteration 1', text: 'What got built, four changes after review, decisions and open questions.' },
+        { label: 'Iteration 2', text: 'Line guidance on rough ground, how it decides and what the simulation measured.' },
+      ],
+      views: [
+        {
+          label: 'Whole board',
+          caption: 'The whole board, left to right: the whiteboard, then both iterations.',
+          image: 'assets/suspension/board-overview.png',
+          thumb: 'assets/suspension/board-overview-thumb.png',
+          alt: 'The full FigJam board: the 45-minute whiteboard on the left, with Iteration 1 and Iteration 2 to its right.',
+        },
+        {
+          label: 'Whiteboard',
+          caption: 'The 45-minute whiteboard, in eight steps from Clarify to Wrap-up.',
+          image: 'assets/suspension/board-whiteboard.png',
+          thumb: 'assets/suspension/board-whiteboard-thumb.png',
+          alt: 'The 45-minute whiteboard in eight zones, from Clarify and reframe to Wrap-up: sticky notes, a persona, a severity table, an alert flowchart and lo-fi screens.',
+        },
+        {
+          label: 'Iteration 1',
+          caption: 'Iteration 1: the whiteboard built into the prototype, then refined.',
+          image: 'assets/suspension/board-iteration-1.png',
+          thumb: 'assets/suspension/board-iteration-1-thumb.png',
+          alt: 'Iteration 1 on the board: what was built, what changed after review, three prototype screenshots, decisions and open questions.',
+        },
+        {
+          label: 'Iteration 2',
+          caption: 'Iteration 2: line guidance on rough ground, with simulated results.',
+          image: 'assets/suspension/board-iteration-2.png',
+          thumb: 'assets/suspension/board-iteration-2-thumb.png',
+          alt: 'Iteration 2 on the board: how line guidance works and decides, two prototype screenshots, simulated trail results, decisions and questions.',
+        },
       ],
     },
 
-    /* ---------------- 3. Where does it exist in the car experience? ---------------- */
-    approach: [
-      { title: 'Before the drive (parked)', desc: 'A readiness view shows suspension status, sensor availability, current ride height and mode, whether automatic adjustment is available, and any faults.' },
-      { title: 'While driving (glanceable mode)', desc: 'The interface shrinks to a minimal view the driver can read in a quick glance and never needs to touch: a simplified vehicle stance, the most relevant wheel or terrain prediction, adjustment status, and one clear instruction when action is needed. Critical warnings can also be mirrored to the instrument cluster, so the driver doesn’t have to look away toward the center screen.' },
-      { title: 'After the drive (parked)', desc: 'The full diagnostic view unlocks. It includes a 3D vehicle model with per-wheel telemetry, a timeline replay of terrain events, clearance concerns, adjustment failures, sensor interruptions, and recommended inspections.' },
+    /* ---------------- The screens ---------------- */
+    flowChapters: [
+      {
+        eyebrow: 'Whiteboard · minutes 24–32',
+        title: 'Lo-fi, built around the parked card',
+        intro: 'Most of the screen time went on the parked state, because that’s where the driver actually decides.',
+        cols: 4,
+        screens: [
+          { code: 'W1', title: 'Parked card', desc: 'One decision in four parts: what’s happening, what it means, what to do, why we think so.', image: 'assets/suspension/lofi-parked-card.png', ratio: '16 / 9' },
+          { code: 'W2', title: 'Vehicle Health detail', desc: 'Opened from “Why?”. Evidence for the curious, never the default.', image: 'assets/suspension/lofi-health-detail.png', ratio: '16 / 9' },
+          { code: 'W3', title: 'Book service', desc: 'Pre-filled from the diagnosis, with an estimate and dealer slots. Finish on the phone if in a hurry.', image: 'assets/suspension/lofi-book-service.png', ratio: '16 / 9' },
+          { code: 'W4', title: 'Close the loop', desc: 'Proves the alert was real, so the next one is trusted.', image: 'assets/suspension/lofi-close-loop.png', ratio: '16 / 9' },
+        ],
+      },
+      {
+        eyebrow: 'Iteration 1',
+        title: 'The whiteboard, running',
+        intro: `The severity model, the three checks and the parked card, built into the IVI
+          prototype. 47 automated checks cover every severity, snoozing, escalation, the
+          monthly cap, offline booking and both service outcomes. The panel on the right is
+          the prototype’s dev control, used to switch scenarios.`,
+        cols: 2,
+        screens: [
+          { code: 'P1', title: 'After a drive', desc: 'Every wheel’s readings, with a Plan card alongside: the front-left shock absorber is wearing faster than usual.', image: 'assets/suspension/parked-plan-card.png', ratio: '1272 / 716', full: true },
+          { code: 'P2', title: 'Start screen', desc: 'Health is worked out whenever the car is parked, so every wheel’s state shows before the first drive.', image: 'assets/suspension/start-screen.png', ratio: '1272 / 716' },
+          { code: 'P3', title: 'Driving with a critical leak', desc: 'The center display stays quiet. The cluster, chime and voice carry the alert, and the report log records it.', image: 'assets/suspension/critical-driving.png', ratio: '1272 / 716' },
+        ],
+      },
+      {
+        eyebrow: 'Iteration 2',
+        title: 'Line guidance on rough ground',
+        intro: `Five times a second, the car scores the scanned ground 22 m ahead for every
+          line it could take, counting where all four wheels will roll. It asks for a move
+          only when shifting at least 0.6 m cuts the suspension load by 55% or more. The
+          countdown ends 0.8 s before the obstacle. If it’s too close to steer round, there’s
+          no cue and the predictive pre-set takes the hit.`,
+        cols: 2,
+        screens: [
+          { code: 'P4', title: 'The cue', desc: 'Steer right 1.7 m within 1.3 s to miss a 228 mm rock. The better line is painted on the scan in green.', image: 'assets/suspension/line-cue.png', ratio: '1940 / 1091' },
+          { code: 'P5', title: 'On the best line', desc: 'Under a second later, the cue turns green and shows the load it saved, for about 2.5 seconds.', image: 'assets/suspension/line-on-best.png', ratio: '1940 / 1091' },
+        ],
+      },
+    ],
+
+    /* ---------------- What building it taught me ---------------- */
+    testing: [
+      { title: 'The data earned its place back', desc: 'The board said evidence is never the default. Running it, every wheel’s state was worth a glance, so per-wheel readings now show by default when parked, beside the decision card. The data came back, but only for the moment a driver can read it.' },
+      { title: 'Point with the wheel, not the camera', desc: 'The camera used to turn the car toward an affected corner. Now each parked state has one fixed shot, framed so all four wheel cards fit, and a corner is pointed out by its own card and ring.' },
+      { title: 'Removing the cluster preview left a gap', desc: 'I took the cluster mock-up off the center display; the car’s real cluster is still the channel while driving. The cost: a critical alert has no visual on this screen. The chime, voice, screen-reader alert and report log carry it.' },
+      { title: 'Small screens need a priority', desc: 'At 1366 × 768 the four wheel cards don’t fit beside a decision card. The decision card wins, and the numbers move to All readings, one tap away.' },
+      { title: 'Fewer, bigger moves', desc: 'Looser thresholds for line guidance gave the same benefit with 70% more cues. I chose fewer, bigger moves: at least 0.6 m and 55% less load. That still means about 17 cues a minute on very rough ground.' },
+      { title: 'One exception to my own rule', desc: 'Line guidance shows on the center display while driving. I treat it as driving assistance, like a hazard callout, so the quiet-while-moving rule for health alerts doesn’t apply. It’s the riskiest call here, and the first thing to test.' },
+    ],
+
+    /* ---------------- Simulated, not real-world ----------------
+       Rock strikes per 600 m stretch, cue vs holding the line:
+       28 vs 89, 33 vs 77, 25 vs 105 → 86 vs 271 in total, 68% fewer
+       (69%, 57% and 76% per stretch). Load figures are from the board. */
+    impact: [
+      { value: 68, suffix: '%', label: 'fewer rock strikes when following the cue than holding the line: 86 against 271 across three stretches' },
+      { value: 66, suffix: '%', label: 'less suspension load past the comfortable height, between 53% and 73% per stretch' },
+      { value: 17, label: 'cues a minute on very rough ground. That’s the cost, and the number usability testing has to check' },
+    ],
+    closing: `Measured in the prototype’s own simulation: its terrain, speed and steering,
+      run headless over three 600 m stretches at 80% roughness, following the cue against
+      holding the line. It shows the guidance logic works. Whether a driver can follow it
+      safely is still untested.`,
+
+    /* ---------------- What I’d do next ---------------- */
+    nextSteps: [
+      { title: 'Usability testing first', items: [
+        'Parked card, with 10 owners: show it for five seconds, then ask what’s wrong, how serious it is and what they’d do. It passes if most can answer all three without help.',
+        'Driving simulator, for the critical alert and the steering cue: eye-tracked glances under 2 seconds and tasks under 12. Run the same trail with and without cues.',
+        'Line guidance at 17 cues a minute: do drivers follow, hesitate or tune it out? This decides whether the feature stays.',
+        'Severity labels: can owners tell Plan from Caution unaided, and does “Plan · not urgent” calm them or get ignored?',
+        'Service advisors: sit with them as they explain a report to a driver, including the false alarm where the dealer finds no fault.',
+        'Then a small pilot on test cars, tracking issues fixed before they fail, false alarms, alerts per car and glance time, before anything scales.',
+      ] },
+      { title: 'Who I’d bring in', items: [
+        'Vehicle dynamics engineers.',
+        'Data science, to set the confidence bar that triggers an alert.',
+        'Functional safety and legal, for the liability wording.',
+        'The instrument-cluster HMI team.',
+        'Dealer operations.',
+      ] },
+      { title: 'Still open', items: [
+        'What confidence should trigger an alert? 70% is a placeholder.',
+        'How do we say “Safe to drive” without liability risk? It lives in one constant, so legal can change it in one place.',
+        'What should a booking really cost? The ₹ figures are placeholders.',
+        'Should a critical alert show anything on the center display when audio is off?',
+        'Should a new steering cue also play a sound?',
+      ] },
     ],
 
     /* Closing card: invites the viewer to try the live prototype. */
     playground: {
       eyebrow: 'Try it live',
       title: 'Simulate it yourself.',
-      intro: 'Reading about a suspension is one thing. Drive it, watch the terrain come in, and see how the screen responds in the moment.',
+      intro: 'Reading about a suspension is one thing. Drive it on the highway, over rough ground or into floodwater, and see how the screen responds in the moment.',
       cta: 'Take me to playground',
       url: 'https://suspension-hud.vercel.app/',
       image: 'assets/suspension/cover.png',
@@ -87,17 +243,31 @@ window.CASE_STUDIES = {
     },
 
     sections: {
-      overview: { label: 'What is this about?' },
-      problem: {
-        label: 'What problem does it solve?',
-        title: 'Drivers can’t see what the suspension is doing.',
+      overview: {
+        label: 'The short version',
+        title: 'Drivers don’t want data. They want a decision.',
       },
-      approach: {
-        label: 'Where does it exist in the car experience?',
-        title: 'On the center display, with depth that follows the vehicle’s state.',
-        intro: `It lives on the center infotainment display as a dedicated vehicle or suspension
-          app. Its depth changes with the vehicle’s state, because the screen sits outside
-          the driver’s direct line of sight.`,
+      problem: {
+        label: 'What’s broken today',
+        title: 'Wear is gradual. The warning is all or nothing.',
+      },
+      flow: {
+        label: 'The screens',
+        title: 'From whiteboard sketch to a running prototype.',
+        intro: 'Center display, landscape. Select any screen to open it full size.',
+      },
+      testing: {
+        label: 'What building it taught me',
+        title: 'Seeing it run overturned one of my own rules.',
+        intro: 'No drivers yet. These came from reviewing the running prototype myself.',
+      },
+      impact: {
+        label: 'What the simulation shows',
+        title: 'Fewer hits on a simulated trail. Not yet tested on a real driver.',
+      },
+      'whats-next': {
+        label: 'What I’d do next',
+        title: 'Put it in front of drivers before building anything else.',
       },
     },
 
