@@ -281,107 +281,481 @@ window.CASE_STUDIES = {
     subtitle: 'EV Tariff Input',
     tagline: 'A paper tariff, a phone, and not one uncovered minute.',
     year: '2023',
+    status: 'Shipped',
     role: 'UI / UX Designer',
     platform: 'Mobile app · iOS & Android',
     scope: 'Research, Concepts, Interaction, Handover',
+    team: 'Me, a product manager and engineers',
     tools: 'Figma',
     tags: ['UX Research', 'Data Viz'],
     gradient: 'linear-gradient(135deg,#35e0a8,#1a1a1a)',
     accent: '#35e0a8',
 
-    /* The project is under NDA, so the page stays short: cover,
-       introduction, problem statement, a ticker of screens, then an
-       invitation to talk it through on a call. */
+    /* Told in the playbook's thirteen steps, each a short line and real
+       work from the Figma file: title (1) is the tagline and metadata (3)
+       the spec sheet in the cover, the lede (2) is the overview, and steps
+       4–13 are `story`. Exports live in assets/offpeak as WebP: phone
+       screens at 2x, boards at 1x. */
 
-    /* ---------------- 1. Cover ---------------- */
+    /* ---------------- Cover ---------------- */
     heroScreens: [
-      { code: 'F3', title: 'Two start dates split the year', image: 'assets/offpeak/f3.png',
+      { code: 'F3', title: 'Period dates', image: 'assets/offpeak/hf-f3-period-dates.webp',
         alt: 'Step 1 of 4, periods: a year ribbon split into Off-peak and Peak, with the start dates editable and the end dates filled in automatically.' },
-      { code: 'F1', title: 'Intro', image: 'assets/offpeak/f1.png',
-        alt: 'The intro screen: “Charge when electricity is cheapest”, a 24-hour price bar, the three questions the flow will ask, and a Start button.' },
-      { code: 'F4', title: 'Days as two groups', image: 'assets/offpeak/f4.png',
-        alt: 'Step 2 of 4, days: Monday to Thursday in group 1 and Friday to Sunday in group 2, one tap to move a day between groups.' },
+      { code: 'F1', title: 'Intro', image: 'assets/offpeak/hf-f1-intro.webp',
+        alt: 'The intro screen: “Charge when electricity is cheapest”, a 24-hour price bar and the three questions the flow will ask.' },
+      { code: 'F4', title: 'Days', image: 'assets/offpeak/hf-f4-days.webp',
+        alt: 'Step 2 of 4, days: Monday to Thursday as weekdays and Friday to Sunday as weekends, one tap to move a day between groups.' },
     ],
 
-    /* Around the screens, a day of smart charging plays out on the tariff
-       from F1's bar: cheap nights, a mid-price day, an evening peak. The
+    /* Around the screens, a day of smart charging plays out on the file's
+       example tariff: cheap nights, a mid-price day, an evening peak. The
        car is out between `away` hours and gets home at `low` battery. */
     heroCharging: {
       slots: [
         { from: 0, to: 6, price: 24 },
-        { from: 6, to: 18, price: 31 },
-        { from: 18, to: 22, price: 41 },
+        { from: 6, to: 18, price: 35 },
+        { from: 18, to: 22, price: 40 },
         { from: 22, to: 24, price: 24 },
       ],
       away: [7, 18],
       low: 35,
     },
 
-    /* ---------------- 2. Introduction ---------------- */
-    overview: `EV owners save real money by charging when electricity is cheap, but
-      only if the app knows their tariff. I designed the flow that gets a
-      time-of-use tariff off a paper contract and into a smart wallbox: up to
-      sixteen prices that, between them, have to cover every minute of the year.`,
+    /* ---------------- 2. Lede: the result first, then what and for whom ---------------- */
+    overview: `200+ customers onboarded to tariff-based charging through the setup I
+      designed. It gets a paper tariff into a smart wallbox, so the car charges
+      when power is cheapest. About 18 values to type instead of 32, and no way
+      to leave a minute out.`,
 
-    /* ---------------- 3. Problem statement ---------------- */
-    problem: {
-      copy: `On paper it looks like a form. In practice it's a transcription job.
-        People sit with the contract open on a laptop, phone in hand, copying
-        numbers written in provider language. A tariff can have two periods a
-        year, two groups of weekdays in each, and up to four time slots a day.
-        Leave fifteen minutes out anywhere and the wallbox has no price for them.
-        The obvious design, a stack of from/to fields, hands all of that checking
-        to the user.`,
-      quote: `When I plug in at home, I want the wallbox to charge at the cheapest
-        times, so I save money without planning anything.`,
-      attribution: 'The job story behind the brief',
-      context: [
-        { title: 'Who', desc: 'EV owners with a wallbox and mixed tech confidence. They do this once, then again whenever the contract changes.' },
-        { title: 'What good looks like', desc: 'The tariff is saved correctly on the first try, with zero coverage errors, and afterwards the user can tell you when charging is cheapest.' },
-      ],
-    },
+    /* ---------------- 4–13. The story, one step per section ---------------- */
+    story: [
+      /* 4. The problem: the moment, one number, what was wrong with the
+         obvious design. The tariff is the file's example, with fifteen
+         minutes left out, as a from/to form allows. */
+      {
+        id: 'hard',
+        label: 'What makes it hard',
+        title: 'It looks like a form. It’s a transcription job.',
+        line: 'People copy up to sixteen prices off a paper contract, and from/to fields leave every gap for them to catch.',
+        visual: {
+          type: 'tariffGap',
+          factors: [
+            { value: '2', label: 'Periods a year' },
+            { value: '2', label: 'Day groups in each' },
+            { value: '4', label: 'Time slots a day' },
+          ],
+          total: { value: '16', label: 'Prices, at most' },
+          caption: 'The obvious design · illustrative',
+          slots: [
+            { from: 0, to: 6, price: 24 },
+            { from: 6, to: 18, price: 35 },
+            { from: 18.25, to: 22, price: 40 },
+            { from: 22, to: 24, price: 24 },
+          ],
+          gapLabel: 'No price',
+        },
+      },
 
-    /* ---------------- 4. A few screens, as a ticker ---------------- */
-    ticker: {
-      screens: [
-        { code: 'F1', title: 'Intro', image: 'assets/offpeak/f1.png',
-          alt: 'The intro screen: “Charge when electricity is cheapest”, a 24-hour price bar, the three questions the flow will ask, and a Start button.' },
-        { code: 'F2', title: 'Does your price change during the year?', image: 'assets/offpeak/f2.png',
-          alt: 'Step 1 of 4, periods: a yes/no choice between one set of prices all year and two periods, Peak and Off-peak.' },
-        { code: 'F3', title: 'Two start dates split the year', image: 'assets/offpeak/f3.png',
-          alt: 'Step 1 of 4, periods: a year ribbon split into Off-peak and Peak, with the start dates editable and the end dates filled in automatically.' },
-        { code: 'F4', title: 'Days as two groups', image: 'assets/offpeak/f4.png',
-          alt: 'Step 2 of 4, days: Monday to Thursday in group 1 and Friday to Sunday in group 2, one tap to move a day between groups.' },
-      ],
-    },
+      /* 5. The bar: the problem statement and its testable limits. */
+      {
+        id: 'bar',
+        label: 'Problem statement',
+        title: 'Zero gaps, saved on the first try.',
+        line: 'How might we get the tariff saved right the first time, so the owner then knows when charging is cheapest?',
+        visual: {
+          type: 'stats',
+          items: [
+            { value: '0', label: 'Gaps or overlaps in the saved tariff' },
+            { value: '1st', label: 'Try: the tariff is saved correctly' },
+            { value: '22–06', label: 'Afterwards, the owner can name the cheapest hours. Example tariff.' },
+          ],
+        },
+      },
 
-    /* ---------------- 5. Under NDA ---------------- */
-    nda: {
-      eyebrow: 'Under NDA',
-      title: 'The rest of this one is best told in person.',
-      intro: `This project is under NDA, so the page stops at the brief and a few
-        screens. I’d love to walk you through the full process on a call.`,
-      cta: 'Let’s set up a call',
-      url: 'mailto:sayhi@niteshdixit.in?subject=Tariff%20Based%20EV%20Charging%20case%20study',
-      points: [
-        { title: 'The framing', desc: 'How the problem was broken down, and the idea that shaped every screen.' },
-        { title: 'The directions', desc: 'The concepts I explored, and how I chose between them.' },
-        { title: 'The full flow', desc: 'Every screen end to end, including the edge cases and how each one is handled.' },
-        { title: 'The handover', desc: 'The custom components, their states and how they were specced for build.' },
+      /* 6. Insight: the research boards, as they are in the file. */
+      {
+        id: 'insight',
+        label: 'Research',
+        title: 'Every level has to add up to a whole.',
+        line: 'Periods fill the year, day groups fill the week, slots fill the day. Three boards of research sit behind that rule.',
+        visual: {
+          type: 'boards',
+          label: 'Three research boards',
+          items: [
+            { code: '01', label: 'The brief, the data model and the key insight', image: 'assets/offpeak/board-brief.webp', size: [1440, 1648],
+              alt: 'Research board 1: the job story, who it is for, what success looks like, the data model behind every tariff, the key insight, design principles and the edge cases found in two sample tariffs.' },
+            { code: '02', label: 'Nine patterns for entering rule-bound data', image: 'assets/offpeak/board-input.webp', size: [1440, 1612],
+              alt: 'Research board 2: how good products let people enter structured data on a phone, nine patterns from interview-style questions to direct manipulation with snapping.' },
+            { code: '03', label: 'Nine ways to show sixteen prices on a phone', image: 'assets/offpeak/board-dataviz.webp', size: [1440, 1972],
+              alt: 'Research board 3: showing 16 prices across 8,760 hours on a 390 px screen, nine chart patterns and a table of which chart does which job.' },
+          ],
+        },
+      },
+
+      /* 7. Explorations: three directions at the same step, scored, then
+         the sketches they came from and the scorecard, on one tray. */
+      {
+        id: 'explorations',
+        label: 'Explorations',
+        title: 'Eight sketches. Three directions. One score.',
+        line: 'Eight ideas in eight minutes. Three went to low-fi and were scored against the problem statement.',
+        visuals: [
+          {
+            type: 'compare',
+            label: 'The same step three ways: entering times and prices',
+            items: [
+              { tag: 'A', title: 'Form-based wizard', score: 2.85, image: 'assets/offpeak/dir-a-wizard.webp',
+                alt: 'Direction A, low-fi: time slots typed as From, To and price fields, with a note that 18:00 to 22:00 is not covered yet.',
+                verdict: 'About 32 values to type, and a gap only shows up as a warning.' },
+              { tag: 'B', title: 'Tariff builder', score: 2.75, image: 'assets/offpeak/dir-b-builder.webp',
+                alt: 'Direction B, low-fi: a section editor for Peak, Tuesday to Friday, with day chips and a list of time slots.',
+                verdict: 'Mirrors the bill, but starts on a blank page with the same gap risk.' },
+              { tag: 'C', title: 'Guided timeline', score: 4.25, chosen: true, image: 'assets/offpeak/dir-c-timeline.webp',
+                alt: 'Direction C, low-fi: drag to set times on a 24-hour bar split into 24, 35 and 40 ct, with the slots listed below.',
+                verdict: 'Gaps can’t happen, and about 18 values to type.' },
+            ],
+          },
+          {
+            type: 'boards',
+            label: 'Where they came from, and how they were scored',
+            items: [
+              { code: '01', image: 'assets/offpeak/board-crazy8.webp', size: [1696, 445],
+                alt: 'Crazy-8 sketches: form rows, a tariff tree, a 24-hour bar, a radial clock, paint the grid, a chat assistant, scan the bill and a provider picker.',
+                caption: 'Crazy-8s. Three became directions A, B and C, three were discarded and two were parked for v2.' },
+              { code: '02', image: 'assets/offpeak/board-scorecard.webp', size: [2010, 1065],
+                alt: 'The scorecard: seven criteria with weights, scores for the wizard, the builder and the timeline, and weighted totals of 2.85, 2.75 and 4.25.',
+                caption: 'The scorecard: seven criteria, weighted. Error prevention counts most, because every minute must be covered.' },
+            ],
+          },
+        ],
+      },
+
+      /* 8. The turning point: the reframe, drawn on the file's example
+         tariff (F3's dates, F4's groups), with a day to try. */
+      {
+        id: 'turn',
+        label: 'The turning point',
+        title: 'A whole you split, never a list you fill in.',
+        line: 'The UI only ever lets people split a whole, so a gap can’t happen. Try it: drag a split on the day.',
+        visual: {
+          type: 'tariffSplit',
+          rows: [
+            {
+              kind: 'year',
+              label: 'Year',
+              note: 'Two start dates. Every day belongs to a period.',
+              periods: [
+                { name: 'Off-peak', days: 59 },
+                { name: 'Peak', days: 245, part: 2, start: '1 Mar' },
+                { name: 'Off-peak', days: 61, start: '1 Nov' },
+              ],
+            },
+            {
+              kind: 'week',
+              label: 'Week',
+              note: 'Two groups. Every day sits in one.',
+              days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+              groups: [1, 1, 1, 1, 2, 2, 2],
+            },
+            {
+              kind: 'day',
+              label: 'Day',
+              note: 'Up to four slots. Drag a split: the day stays whole.',
+              live: true,
+              slots: [
+                { from: 0, to: 6, price: 24 },
+                { from: 6, to: 18, price: 35 },
+                { from: 18, to: 22, price: 40 },
+                { from: 22, to: 24, price: 24 },
+              ],
+            },
+          ],
+        },
+      },
+
+      /* 9. Details, part one: the editor's one gesture, step by step,
+         from the Design Decisions page. */
+      {
+        id: 'editor',
+        label: 'Details',
+        title: 'One gesture splits the day and prices it.',
+        line: 'Drag sideways to split, drag up or down to set the price. No add buttons, no forms.',
+        visual: {
+          type: 'strip',
+          label: 'The drag editor, step by step',
+          screens: [
+            { title: 'Start with one line', desc: 'The day starts whole: one slot, 00:00 to 24:00.', image: 'assets/offpeak/drag-01.webp',
+              alt: 'Editor step 1: the day as one line from 00:00 to 24:00, with a hint to press and drag sideways to split it.' },
+            { title: 'Split the day', desc: 'Drag sideways on the line to cut it in two.', image: 'assets/offpeak/drag-02.webp',
+              alt: 'Editor step 2: a split dragged to 06:00, making two slots, 00:00 to 06:00 and 06:00 to 24:00.' },
+            { title: 'Add more splits', desc: 'Four parts now, still exactly 24 hours.', image: 'assets/offpeak/drag-03.webp',
+              alt: 'Editor step 3: splits at 06:00, 18:00 and 22:00, with a hint to drag each part up or down to set its price.' },
+            { title: 'Drag up to set a price', desc: 'Height is price. The list below reads it out.', image: 'assets/offpeak/drag-04.webp',
+              alt: 'Editor step 4: the first part dragged up to 24 ct/kWh, the slot list updating below.' },
+            { title: 'Linked across midnight', desc: 'The night slot runs 22:00 to 06:00 as one.', image: 'assets/offpeak/drag-05.webp',
+              alt: 'Editor step 5: the slots before 06:00 and after 22:00 linked across midnight at 24 ct.' },
+            { title: 'All prices set', desc: '24 hours covered, and the screen says so.', image: 'assets/offpeak/drag-06.webp',
+              alt: 'Editor step 6: every part priced at 24, 35 and 40 ct, with a “24 hours covered” confirmation.' },
+            { title: 'Fine-tune by dragging', desc: 'Move a split and both neighbours follow.', image: 'assets/offpeak/drag-07.webp',
+              alt: 'Editor step 7: a split dragged from 18:00 to 17:00, the times on both sides updating.' },
+            { title: 'Drag a split off to remove it', desc: 'Drop it below the bar to delete it.', image: 'assets/offpeak/drag-08.webp',
+              alt: 'Editor step 8: a split dragged down into a “Drop to remove” zone.' },
+            { title: 'Limit reached', desc: 'Four slots a day, flagged before anything breaks.', image: 'assets/offpeak/drag-09.webp',
+              alt: 'Editor step 9: a “Max 4 slots per day” label when a fifth split is attempted.' },
+          ],
+        },
+      },
+
+      /* 9. Details, part two: the shipped flow, the map first. */
+      {
+        id: 'final-flow',
+        label: 'The final flow',
+        title: 'From a paper bill to a plugged-in car.',
+        line: 'Thirteen hi-fi screens in three parts. The map first, then every step.',
+        visuals: [
+          {
+            type: 'chapters',
+            label: 'The map, then 13 shipped screens',
+            chapters: [
+              {
+                eyebrow: 'The map',
+                title: 'One loop per period and day group',
+                line: 'Then review, save and sync.',
+                sheets: [
+                  { image: 'assets/offpeak/board-userflow.webp', size: [2504, 1560],
+                    alt: 'The final user flow: entry, intro, period and day questions, a loop of times and prices per day group and per period, then review, sync and the tariff overview.' },
+                ],
+              },
+              {
+                eyebrow: 'Part 1 · Set the frame',
+                title: 'Questions in the bill’s own words',
+                line: 'Every answer takes work off the next step.',
+                screens: [
+                  { code: '01', title: 'Intro', desc: 'Three questions up front, and the bill to hand.', image: 'assets/offpeak/hf-f1-intro.webp',
+                    alt: 'Intro: “Charge when electricity is cheapest”, the three questions the flow will ask, and a Start button.' },
+                  { code: '02', title: 'Period choice', desc: 'One answer decides one period or two.', image: 'assets/offpeak/hf-f2-period-choice.webp',
+                    alt: 'Does your price change during the year? A choice between the same price all year and two periods.' },
+                  { code: '03', title: 'Period dates', desc: 'Two start dates. The end dates fill themselves in.', image: 'assets/offpeak/hf-f3-period-dates.webp',
+                    alt: 'When does each period start? A year ribbon with Off-peak from 1 November and Peak from 1 March, end dates filled in.' },
+                  { code: '04', title: 'Start-date picker', desc: 'Day and month on a wheel. No typing.', image: 'assets/offpeak/hf-f3a-date-picker.webp',
+                    alt: 'A wheel picker for the Off-peak start date, noting that the period then ends on 28 or 29 February automatically.' },
+                  { code: '05', title: 'Days', desc: 'Tap the days that have their own prices.', image: 'assets/offpeak/hf-f4-days.webp',
+                    alt: 'Do prices differ between weekdays? Day chips with Friday to Sunday set as weekends.' },
+                ],
+              },
+              {
+                eyebrow: 'Part 2 · Split the day',
+                title: 'Split, price, then copy across',
+                line: 'The editor does the hard part once. Copying does the rest.',
+                screens: [
+                  { code: '06', title: 'Times & prices', desc: 'Split and priced, with 24 hours covered.', image: 'assets/offpeak/hf-f5-times-prices.webp',
+                    alt: 'Set times and prices for Off-peak weekends: a bar split into 24, 35 and 40 ct, “24 hours covered”, and the three slots.' },
+                  { code: '07', title: 'Checkpoint', desc: 'One group done. Copy its times or start fresh.', image: 'assets/offpeak/hf-f8-checkpoint.webp',
+                    alt: 'Checkpoint: Off-peak weekends complete, with exact prices per slot, and a choice to copy the times or use one price all day.' },
+                  { code: '08', title: 'Copied times', desc: 'The times come across. Only prices to add.', image: 'assets/offpeak/hf-f7-copied-times.webp',
+                    alt: 'Set times and prices for weekdays: times copied from Friday to Sunday, prices still to add.' },
+                  { code: '09', title: 'Slot sheet', desc: 'Tap instead of drag: from, to and price in a sheet.', image: 'assets/offpeak/hf-f7-copied-times-2.webp',
+                    alt: 'A bottom sheet to add a time and price: from 22:00, to 06:00, price per kWh with a ct or € switch.' },
+                ],
+              },
+              {
+                eyebrow: 'Part 3 · Review, save, sync',
+                title: 'See what the car will do',
+                line: 'Check the tariff, save it, and get tonight’s plan.',
+                screens: [
+                  { code: '10', title: 'Review', desc: 'Cheapest prices first, then every slot by number.', image: 'assets/offpeak/hf-f9-review.webp', ratio: '390 / 1013',
+                    alt: 'Check your tariff: the cheapest prices for weekends and weekdays, then each day group with its slots and price-hours bar.' },
+                  { code: '11', title: 'Saved', desc: 'The cheapest window for every season and day group.', image: 'assets/offpeak/hf-f10-saved.webp',
+                    alt: 'Tariff saved: when charging is cheapest in Off-peak and Peak, for weekends and weekdays, and a prompt to sync the wallbox.' },
+                  { code: '12', title: 'Syncing', desc: 'A few seconds while the wallbox picks it up.', image: 'assets/offpeak/hf-c0-syncing.webp',
+                    alt: 'Syncing your tariff to the wallbox, which usually takes a few seconds.' },
+                  { code: '13', title: 'All set', desc: 'Tonight’s charging window and price, up front.', image: 'assets/offpeak/hf-c1-all-set.webp', ratio: '390 / 977',
+                    alt: 'You’re all set: tonight’s charging window from 22:00 to 06:00 at 27 ct/kWh, and the charging schedule by season.' },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+
+      /* 9. Details, part three: what can still go wrong. */
+      {
+        id: 'edge-states',
+        label: 'Edge states',
+        title: 'What can still go wrong, and how it’s caught.',
+        line: 'Partitions rule out gaps. Everything else gets a calm, specific answer.',
+        visual: {
+          type: 'chapters',
+          label: 'Six states, while entering and after saving',
+          chapters: [
+            {
+              eyebrow: 'While entering',
+              title: 'Caught on the slot, not in an error list',
+              screens: [
+                { code: 'S1', title: 'Missing price', desc: 'The one error left by design, flagged on the slot itself.', image: 'assets/offpeak/edge-s1-missing-price.webp',
+                  alt: 'A slot from 18:00 to 22:00 without a price, flagged on the bar and the row, with “Add a price for 18:00 – 22:00 to continue”.' },
+                { code: 'S2', title: 'Unit check', desc: '24 €/kWh? A one-tap fix to 24 ct, not a blocking error.', image: 'assets/offpeak/edge-s2-unit-check.webp',
+                  alt: 'A price of 24 entered in euros, with “24 €/kWh is unusually high. Did you mean 24 ct/kWh?” and buttons for each.' },
+                { code: 'S4', title: 'Flat tariff', desc: 'One price all year, and honest that charging starts at plug-in.', image: 'assets/offpeak/edge-s4-flat.webp',
+                  alt: 'What do you pay per kWh? One price for every hour, with a note that charging starts as soon as the car is plugged in.' },
+              ],
+            },
+            {
+              eyebrow: 'After saving',
+              title: 'Clear about what the wallbox has',
+              screens: [
+                { code: 'E1', title: 'Replace tariff', desc: 'The current tariff stays active until the new one syncs.', image: 'assets/offpeak/edge-replace.webp',
+                  alt: 'Replace your tariff? The current tariff stays active on the wallbox until a new one is saved and synced.' },
+                { code: 'E2', title: 'Sync pending', desc: 'Nothing is lost: saved in the app, retried automatically.', image: 'assets/offpeak/edge-sync-pending.webp',
+                  alt: 'Tariff saved, not on your wallbox yet: saved in the app and retried automatically, with things worth checking.' },
+                { code: 'E3', title: 'Car not plugged in', desc: 'Synced, and clear that charging starts when the car does.', image: 'assets/offpeak/edge-not-plugged.webp',
+                  alt: 'You’re all set, waiting for your car: charging starts when you plug in, at 21 ct/kWh today.' },
+              ],
+            },
+          ],
+        },
+      },
+
+      /* 10. What we cut: the discarded ideas, each with the reason. What
+         changed after review sits in Outcomes, inside the evidence for its
+         figures. */
+      {
+        id: 'cut',
+        label: 'What we cut',
+        title: 'Every discarded idea left something behind.',
+        line: 'The radial clock and the paint grid lost early. After review, the heatmaps went too.',
+        visuals: [
+          {
+            type: 'boards',
+            label: 'Discarded, each with the reason',
+            items: [
+              { code: '01', image: 'assets/offpeak/board-discarded.webp', size: [1696, 392],
+                alt: 'Discarded: the radial 24-hour clock and paint the grid, each with why I tried it, why it lost and what it left in the final design.',
+                caption: 'Two tempting ideas I threw away. The clock’s midnight insight and the grid’s heatmap both stayed.' },
+              { code: '02', image: 'assets/offpeak/board-dropped.webp', size: [1696, 297],
+                alt: 'Other ideas dropped along the way: a chat assistant, one tab per weekday, a vertical timeline, typed period dates, and scan-the-bill parked for v2.',
+                caption: 'Other ideas dropped along the way, each with the reason.' },
+            ],
+          },
+        ],
+      },
+
+      /* 11. Outcomes: the figures (historical, from the author; 60% and 90%
+         exactly as the review note in the Figma file words them), the
+         review behind those two, credit shared, and the system it was
+         handed over as. */
+      {
+        id: 'outcomes',
+        label: 'Outcomes',
+        title: '200+ customers onboarded. No minute goes without a price.',
+        line: 'Built and shipped with a product manager and engineers. These are historical figures, not live data.',
+        visuals: [
+          {
+            type: 'stats',
+            items: [
+              { value: 200, suffix: '+', label: 'Customers onboarded to the feature' },
+              { value: 60, suffix: '%', label: 'Increase in user satisfaction' },
+              { value: 90, suffix: '%', label: 'Reduction in task complexity' },
+            ],
+          },
+          /* The review in the Figma file (Design Decisions → "Review
+             updated"): its own three screens, and the note quoted word for
+             word where it gives the figures. */
+          {
+            type: 'evidence',
+            label: 'The evidence: the review in the Figma file',
+            beforeLabel: 'Mid-fi',
+            afterLabel: 'Shipped',
+            before: [
+              { code: '09', title: 'Chart', desc: 'Heat maps didn’t add much value. The exact price wasn’t shown properly.',
+                image: 'assets/offpeak/was-review-chart.webp', ratio: '788 / 1705',
+                alt: 'Mid-fi review, chart view: the cheapest price called out, a week-by-hour heatmap with a five-step colour key, and each day group’s prices on one line.' },
+              { code: '10', title: 'Table', desc: 'Very easy to perceive, but no way to edit the price.',
+                image: 'assets/offpeak/review-10-table.webp', ratio: '788 / 1705',
+                alt: 'Mid-fi review, table view: each period’s day groups with their time slots and exact prices, 24 to 42 ct/kWh, and no way to edit a price.' },
+            ],
+            after: { code: 'F9', title: 'Hybrid', desc: 'Clear numbers on every slot, colours as a visual cue, a toggle for the seasons.',
+              image: 'assets/offpeak/review-f9-hybrid.webp', ratio: '780 / 1918',
+              alt: 'Shipped review: an Off-peak and Peak toggle, the cheapest prices first, then each day group’s time slots with exact prices, an edit button and a coloured 24-hour price bar.' },
+            quote: 'Showing exact price against each slot increased the user satisfaction by <b>60%</b> and reduced the task complexity by <b>90%</b>.',
+            cite: 'Review note · Design Decisions page',
+            href: 'https://www.figma.com/design/YXv8WqRuNMctzHyAyVofZ7/EV-tariff?node-id=351-712',
+            /* Changed in the same round of review, each pair captioned with
+               its own note from the file (Design Decisions → "Chekpoint
+               update" and "Successfull sync"). */
+            pairs: {
+              label: 'Changed after review',
+              beforeLabel: 'Mid-fi',
+              afterLabel: 'Shipped',
+              items: [
+                { title: 'The checkpoint lost its heatmap',
+                  why: 'Heat maps didn’t show any value; the price became very vague. Showing exact value against the slot in a tabular format, on the other hand, was very easy to perceive.',
+                  before: { image: 'assets/offpeak/was-checkpoint.webp', alt: 'Mid-fi checkpoint: a heatmap of the finished period.' },
+                  after: { image: 'assets/offpeak/hf-f8-checkpoint.webp', alt: 'Shipped checkpoint: the finished group’s slots with exact prices.' } },
+                { title: '“All set” got specific',
+                  why: 'A synced wallbox screen was not so informative. The earlier effort seemed useless without an acknowledgment of what exactly was fed to the system.',
+                  before: { image: 'assets/offpeak/was-all-set.webp', alt: 'Mid-fi “You’re all set” screen with a short confirmation.' },
+                  after: { image: 'assets/offpeak/hf-c1-all-set.webp', alt: 'Shipped “You’re all set” screen with tonight’s charging window and price.' } },
+              ],
+            },
+          },
+          {
+            type: 'boards',
+            label: 'Handed over as a system: 14 colour variables, 12 text styles, 17 product components',
+            items: [
+              { code: 'A', label: 'Colour variables', image: 'assets/offpeak/board-colours.webp', size: [2680, 1264],
+                alt: 'Design system: 14 colour variables, from the core teal and the price colours to the critical red.' },
+              { code: 'B', label: 'Product components', image: 'assets/offpeak/board-components.webp', size: [2680, 1381],
+                alt: 'Design system: the product components, including buttons, card buttons, day toggles, price inputs and price slot rows.' },
+            ],
+          },
+        ],
+      },
+
+      /* 12. After launch: what's still open, labelled as notes. */
+      {
+        id: 'after-launch',
+        label: 'After launch',
+        title: 'Next, nobody types a tariff at all.',
+        line: 'Still open: sketches 7 and 8. Scan the bill or pick the provider’s plan, then check it on the same review screen.',
+        visual: {
+          type: 'routes',
+          from: ['Scan the bill', 'Pick the provider’s plan'],
+          to: 'Same review screen, nothing typed',
+          tag: 'Parked for v2: both need data partnerships.',
+        },
+      },
+
+      /* 13. Reflection. */
+      {
+        id: 'reflection',
+        label: 'Reflection',
+        quote: 'The best error message is the one the design never has to show.',
+      },
+    ],
+
+    figma: {
+      eyebrow: 'Go deeper',
+      title: 'The thinking lives in the Figma file.',
+      intro: `This page is the short version. The file holds all of it: the research,
+        the sketches, three directions, every final screen and the hand-off.`,
+      cta: 'Explore Figma file',
+      url: 'https://www.figma.com/design/YXv8WqRuNMctzHyAyVofZ7/EV-tariff?node-id=313-4504&t=HfaH4HLDPM01v90e-1',
+      reasons: [
+        { title: 'Read the research', desc: 'The brief and data model, nine input patterns and nine ways to chart sixteen prices.' },
+        { title: 'Follow the decisions', desc: 'Crazy-8s, three low-fi directions, the scorecard and what changed after review.' },
+        { title: 'Walk the whole flow', desc: 'Every hi-fi screen, the drag editor step by step, and the edge states.' },
+        { title: 'Check the hand-off', desc: 'The design system and the annotated dev hand-off.' },
       ],
     },
 
     sections: {
-      overview: { label: 'Introduction' },
-      problem: { label: 'Problem Statement' },
-      screens: {
-        label: 'Screens',
-        title: 'A few screens from the flow',
-        intro: 'Select any screen to open it at full resolution.',
+      overview: {
+        label: 'The short version',
+        title: 'Every minute of the year needs a price.',
       },
-      nda: { label: 'The Full Story' },
+      'figma-file': { label: 'The Figma file' },
     },
-
     next: 'codeflow',
   },
 

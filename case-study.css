@@ -2314,6 +2314,1000 @@
   .case-explore-expand { transition-duration: 0.01ms !important; }
 }
 
+/* ================= 11c. STORY STEPS =================
+   A case told in short steps (case-study.js 7d): each step is a section
+   with one supporting line and one visual. The tariff visuals reuse the
+   EV cover's hour bar, so the problem, the turn and the cover speak one
+   language. A step under NDA is a smaller plate with a redacted sheet. */
+
+/* ---- Hour bars: the cover's segments, placed at exact positions ---- */
+.story-bar { position: relative; height: 26px; }
+.story-bar .charge-seg { position: absolute; top: 0; bottom: 0; }
+.story-bar .charge-seg.is-gap {
+  min-width: 4px;
+  padding: 0;
+  background: repeating-linear-gradient(135deg, var(--c-signal) 0 1.5px, transparent 1.5px 4px);
+  box-shadow: inset 0 0 0 1px var(--c-signal);
+}
+
+/* ---- The problem: the sum on the left, the obvious design on the right ---- */
+.story-gap {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1fr);
+  column-gap: clamp(2.5rem, 7vw, 7rem);
+  row-gap: 3.5rem;
+  align-items: start;
+}
+.story-sum { display: grid; justify-items: start; }
+.story-sum-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1.1rem;
+}
+.story-sum-row b {
+  flex: 0 0 1.45em;
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 300;
+  font-size: clamp(2.5rem, 1.5rem + 2.8vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-fg);
+}
+.story-sum-row span,
+.story-sum-op {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.story-sum-op {
+  padding: 0.25rem 0 0.4rem 0.3rem;
+  font-size: clamp(0.95rem, 0.85rem + 0.3vw, 1.15rem);
+  line-height: 1;
+}
+/* The rule under the factors does the work of "=", like a sum on paper. */
+.story-sum-row.is-total {
+  width: 100%;
+  margin-top: 0.9rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--c-line-2);
+}
+.story-sum-row.is-total b { color: var(--cs-accent); }
+.story-sum-row.is-total span { color: var(--c-fg); }
+
+.story-form { min-width: 0; margin: 0; }
+.story-form .case-label { margin-bottom: 1rem; }
+.story-form-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-fg);
+}
+.story-form-table th {
+  padding: 0 0.9rem 0.15rem;
+  font-size: var(--fs-label);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+/* Each row reads as one input split into three fields. */
+.story-form-table td {
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--c-line-2);
+  border-right-width: 0;
+  background: rgba(236, 233, 226, 0.025);
+}
+.story-form-table td:last-child { border-right-width: 1px; }
+.story-form-table tr.is-late td:first-child {
+  color: var(--c-signal);
+  background: var(--c-signal-soft);
+  box-shadow: inset 0 0 0 1px var(--c-signal);
+}
+
+/* The day under the form, with a flag where no slot reaches. */
+.story-day {
+  position: relative;
+  margin-top: 2.25rem;
+  padding-top: 2.4rem;
+}
+.story-gap-flag {
+  position: absolute;
+  bottom: calc(100% - 2.4rem);
+  right: calc(100% - var(--at) - 2px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--c-signal);
+}
+.story-gap-flag::after {
+  content: '';
+  width: 1px;
+  height: 0.75rem;
+  margin-top: 0.35rem;
+  background: var(--c-signal);
+}
+
+/* ---- The turn: year, week and day, each one whole that gets split ---- */
+.story-split { display: grid; row-gap: clamp(1.75rem, 3.6vw, 2.5rem); }
+.story-split-row {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) minmax(0, 15rem);
+  column-gap: var(--cs-gap);
+  align-items: center;
+  padding-top: clamp(1.25rem, 2.4vw, 1.75rem);
+  border-top: 1px solid var(--c-line);
+}
+.story-split-row > .case-label { margin: 0; color: var(--c-fg); }
+.story-split-track { min-width: 0; }
+.story-split-note {
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  color: var(--c-fg-2);
+}
+
+/* Two parts of a whole: the first lit, the second muted. Prices keep
+   their own colours on the hour bar, so no season or day group looks
+   cheaper than the tariff says. */
+.story-ribbon {
+  position: relative;
+  height: 26px;
+  margin-top: 1.7rem;
+}
+.story-ribbon > span,
+.story-week > span {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.story-ribbon > span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 0.55rem;
+  overflow: hidden;
+}
+.story-ribbon > .is-a,
+.story-week > .is-a { background: rgba(236, 233, 226, 0.82); color: var(--c-ink); }
+.story-ribbon > .is-b,
+.story-week > .is-b { background: rgba(236, 233, 226, 0.12); color: var(--c-fg-2); }
+/* A start date: a handle on the boundary, labelled like the cover's playhead. */
+.story-mark {
+  position: absolute;
+  top: -7px;
+  bottom: -7px;
+  width: 2px;
+  margin-left: -2px;
+  font-style: normal;
+  background: var(--c-fg);
+}
+.story-mark b {
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.32rem 0.45rem 0.28rem;
+  background: var(--c-fg);
+  color: var(--c-ink);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.story-months {
+  position: relative;
+  height: 1.5rem;
+  margin-top: 0.4rem;
+  padding-top: 0.75rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  color: var(--c-fg-3);
+  border-top: 1px solid var(--c-line-2);
+}
+/* A tick at the start of each month, its letter beside it. */
+.story-months span { position: absolute; top: 0.75rem; padding-left: 0.3rem; }
+.story-months span::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -0.75rem;
+  width: 1px;
+  height: 6px;
+  background: var(--c-fg-3);
+}
+.story-week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+}
+.story-week > span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  height: 3rem;
+}
+.story-week small { font-size: 0.5625rem; opacity: 0.75; }
+
+/* ---- Stat callouts: words sit smaller than figures, on one baseline ---- */
+.story-stats .case-impact-num-row {
+  align-items: flex-end;
+  min-height: clamp(3rem, 1.4rem + 4.6vw, 6.75rem);
+}
+.story-stats .case-impact-num.is-word {
+  font-size: clamp(1.9rem, 1rem + 2.6vw, 3.6rem);
+  letter-spacing: -0.01em;
+}.story-stat-lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-2);
+}
+.story-stat-lock svg {
+  width: clamp(1.75rem, 1.1rem + 1.6vw, 2.6rem);
+  height: auto;
+  color: var(--c-signal);
+}
+
+/* ---- After launch: the ways in, an arrow, the one result ---- */
+.story-routes {
+  display: grid;
+  grid-template-columns: auto minmax(3.5rem, 1fr) auto;
+  align-items: center;
+  column-gap: clamp(1rem, 2.4vw, 2rem);
+  max-width: 60rem;
+}
+.story-routes-from { display: grid; row-gap: 0.55rem; }
+.story-routes-or {
+  padding-left: 1.2rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.story-chip {
+  display: flex;
+  align-items: center;
+  min-height: 3.25rem;
+  padding: 0.8rem 1.2rem;
+  border: 1px solid var(--c-line-2);
+  background: rgba(236, 233, 226, 0.03);
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-size: clamp(1rem, 0.9rem + 0.4vw, 1.2rem);
+  line-height: 1.25;
+  color: var(--c-fg);
+}
+.story-chip.is-result {
+  border-color: var(--cs-accent);
+  box-shadow: inset 3px 0 0 var(--cs-accent);
+}
+.story-routes-arrow {
+  position: relative;
+  display: block;
+  height: 9px;
+  color: var(--c-fg-3);
+}
+.story-routes-arrow::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: currentColor;
+}
+.story-routes-arrow i {
+  position: absolute;
+  left: 0;
+  right: 1px;
+  top: 4px;
+  height: 1px;
+  background: currentColor;
+}
+.story-routes-arrow::after {
+  content: '';
+  position: absolute;
+  right: 1px;
+  top: 4.5px;
+  width: 6px;
+  height: 6px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: translate(0, -50%) rotate(45deg);
+}
+.story-routes-tag { margin-top: 1.75rem; }
+
+/* ---- Reflection: one belief, set large on a redline edge ---- */
+.story-quote {
+  position: relative;
+  max-width: 24em;
+  margin-top: 0;
+  padding-left: clamp(1.25rem, 2.6vw, 2.25rem);
+  border-left: 1px solid var(--c-line-2);
+}
+.story-quote::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 0;
+  width: 1px;
+  height: 2.4rem;
+  background: var(--c-signal);
+  box-shadow: 0 0 12px var(--c-signal-soft);
+}
+
+/* ---- A step under NDA: a smaller plate, the work redacted ---- */
+.case-story.is-locked { padding-block: calc(var(--section-pad) * 0.6); }
+.story-locked {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+  column-gap: clamp(2rem, 5vw, 5rem);
+  row-gap: 2rem;
+  align-items: center;
+  padding: clamp(1.5rem, 3.4vw, 3rem);
+  border: 1px solid var(--c-line-2);
+  outline: 1px solid var(--c-line);
+  outline-offset: -8px;
+  background: linear-gradient(180deg, rgba(236, 233, 226, 0.035), rgba(236, 233, 226, 0) 55%);
+}
+.story-locked-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  color: var(--c-fg-2);
+}
+.story-locked-eyebrow svg { color: var(--c-signal); }
+.story-locked h3 {
+  margin: clamp(1rem, 2vw, 1.4rem) 0 0.85rem;
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 400;
+  font-size: clamp(1.3rem, 0.8rem + 1.5vw, 2.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  color: var(--c-fg);
+  text-wrap: balance;
+}
+.story-locked p {
+  max-width: 44ch;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--c-fg-2);
+}
+.story-locked .case-figma-cta { margin-top: clamp(1.25rem, 2.4vw, 1.75rem); }
+.story-redact {
+  display: grid;
+  grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr));
+  gap: 0.6rem;
+}
+.story-redact-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  height: clamp(7.5rem, 13vw, 11.5rem);
+  padding: 0.8rem;
+  border: 1px solid var(--c-line);
+  background: repeating-linear-gradient(135deg, rgba(236, 233, 226, 0.035) 0 1px, transparent 1px 7px);
+}
+.story-redact-tile i { display: block; height: 0.5rem; background: var(--c-fg-4); }
+.story-redact-tile i:nth-of-type(2) { width: 72%; }
+.story-redact-tile i:nth-of-type(3) { width: 46%; }
+.story-redact-tile b {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.8rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--c-fg-3);
+}
+
+/* ---- Blocks: a step can stack several visuals ---- */
+.story-block + .story-block { margin-top: var(--cs-block); }
+.story-block-label { margin-bottom: 1.5rem; }
+
+/* ---- The try-it day: handles on the splits of the hour bar ---- */
+.story-live { position: relative; }
+.story-live-handles {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 26px;
+}
+.story-handle {
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  width: 30px;
+  margin-left: -16px;          /* centred on the 2px gap before its slot */
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: ew-resize;
+  touch-action: none;
+}
+/* The line itself, and a grip in the middle of it. */
+.story-handle::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--c-fg);
+  box-shadow: 0 0 10px 1px rgba(255, 246, 234, 0.35);
+}
+.story-handle::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 18px;
+  border: 1px solid var(--c-fg);
+  border-radius: 6px;
+  background: var(--c-bg);
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s var(--ease-soft), background 0.3s var(--ease-soft);
+}
+.story-handle b {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.3rem 0.42rem 0.26rem;
+  background: var(--c-fg);
+  color: var(--c-ink);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease-soft);
+}
+.story-handle:hover b,
+.story-handle:focus-visible b,
+.story-handle.is-dragging b { opacity: 1; }
+.story-handle:hover::after,
+.story-handle.is-dragging::after { background: var(--cs-accent); transform: translate(-50%, -50%) scale(1.15); }
+.story-handle:focus-visible { outline: none; }
+.story-handle:focus-visible::after { box-shadow: 0 0 0 2px var(--c-bg), 0 0 0 3px var(--c-signal); }
+/* Until the first drag, the first grip breathes to say "try me". */
+.story-live:not(.is-touched) .story-handle:first-child::after { animation: story-nudge 2.4s var(--ease-soft) infinite; }
+@keyframes story-nudge {
+  0%, 60%, 100% { transform: translate(-50%, -50%); }
+  20% { transform: translate(calc(-50% - 5px), -50%); }
+  40% { transform: translate(calc(-50% + 5px), -50%); }
+}
+.story-live .story-bar .charge-seg { transition: none; }
+.story-live-readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin-top: 0.85rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.story-live-readout b { font-weight: 400; color: var(--cs-accent); }
+.story-live-readout b::before { content: '✓ '; }
+
+/* ---- Trays: the frames of one visual, kept small on one canvas ----
+   Like a zoomed-out view of the Figma file: a dotted canvas, a head that
+   names the group, and frames that open full size (13. ZOOM). Phones
+   share one width and boards one height range across the page, so no
+   single image is louder than the story around it. */
+.story-block.is-tray + .story-block.is-tray { margin-top: clamp(1rem, 2vw, 1.5rem); }
+.story-tray {
+  --tray-pad: clamp(1rem, 2.2vw, 2rem);
+  --tray-gap: clamp(0.75rem, 1.2vw, 1.1rem);
+  --frame-w: clamp(112px, 9.4vw, 144px);      /* a phone */
+  --strip-w: clamp(124px, 11.5vw, 172px);     /* a phone in the strip */
+  --sheet-min: 96px;                          /* a board's height: at least… */
+  --sheet-max: clamp(150px, 18vw, 260px);     /* …and at most */
+  position: relative;
+  padding: var(--tray-pad);
+  border: 1px solid var(--c-line);
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(236, 233, 226, 0.08) 1px, transparent 1.5px) 0 0 / 18px 18px,
+    var(--c-bg-2);
+}
+.story-tray-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.4rem 1.5rem;
+  margin-bottom: clamp(1.1rem, 2vw, 1.6rem);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.story-tray-label { color: var(--c-fg-2); }
+.story-tray-hint { flex: none; font-variant-numeric: tabular-nums; }
+.story-tray-hint .is-touch { display: none; }
+@media (hover: none) {
+  .story-tray-hint .is-touch { display: inline; }
+  .story-tray-hint .is-mouse { display: none; }
+}
+
+/* Phones in a tray: one width, a lift on hover, compact captions. */
+.story-tray .screen-slot { flex: none; width: var(--frame-w); }
+.story-tray .screen-slot-frame {
+  border-radius: clamp(12px, 1vw, 16px);
+  transition: transform 0.5s var(--ease-out);
+}
+.story-tray .screen-slot-frame:hover { transform: translateY(-3px); }
+.story-tray .screen-slot figcaption,
+.story-tray .story-strip-item figcaption {
+  display: block;
+  margin-top: 0.7rem;
+  padding-top: 0.55rem;
+}
+.story-tray figcaption .screen-slot-code { margin-right: 0.45rem; }
+.story-tray figcaption h4 {
+  display: inline;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+.story-tray figcaption p {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--c-fg-3);
+}
+.story-frames {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tray-gap);
+  align-items: flex-start;
+}
+
+/* Boards in a tray share a row at one height, between the two limits.
+   A row that stops short of the edge at --sheet-max sits centred. */
+.story-sheets {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--tray-gap) calc(var(--tray-gap) * 1.5);
+  align-items: flex-start;
+}
+.story-sheet {
+  min-width: 0;
+  margin: 0;
+  flex: var(--r) 1 calc(var(--r) * var(--sheet-min));
+  max-width: calc(var(--r) * var(--sheet-max));
+}
+.story-sheet-frame {
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--c-paper);
+  box-shadow: 0 0 0 1px var(--c-line-2), 0 24px 48px -28px rgba(0, 0, 0, 0.9);
+  transition: transform 0.5s var(--ease-out);
+}
+.story-sheet-frame img { display: block; width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
+.story-sheet-frame:hover { transform: translateY(-3px); }
+.story-sheet-frame:has(img:focus-visible) { outline: 1px solid var(--c-signal); outline-offset: 4px; }
+.story-sheet-frame img:focus-visible { outline: none; }
+.story-sheet figcaption {
+  margin-top: 0.7rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--c-fg-2);
+}
+
+/* Parts of a flow, side by side on the canvas while they fit. */
+.story-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.75rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 3rem);
+  align-items: flex-start;
+}
+.story-group { flex: 0 1 auto; min-width: 0; max-width: 100%; }
+/* The head wraps to its frames' width rather than widening the group. */
+.story-group-head {
+  contain: inline-size;
+  margin-bottom: 1rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--c-line-2);
+}
+.story-group-head .case-label { margin: 0 0 0.35rem; color: var(--c-signal); }
+.story-group-head h3 {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  color: var(--c-fg);
+}
+.story-group-head p {
+  margin-top: 0.3rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--c-fg-3);
+}
+/* A board in a group (the map) stands at the tallest board height. */
+.story-group .story-sheets { justify-content: flex-start; }
+.story-group .story-sheet { flex: none; width: calc(var(--r) * var(--sheet-max)); max-width: 100%; }
+
+/* ---- Directions at the same step, scored ---- */
+.story-compare {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: clamp(1.25rem, 2vw, 1.75rem) clamp(1rem, 2.4vw, 2.25rem);
+  align-items: start;
+}
+.story-option {
+  display: grid;
+  grid-template-columns: var(--frame-w) minmax(0, 1fr);
+  column-gap: clamp(0.85rem, 1.4vw, 1.25rem);
+  align-items: start;
+  min-width: 0;
+}
+.story-option-tag {
+  display: inline-grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 1px solid var(--c-line-2);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  color: var(--c-fg-2);
+}
+.story-option h3 {
+  margin: 0.65rem 0 1rem;
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.25;
+  color: var(--c-fg);
+}
+/* Losing directions sit back; the chosen one is lit. */
+.story-option:not(.is-chosen) .screen-slot-frame { filter: grayscale(0.4) brightness(0.82); }
+.story-option.is-chosen .story-option-tag { border-color: var(--cs-accent); color: var(--cs-accent); }
+.story-option.is-chosen .screen-slot-frame {
+  box-shadow: 0 0 0 1px var(--cs-accent), 0 20px 60px -24px color-mix(in srgb, var(--cs-accent) 45%, transparent);
+}
+.story-option-score {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  column-gap: 0.5rem;
+}
+.story-option-score b {
+  font-family: var(--f-display);
+  font-stretch: var(--wd-display);
+  font-weight: 300;
+  font-size: clamp(1.6rem, 1.1rem + 1vw, 2.2rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-fg);
+}
+.story-option.is-chosen .story-option-score b { color: var(--cs-accent); }
+.story-option-score span {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.story-option-score i {
+  grid-column: 1 / -1;
+  display: block;
+  height: 3px;
+  margin-top: 0.7rem;
+  background: var(--c-line);
+}
+.story-option-score em { display: block; height: 100%; background: var(--c-fg-3); }
+.story-option.is-chosen .story-option-score em { background: var(--cs-accent); }
+.story-option p {
+  margin-top: 0.8rem;
+  max-width: 34ch;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--c-fg-2);
+}
+
+/* ---- The strip: one interaction, step by step ---- */
+.story-strip-stage { position: relative; }
+.story-strip-track {
+  display: flex;
+  gap: var(--tray-gap);
+}
+.story-strip-item {
+  flex: 0 0 auto;
+  width: var(--strip-w);
+  margin: 0;
+}
+.story-strip-item figcaption { border-top: 1px solid var(--c-line); }
+.story-strip-item h4 {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  color: var(--c-fg);
+}
+.story-strip-meter {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 1.25rem;
+  margin-top: clamp(1.1rem, 2vw, 1.5rem);
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+  font-variant-numeric: tabular-nums;
+}
+.story-strip-count { color: var(--c-fg); }
+.story-strip-meter i { display: block; height: 1px; background: var(--c-line-2); }
+.story-strip-meter b {
+  display: block;
+  height: 100%;
+  background: var(--c-signal);
+  box-shadow: 0 0 8px var(--c-signal-soft);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.story-strip-hint .is-scroll { display: none; }
+.story-strip.is-pinned .story-strip-hint .is-scroll { display: inline; }
+.story-strip.is-pinned .story-strip-hint .is-swipe { display: none; }
+
+/* Pinned: the strip is as tall as its stage plus the sideways run, and
+   the stage sticks, centred in the view, while the page scrolls that run.
+   --stage-h is measured in 7e. */
+.story-strip.is-pinned { height: calc(var(--stage-h, 0px) + var(--strip-run, 0px)); }
+.story-strip.is-pinned .story-strip-stage {
+  position: sticky;
+  top: max(calc(var(--nav-h) + 1.5rem), calc(50vh - var(--stage-h, 0px) / 2));
+}
+/* The row runs off the right edge, fading out, so there's always more. */
+.story-strip.is-pinned .story-strip-view {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+  mask-image: linear-gradient(90deg, #000 85%, transparent);
+}
+.story-strip.is-pinned .story-strip-track { width: max-content; will-change: transform; }
+/* Swiped: a native, snapping row. */
+.story-strip:not(.is-pinned) .story-strip-track {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-bottom: 0.25rem;
+}
+.story-strip:not(.is-pinned) .story-strip-track::-webkit-scrollbar { display: none; }
+.story-strip:not(.is-pinned) .story-strip-item { scroll-snap-align: start; }
+
+/* ---- Before and after review ---- */
+.story-pairs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: clamp(1.25rem, 2vw, 1.75rem) clamp(1rem, 2.4vw, 2.25rem);
+  align-items: start;
+}
+.story-pair { min-width: 0; }
+.story-pair-shots {
+  display: grid;
+  grid-template-columns: minmax(0, var(--frame-w)) 1.25rem minmax(0, var(--frame-w));
+  justify-content: start;
+  align-items: center;
+}
+.story-pair-shots figure { margin: 0; min-width: 0; }
+.story-pair-shots .case-label { margin-bottom: 0.5rem; }
+.story-pair-was .screen-slot-frame { filter: grayscale(0.6) brightness(0.7); }
+.story-pair-now .case-label { color: var(--cs-accent); }
+.story-pair-now .screen-slot-frame { box-shadow: 0 0 0 1px var(--cs-accent), 0 18px 48px -24px color-mix(in srgb, var(--cs-accent) 50%, transparent); }
+.story-pair-arrow { position: relative; height: 9px; margin-top: 1.6rem; color: var(--c-fg-3); }
+.story-pair-arrow i { position: absolute; left: 3px; right: 3px; top: 4px; height: 1px; background: currentColor; }
+.story-pair-arrow::after {
+  content: '';
+  position: absolute;
+  right: 3px;
+  top: 4.5px;
+  width: 5px;
+  height: 5px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: translate(0, -50%) rotate(45deg);
+}
+.story-pair h3 {
+  margin-top: 1rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--c-line);
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  color: var(--c-fg);
+}
+.story-pair p {
+  margin-top: 0.3rem;
+  max-width: 42ch;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--c-fg-2);
+}
+
+/* ---- The proof behind a figure: its screens beside the note ---- */
+.story-evidence {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(1.5rem, 3.5vw, 3.5rem);
+  align-items: center;
+}
+.story-evidence-shots {
+  display: flex;
+  gap: var(--tray-gap);
+  align-items: flex-start;
+}
+.story-evidence-shots .screen-slot { margin: 0; }
+.story-evidence-shots .case-label { display: block; margin-bottom: 0.5rem; }
+.story-evidence-shots .story-pair-arrow { flex: none; align-self: center; width: 1.25rem; margin-top: 0; }
+.story-evidence-note {
+  margin: 0;
+  padding-left: clamp(1.25rem, 2.6vw, 2.25rem);
+  border-left: 1px solid var(--c-line-2);
+}
+.story-evidence-note p {
+  max-width: 24em;
+  font-size: clamp(1.25rem, 0.8rem + 1.1vw, 1.875rem);
+  line-height: 1.3;
+  color: var(--c-fg);
+}
+/* The figures, as the note words them, in the accent. */
+.story-evidence-note b { font-weight: inherit; color: var(--cs-accent); }
+.story-evidence-note footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  margin-top: 1.1rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.story-evidence-note cite { font-style: normal; }
+.story-evidence-note a {
+  color: var(--c-fg-2);
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+  transition: color 0.3s var(--ease-out);
+}
+.story-evidence-note a:hover { color: var(--cs-accent); }
+/* Other changes from the same review, under a hairline. */
+.story-evidence-more {
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  padding-top: clamp(1.25rem, 2vw, 1.75rem);
+  border-top: 1px solid var(--c-line);
+}
+.story-evidence-sub { margin-bottom: 1.1rem; color: var(--c-fg-2); }
+
+@media (max-width: 900px) {
+  .story-gap,
+  .story-locked { grid-template-columns: minmax(0, 1fr); }
+  .story-tray { --tray-pad: 1rem; --frame-w: 124px; --strip-w: 140px; --sheet-max: 150px; border-radius: 12px; }
+  /* Inside a tray, rows swipe sideways and run to the tray's edges, so
+     the next frame peeks in and says there's more. */
+  .story-tray .story-frames,
+  .story-tray .story-sheets,
+  .story-tray .story-compare,
+  .story-tray .story-pairs,
+  .story-tray .story-evidence-shots {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0.85rem;
+    margin-inline: calc(-1 * var(--tray-pad));
+    padding-inline: var(--tray-pad);
+    scroll-padding-inline: var(--tray-pad);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .story-tray .story-frames::-webkit-scrollbar,
+  .story-tray .story-sheets::-webkit-scrollbar,
+  .story-tray .story-compare::-webkit-scrollbar,
+  .story-tray .story-pairs::-webkit-scrollbar,
+  .story-tray .story-evidence-shots::-webkit-scrollbar { display: none; }
+  .story-tray .screen-slot,
+  .story-tray .story-sheet { scroll-snap-align: start; }
+  .story-tray .story-sheet { flex: none; width: min(calc(var(--r) * var(--sheet-max)), 78vw); max-width: none; }
+  /* Cards stop short of the tray's edge, so the next one peeks in. */
+  .story-tray .story-option { flex: 0 0 min(74vw, 300px); scroll-snap-align: start; }
+  .story-tray .story-pair { flex: 0 0 min(74vw, 290px); scroll-snap-align: start; }
+  /* The evidence stacks: its screens swipe, the note follows. */
+  .story-evidence { grid-template-columns: minmax(0, 1fr); row-gap: 1.5rem; }
+  .story-evidence-note { padding-left: 1rem; }
+  .story-groups { flex-direction: column; flex-wrap: nowrap; }
+  .story-group { width: 100%; }
+  .story-split-row { grid-template-columns: minmax(0, 1fr); row-gap: 0.9rem; }
+  .story-routes { grid-template-columns: minmax(0, 1fr); row-gap: 0.9rem; justify-items: start; }
+  .story-routes-from { justify-items: start; }
+  /* The arrow turns to run down the page. */
+  .story-routes-arrow { width: 9px; height: 2.5rem; margin-left: 1.2rem; }
+  .story-routes-arrow::before { right: 0; bottom: auto; width: auto; height: 1px; }
+  .story-routes-arrow i { left: 4px; right: auto; top: 0; bottom: 1px; width: 1px; height: auto; }
+  .story-routes-arrow::after { left: 4.5px; right: auto; top: auto; bottom: 1px; transform: translate(-50%, 0) rotate(135deg); }
+}
+@media (max-width: 560px) {
+  .story-redact { --n: 3 !important; }
+  .story-redact-tile:nth-child(n + 4) { display: none; }
+  /* Narrow seasons keep their names whole. */
+  .story-ribbon > span { padding-left: 0.3rem; font-size: 0.5625rem; letter-spacing: 0.02em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-live .story-handle::after { animation: none !important; }
+  .story-sheet-frame,
+  .story-tray .screen-slot-frame { transition: none; }
+}
+
 /* ================= 12. NEXT PROJECT =================
    The next model, badge-sized, with a dimension line that runs to the
    edge of the page and fills with redline on hover. */
@@ -2528,8 +3522,7 @@
   .case-panel-grid { --cols: 2 !important; }
   .case-panel-grid.is-fill .case-panel:nth-child(n+3):last-child:nth-child(3n+2) { grid-column: auto; }
   .case-panel-grid.is-fill .case-panel:last-child:nth-child(odd) { grid-column: 1 / -1; }
-  .case-direction-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
+  .case-direction-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }}
 
 @media (max-width: 900px) {
   .case-hero-brief,

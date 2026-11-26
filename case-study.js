@@ -394,47 +394,51 @@
         ${data.overviewMore.map((p) => `<p class="case-copy reveal-text">${p}</p>`).join('')}
       </div>`);
   }
-  byId('caseProblem').textContent = data.problem.copy;
-  if (data.problem.quote) {
-    byId('caseQuoteText').textContent = data.problem.quote;
-    byId('caseQuoteAttribution').textContent = data.problem.attribution;
-  } else {
-    document.querySelector('#problem .case-quote').remove();
-  }
+  // A case told in story steps (7d) can leave the classic problem block out.
   const problem = data.problem;
-  const problemExtras = [];
-  if (problem.brief) {
-    problemExtras.push(`
-      <div class="case-brief case-reveal">
-        <span class="case-label">${problem.brief.label}</span>
-        <p>${problem.brief.text}</p>
-      </div>`);
+  if (!problem) byId('problem').hidden = true;
+  if (problem) {
+    byId('caseProblem').textContent = problem.copy;
+    if (problem.quote) {
+      byId('caseQuoteText').textContent = problem.quote;
+      byId('caseQuoteAttribution').textContent = problem.attribution;
+    } else {
+      document.querySelector('#problem .case-quote').remove();
+    }
+    const problemExtras = [];
+    if (problem.brief) {
+      problemExtras.push(`
+        <div class="case-brief case-reveal">
+          <span class="case-label">${problem.brief.label}</span>
+          <p>${problem.brief.text}</p>
+        </div>`);
+    }
+    if (problem.context) {
+      // Numbered causes read as h3s; the plain version keeps the small label.
+      problemExtras.push(`
+        <div class="case-problem-context">
+          ${problem.contextLabel ? `<span class="case-label reveal-text">${problem.contextLabel}</span>` : ''}
+          <div class="case-panel-grid is-fill" style="--cols:${problem.contextCols || problem.context.length};">
+            ${problem.context.map((item, i) => `
+              <div class="case-panel case-reveal">
+                ${problem.contextNumbered
+                  ? `<span class="case-panel-index">${pad(i + 1)}</span><h3>${item.title}</h3>`
+                  : `<span class="case-label">${item.title}</span>`}
+                <p>${item.desc}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>`);
+    }
+    if (problem.jobs) {
+      problemExtras.push(`
+        <div class="case-jobs case-reveal">
+          <span class="case-label">${problem.jobsLabel || 'Jobs'}</span>
+          <div class="case-jobs-list">${problem.jobs.map((job, i) => `<span class="case-job"><small>${pad(i + 1)}</small>${job}</span>`).join('')}</div>
+        </div>`);
+    }
+    byId('caseProblemContext').innerHTML = problemExtras.join('');
   }
-  if (problem.context) {
-    // Numbered causes read as h3s; the plain version keeps the small label.
-    problemExtras.push(`
-      <div class="case-problem-context">
-        ${problem.contextLabel ? `<span class="case-label reveal-text">${problem.contextLabel}</span>` : ''}
-        <div class="case-panel-grid is-fill" style="--cols:${problem.contextCols || problem.context.length};">
-          ${problem.context.map((item, i) => `
-            <div class="case-panel case-reveal">
-              ${problem.contextNumbered
-                ? `<span class="case-panel-index">${pad(i + 1)}</span><h3>${item.title}</h3>`
-                : `<span class="case-label">${item.title}</span>`}
-              <p>${item.desc}</p>
-            </div>
-          `).join('')}
-        </div>
-      </div>`);
-  }
-  if (problem.jobs) {
-    problemExtras.push(`
-      <div class="case-jobs case-reveal">
-        <span class="case-label">${problem.jobsLabel || 'Jobs'}</span>
-        <div class="case-jobs-list">${problem.jobs.map((job, i) => `<span class="case-job"><small>${pad(i + 1)}</small>${job}</span>`).join('')}</div>
-      </div>`);
-  }
-  byId('caseProblemContext').innerHTML = problemExtras.join('');
 
   /* ----------------------------------------------------------------
      4. Approach — optional; a project can drop it entirely.
@@ -943,6 +947,512 @@
   if (data.states) fillSection('states', `<div class="screen-grid">${data.states.map((s) => screenSlotHTML(s)).join('')}</div>`);
   if (data.system) fillSection('system', systemHTML(data.system));
   if (data.nextSteps) fillSection('whats-next', nextStepsHTML(data.nextSteps));
+
+  /* ----------------------------------------------------------------
+     7d. Story steps — a case can tell itself as short steps in the
+         playbook's order. Each step is a section of its own: a label,
+         a title, one supporting line and one visual. A step under NDA
+         is a locked plate that points to the call instead. The steps
+         land before the closing plates; data.order can still move them.
+  ---------------------------------------------------------------- */
+  const lockSVG = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.5" /><rect x="5" y="10.5" width="14" height="10" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="M12 14v3" stroke="currentColor" stroke-width="1.5" /></svg>';
+  const hourText = (h) => `${pad(Math.floor(h))}:${pad(Math.round((h % 1) * 60))}`;
+
+  // A day of prices on the EV cover's hour bar: cheapest in the project
+  // colour, priciest in amber, and any stretch without a price hatched.
+  // Segments sit at exact hour positions, so flags and ticks line up.
+  const span = (from, to, of) => `left:${(from / of) * 100}%;width:calc(${((to - from) / of) * 100}% - 2px);`;
+  function dayBarHTML(slots, gaps = []) {
+    const prices = slots.map((s) => s.price);
+    const low = Math.min(...prices);
+    const high = Math.max(...prices);
+    const tone = (p) => (p === low ? 'is-cheap' : p === high ? 'is-peak' : 'is-mid');
+    const parts = [
+      ...slots.map((s) => ({ ...s, cls: tone(s.price), text: `${s.price} ct` })),
+      ...gaps.map((g) => ({ ...g, cls: 'is-gap', text: '' })),
+    ];
+    return `
+      <div class="story-hours" aria-hidden="true">
+        <div class="story-bar">${parts.map((p) => `<span class="charge-seg ${p.cls}" style="${span(p.from, p.to, 24)}">${p.text ? `<em>${p.text}</em>` : ''}</span>`).join('')}</div>
+        <div class="charge-ticks">${[0, 6, 12, 18, 24].map((h) => `<span style="left:${(h / 24) * 100}%;">${pad(h)}</span>`).join('')}</div>
+      </div>`;
+  }
+
+  // The problem: how many prices a tariff can hold, beside the obvious
+  // design, a stack of from/to fields that lets a stretch slip through.
+  function tariffGapHTML(v) {
+    const slots = [...v.slots].sort((a, b) => a.from - b.from);
+    const gaps = [];
+    let reach = 0;
+    slots.forEach((s) => {
+      if (s.from > reach) gaps.push({ from: reach, to: s.from });
+      reach = Math.max(reach, s.to);
+    });
+    if (reach < 24) gaps.push({ from: reach, to: 24 });
+    const afterGap = new Set(gaps.map((g) => g.to));
+    return `
+      <div class="story-gap">
+        <div class="story-sum case-reveal">
+          ${v.factors.map((f, i) => `
+            ${i ? '<span class="story-sum-op" aria-hidden="true">×</span>' : ''}
+            <p class="story-sum-row"><b>${f.value}</b><span>${f.label}</span></p>`).join('')}
+          <p class="story-sum-row is-total"><b>${v.total.value}</b><span>${v.total.label}</span></p>
+        </div>
+        <figure class="story-form case-reveal">
+          <figcaption class="case-label">${v.caption}</figcaption>
+          <table class="story-form-table">
+            <thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Price</th></tr></thead>
+            <tbody>${slots.map((s) => `
+              <tr${afterGap.has(s.from) ? ' class="is-late"' : ''}><td>${hourText(s.from)}</td><td>${hourText(s.to)}</td><td>${s.price} ct</td></tr>`).join('')}
+            </tbody>
+          </table>
+          <div class="story-day">
+            ${dayBarHTML(slots, gaps)}
+            ${gaps.map((g) => `<span class="story-gap-flag" style="--at:${(g.from / 24) * 100}%;">${hourText(g.from)}–${hourText(g.to)} · ${v.gapLabel}</span>`).join('')}
+          </div>
+        </figure>
+      </div>`;
+  }
+
+  // The turn: every level of the tariff is one whole the owner splits.
+  const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  function splitTrackHTML(row) {
+    if (row.kind === 'year') {
+      const total = row.periods.reduce((sum, p) => sum + p.days, 0);
+      let day = 0;
+      const marks = [];
+      const segs = row.periods.map((p) => {
+        if (p.start) marks.push({ at: day, text: p.start });
+        const seg = `<span class="${p.part === 2 ? 'is-b' : 'is-a'}" style="${span(day, day + p.days, total)}"><em>${p.name}</em></span>`;
+        day += p.days;
+        return seg;
+      });
+      let start = 0;
+      const months = monthDays.map((len, i) => {
+        const at = start;
+        start += len;
+        return `<span style="left:${(at / 365) * 100}%;">${'JFMAMJJASOND'[i]}</span>`;
+      });
+      return `
+        <div class="story-ribbon">${segs.join('')}${marks.map((k) => `<i class="story-mark" style="left:${(k.at / total) * 100}%;"><b>${k.text}</b></i>`).join('')}</div>
+        <div class="story-months" aria-hidden="true">${months.join('')}</div>`;
+    }
+    if (row.kind === 'week') {
+      return `<div class="story-week">${row.days.map((d, i) => `<span class="${row.groups[i] === 2 ? 'is-b' : 'is-a'}">${d}<small>${row.groups[i]}</small></span>`).join('')}</div>`;
+    }
+    return row.live ? liveDayHTML(row.slots) : dayBarHTML(row.slots);
+  }
+
+  // The turn, to try: the day's splits can be dragged, or stepped with the
+  // arrow keys. Moving a split only moves the boundary between two slots,
+  // so the bar always covers 24 hours and no gap can open. (7e wires it.)
+  function liveDayHTML(slots) {
+    return `
+      <div class="story-live" data-live-day='${JSON.stringify(slots)}'>
+        ${dayBarHTML(slots)}
+        <div class="story-live-handles">${slots.slice(1).map((s, i) => `
+          <button type="button" class="story-handle" role="slider" data-i="${i + 1}" style="left:${(s.from / 24) * 100}%;"
+            aria-label="Split ${i + 1} of ${slots.length - 1}, between ${slots[i].price} ct and ${s.price} ct"
+            aria-valuemin="0" aria-valuemax="24" aria-valuenow="${s.from}" aria-valuetext="${hourText(s.from)}"><b>${hourText(s.from)}</b></button>`).join('')}
+        </div>
+        <p class="story-live-readout" aria-live="polite"></p>
+      </div>`;
+  }
+
+  function tariffSplitHTML(v) {
+    return `<div class="story-split">${v.rows.map((row) => `
+      <div class="story-split-row case-reveal">
+        <span class="case-label">${row.label}</span>
+        <div class="story-split-track">${splitTrackHTML(row)}</div>
+        <p class="story-split-note">${row.note}</p>
+      </div>`).join('')}</div>`;
+  }
+
+  // Stat callouts: the number lands first, its meaning under it. Numbers
+  // roll on the odometer like Impact's (13); words sit smaller. A stat
+  // still under NDA shows the lock where the number would be.
+  function statsHTML(v) {
+    return `<div class="case-impact-grid story-stats">${v.items.map((s) => {
+      const isNum = typeof s.value === 'number';
+      const shown = isNum ? s.value.toFixed(s.decimals || 0) : s.value;
+      return `
+      <div class="case-impact-stat${s.locked ? ' is-locked' : ''}">
+        <div class="case-impact-num-row">${s.locked
+          ? `<span class="story-stat-lock">${lockSVG}<span>Under NDA</span></span>`
+          : `<span class="case-impact-num${/[a-z]{4,}/i.test(shown) ? ' is-word' : ''}"${isNum ? ` data-count="${s.value}" data-decimals="${s.decimals || 0}"` : ''}>${shown}</span>${s.suffix ? `<span class="case-impact-suffix">${s.suffix}</span>` : ''}`}</div>
+        <p>${s.label}</p>
+      </div>`;
+    }).join('')}</div>`;
+  }
+
+  // A tray: the frames of one visual kept small on a single canvas, like
+  // a zoomed-out view of the Figma file. Its head names the group and
+  // says how many frames it holds; every frame opens full size (14).
+  function trayHTML(v, body, frames, opts = {}) {
+    return `
+      <div class="story-tray${opts.reveal === false ? '' : ' case-reveal'}">
+        <div class="story-tray-head">
+          <span class="story-tray-label">${v.label || ''}</span>
+          <span class="story-tray-hint" aria-hidden="true">${pad(frames)} ${frames === 1 ? 'frame' : 'frames'} · <span class="is-mouse">Click to enlarge</span><span class="is-touch">Tap to enlarge</span></span>
+        </div>
+        ${body}
+      </div>`;
+  }
+
+  // A page of the Figma file as a thumbnail. Sheets in a row share one
+  // height (between --sheet-min and --sheet-max), so each needs its size.
+  function sheetHTML(b) {
+    const [w, h] = b.size || [16, 10];
+    const text = b.caption || b.label;
+    return `
+      <figure class="story-sheet" style="--r:${(w / h).toFixed(4)};">
+        <div class="story-sheet-frame" style="aspect-ratio:${w} / ${h};"><img src="${b.image}" alt="${b.alt}" width="${w}" height="${h}" loading="lazy" data-zoom /></div>
+        ${text ? `<figcaption>${b.code ? `<span class="screen-slot-code">${b.code}</span>` : ''}${text}</figcaption>` : ''}
+      </figure>`;
+  }
+  const sheetsHTML = (items) => `<div class="story-sheets">${items.map(sheetHTML).join('')}</div>`;
+  const boardHTML = (v) => trayHTML(v, sheetsHTML([v]), 1);
+  const boardsHTML = (v) => trayHTML(v, sheetsHTML(v.items), v.items.length);
+
+  // Directions side by side at the same step of the flow, each with its
+  // weighted score as a bar out of 5 and the reason it won or lost.
+  function compareHTML(v) {
+    return trayHTML(v, `<div class="story-compare">${v.items.map((d) => `
+      <article class="story-option${d.chosen ? ' is-chosen' : ''}">
+        <div class="screen-slot-frame"><img src="${d.image}" alt="${d.alt}" loading="lazy" data-zoom /></div>
+        <div class="story-option-info">
+          <span class="story-option-tag">${d.tag}</span>
+          <h3>${d.title}</h3>
+          <div class="story-option-score">
+            <b>${d.score.toFixed(2)}</b><span>/ 5${d.chosen ? ' · chosen' : ''}</span>
+            <i aria-hidden="true"><em style="width:${(d.score / 5) * 100}%;"></em></i>
+          </div>
+          <p>${d.verdict}</p>
+        </div>
+      </article>`).join('')}</div>`, v.items.length);
+  }
+
+  // Steps of one interaction in order. On wide screens with motion the
+  // tray pins and its row slides sideways as the page scrolls on (7e);
+  // otherwise it's a row to swipe. A meter counts the steps either way.
+  function stripHTML(v) {
+    const n = v.screens.length;
+    return `
+      <div class="story-strip case-reveal" data-strip>
+        <div class="story-strip-stage">${trayHTML(v, `
+          <div class="story-strip-view">
+            <div class="story-strip-track" role="list">${v.screens.map((s, i) => `
+              <figure class="story-strip-item" role="listitem">
+                <div class="screen-slot-frame"><img src="${s.image}" alt="${s.alt}" loading="lazy" data-zoom /></div>
+                <figcaption><span class="screen-slot-code">${pad(i + 1)}</span><h4>${s.title}</h4><p>${s.desc}</p></figcaption>
+              </figure>`).join('')}
+            </div>
+          </div>
+          <div class="story-strip-meter" aria-hidden="true">
+            <span class="story-strip-count">01 / ${pad(n)}</span>
+            <i><b></b></i>
+            <span class="story-strip-hint"><span class="is-scroll">Keep scrolling</span><span class="is-swipe">Swipe</span></span>
+          </div>`, n, { reveal: false })}
+        </div>
+      </div>`;
+  }
+
+  // A long flow in parts, all on one tray: each part is a group with a
+  // short head and its frames (phones, or a board such as the map).
+  function chaptersHTML(v) {
+    const frames = v.chapters.reduce((sum, c) => sum + (c.sheets || c.screens).length, 0);
+    return trayHTML(v, `<div class="story-groups">${v.chapters.map((c) => `
+      <div class="story-group">
+        <div class="story-group-head">
+          <span class="case-label">${c.eyebrow}</span>
+          <h3>${c.title}</h3>
+          ${c.line ? `<p>${c.line}</p>` : ''}
+        </div>
+        ${c.sheets ? sheetsHTML(c.sheets) : `<div class="story-frames">${c.screens.map((s) => screenSlotHTML(s)).join('')}</div>`}
+      </div>`).join('')}</div>`, frames);
+  }
+
+  // What changed after review: the earlier screen dimmed, the shipped one
+  // lit, and why in one line. On a tray of its own, or inside the evidence.
+  function pairsGridHTML(v) {
+    const shot = (s, label, cls) => `
+      <figure class="${cls}">
+        <span class="case-label">${label}</span>
+        <div class="screen-slot-frame"><img src="${s.image}" alt="${s.alt}" loading="lazy" data-zoom /></div>
+      </figure>`;
+    return `<div class="story-pairs">${v.items.map((p) => `
+      <article class="story-pair">
+        <div class="story-pair-shots">
+          ${shot(p.before, v.beforeLabel || 'Before', 'story-pair-was')}
+          <span class="story-pair-arrow" aria-hidden="true"><i></i></span>
+          ${shot(p.after, v.afterLabel || 'After', 'story-pair-now')}
+        </div>
+        <h3>${p.title}</h3>
+        <p>${p.why}</p>
+      </article>`).join('')}</div>`;
+  }
+  function pairsHTML(v) {
+    return trayHTML(v, pairsGridHTML(v), v.items.length * 2);
+  }
+
+  // The proof behind a figure: the screens it came from, the earlier ones
+  // dimmed and the shipped one lit, beside the source note's own words and
+  // a link to the spot in the file. Other changes from the same review can
+  // follow under a hairline, as before-and-after pairs.
+  function evidenceHTML(v) {
+    const shot = (s, label, cls) => `
+      <figure class="screen-slot ${cls}">
+        <span class="case-label">${label}</span>
+        <div class="screen-slot-frame" style="aspect-ratio:${s.ratio};"><img src="${s.image}" alt="${s.alt}" loading="lazy" data-zoom /></div>
+        <figcaption><span class="screen-slot-code">${s.code}</span><h4>${s.title}</h4><p>${s.desc}</p></figcaption>
+      </figure>`;
+    return trayHTML(v, `
+      <div class="story-evidence">
+        <div class="story-evidence-shots">
+          ${v.before.map((s) => shot(s, v.beforeLabel || 'Before', 'story-pair-was')).join('')}
+          <span class="story-pair-arrow" aria-hidden="true"><i></i></span>
+          ${shot(v.after, v.afterLabel || 'After', 'story-pair-now')}
+        </div>
+        <blockquote class="story-evidence-note">
+          <p>“${v.quote}”</p>
+          <footer><cite>${v.cite}</cite>${v.href ? `<a href="${v.href}" target="_blank" rel="noopener">Open in Figma</a>` : ''}</footer>
+        </blockquote>
+      </div>${v.pairs ? `
+      <div class="story-evidence-more">
+        <span class="case-label story-evidence-sub">${v.pairs.label}</span>
+        ${pairsGridHTML(v.pairs)}
+      </div>` : ''}`, v.before.length + 1 + (v.pairs ? v.pairs.items.length * 2 : 0));
+  }
+
+  // Ways in that lead to one result: chips, an "or", a dimension arrow.
+  function routesHTML(v) {
+    return `
+      <div class="story-routes case-reveal">
+        <div class="story-routes-from">${v.from.map((f, i) => `${i ? '<span class="story-routes-or">or</span>' : ''}<span class="story-chip">${f}</span>`).join('')}</div>
+        <span class="story-routes-arrow" aria-hidden="true"><i></i></span>
+        <span class="story-chip is-result">${v.to}</span>
+      </div>
+      ${v.tag ? `<p class="case-note story-routes-tag reveal-text">${v.tag}</p>` : ''}`;
+  }
+
+  // A step under NDA: what it covers, the way to hear it, and a redacted
+  // sheet in place of the work.
+  function lockedHTML(l) {
+    const url = data.nda && data.nda.url;
+    const n = l.tiles || 3;
+    const tiles = Array.from({ length: n }, (_, i) => `
+      <span class="story-redact-tile">${l.tags ? `<b>${l.tags[i]}</b>` : ''}<i></i><i></i><i></i></span>`).join('');
+    return `
+      <div class="story-locked case-reveal">
+        <div class="story-locked-copy">
+          <span class="case-label story-locked-eyebrow">${lockSVG}<span>Under NDA</span></span>
+          <h3>${l.title}</h3>
+          <p>${l.teaser}</p>
+          ${url ? `<a class="case-figma-cta" href="${url}" data-cursor="Say hi"><span>${l.cta || 'Ask me on a call'}</span><span class="case-cta-dim" aria-hidden="true"><i></i></span></a>` : ''}
+        </div>
+        <div class="story-redact" style="--n:${n};" aria-hidden="true">${tiles}</div>
+      </div>`;
+  }
+
+  const storyVisuals = {
+    tariffGap: tariffGapHTML,
+    tariffSplit: tariffSplitHTML,
+    stats: statsHTML,
+    routes: routesHTML,
+    board: boardHTML,
+    boards: boardsHTML,
+    compare: compareHTML,
+    strip: stripHTML,
+    chapters: chaptersHTML,
+    pairs: pairsHTML,
+    evidence: evidenceHTML,
+    screens: (v) => `<div class="screen-grid case-lineup">${v.screens.map((s) => screenSlotHTML(s)).join('')}</div>`,
+  };
+
+  // A step can carry one visual or several, in order, each with an
+  // optional small label of its own. Visuals made of frames sit in a
+  // tray, which carries the label in its head.
+  const trayTypes = ['board', 'boards', 'compare', 'strip', 'chapters', 'pairs', 'evidence'];
+  function storyBodyHTML(step) {
+    const list = step.visuals || (step.visual ? [step.visual] : []);
+    return list.map((v) => {
+      const tray = trayTypes.includes(v.type);
+      return `
+      <div class="story-block${tray ? ' is-tray' : ''}">
+        ${v.label && !tray ? `<span class="case-label story-block-label reveal-text">${v.label}</span>` : ''}
+        ${storyVisuals[v.type](v)}
+      </div>`;
+    }).join('');
+  }
+
+  function storySection(step) {
+    const section = document.createElement('section');
+    section.className = `case-section case-story${step.locked ? ' is-locked' : ''}`;
+    // Never shadow a template section's id (they stay in the page, hidden).
+    section.id = byId(step.id) ? `story-${step.id}` : step.id;
+    const head = step.title || step.line ? `
+      <div class="case-section-head">
+        ${step.title ? `<h2 class="case-section-title reveal-text">${step.title}</h2>` : ''}
+        ${step.line ? `<p class="case-section-intro reveal-text">${step.line}</p>` : ''}
+      </div>` : '';
+    let body = '';
+    if (step.locked) body = lockedHTML(step.locked);
+    else if (step.quote) body = `<p class="case-closing story-quote reveal-text">${step.quote}</p>`;
+    else body = storyBodyHTML(step);
+    section.innerHTML = `
+      <div class="section-index rule" data-rule><span class="rule-index"></span><span class="rule-title section-index-label">${step.label}</span><span class="rule-line" aria-hidden="true"><i class="rule-fill"></i></span><span class="rule-meta"></span></div>
+      ${head}
+      <div class="case-section-body">${body}</div>`;
+    return section;
+  }
+
+  if (data.story) {
+    const plates = byId('figma-file');
+    data.story.forEach((step) => plates.parentNode.insertBefore(storySection(step), plates));
+    initLiveDays();
+    initStrips();
+  }
+
+  /* ----------------------------------------------------------------
+     7e. Story behaviour — wired here, before the motion runtime, so the
+         try-it bar and the strip work with motion reduced too.
+  ---------------------------------------------------------------- */
+  // The try-it day: drag a split (pointer), or focus it and use the arrow
+  // keys (15 min; Shift for an hour). A split stays at least 15 min from
+  // its neighbours, so every slot keeps a length and the day stays whole.
+  function initLiveDays() {
+    document.querySelectorAll('[data-live-day]').forEach((box) => {
+      const slots = JSON.parse(box.dataset.liveDay);
+      const bar = box.querySelector('.story-bar');
+      const segs = [...bar.querySelectorAll('.charge-seg')];
+      const handles = [...box.querySelectorAll('.story-handle')];
+      const readout = box.querySelector('.story-live-readout');
+      const STEP = 0.25;
+
+      function cheapest() {
+        const low = Math.min(...slots.map((s) => s.price));
+        const first = slots[0];
+        const last = slots[slots.length - 1];
+        // The cheap night runs across midnight when both ends share it.
+        if (first.price === low && last.price === low && slots.length > 1) return `${hourText(last.from)}–${hourText(first.to)}`;
+        const s = slots.find((x) => x.price === low);
+        return `${hourText(s.from)}–${hourText(s.to)}`;
+      }
+      function render() {
+        slots.forEach((s, i) => {
+          segs[i].style.left = `${(s.from / 24) * 100}%`;
+          segs[i].style.width = `calc(${((s.to - s.from) / 24) * 100}% - 2px)`;
+        });
+        handles.forEach((h) => {
+          const at = slots[Number(h.dataset.i)].from;
+          h.style.left = `${(at / 24) * 100}%`;
+          h.setAttribute('aria-valuenow', String(at));
+          h.setAttribute('aria-valuetext', hourText(at));
+          h.querySelector('b').textContent = hourText(at);
+        });
+        const low = Math.min(...slots.map((s) => s.price));
+        // The hidden full stop keeps the two read apart for screen readers;
+        // the flex gap spaces them on screen.
+        readout.innerHTML = `<b>24 h covered</b><span class="sr-only">. </span><span>Cheapest ${cheapest()} at ${low} ct</span>`;
+      }
+      function move(i, hour) {
+        const min = slots[i - 1].from + STEP;
+        const max = slots[i].to - STEP;
+        const at = Math.min(max, Math.max(min, Math.round(hour / STEP) * STEP));
+        if (at === slots[i].from) return;
+        slots[i - 1].to = at;
+        slots[i].from = at;
+        box.classList.add('is-touched');
+        render();
+      }
+      handles.forEach((h) => {
+        const i = Number(h.dataset.i);
+        h.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          h.setPointerCapture(e.pointerId);
+          h.classList.add('is-dragging');
+          const drag = (ev) => {
+            const r = bar.getBoundingClientRect();
+            move(i, ((ev.clientX - r.left) / r.width) * 24);
+          };
+          const stop = () => {
+            h.classList.remove('is-dragging');
+            h.removeEventListener('pointermove', drag);
+            h.removeEventListener('pointerup', stop);
+            h.removeEventListener('pointercancel', stop);
+          };
+          h.addEventListener('pointermove', drag);
+          h.addEventListener('pointerup', stop);
+          h.addEventListener('pointercancel', stop);
+        });
+        h.addEventListener('keydown', (e) => {
+          const by = e.shiftKey ? 1 : STEP;
+          const keys = { ArrowLeft: -by, ArrowDown: -by, ArrowRight: by, ArrowUp: by };
+          if (e.key in keys) move(i, slots[i].from + keys[e.key]);
+          else if (e.key === 'Home') move(i, 0);
+          else if (e.key === 'End') move(i, 24);
+          else return;
+          e.preventDefault();
+        });
+      });
+      render();
+    });
+  }
+
+  // Strips pin on wide screens with motion: the stage sticks, centred in
+  // the view, while the page scrolls the row sideways, one step at a time.
+  // Elsewhere the row scrolls natively. The meter follows both.
+  function initStrips() {
+    const wide = window.matchMedia('(min-width: 901px)');
+    document.querySelectorAll('[data-strip]').forEach((strip) => {
+      const stage = strip.querySelector('.story-strip-stage');
+      const view = strip.querySelector('.story-strip-view');
+      const track = strip.querySelector('.story-strip-track');
+      const count = strip.querySelector('.story-strip-count');
+      const fill = strip.querySelector('.story-strip-meter b');
+      const n = track.children.length;
+      let run = 0;
+      let queued = false;
+
+      function show(p) {
+        fill.style.transform = `scaleX(${p.toFixed(4)})`;
+        count.textContent = `${pad(Math.round(p * (n - 1)) + 1)} / ${pad(n)}`;
+      }
+      function update() {
+        queued = false;
+        if (strip.classList.contains('is-pinned')) {
+          const travel = strip.offsetHeight - stage.offsetHeight;
+          const stick = parseFloat(getComputedStyle(stage).top) || 0;
+          const p = travel > 0 ? Math.min(1, Math.max(0, (stick - strip.getBoundingClientRect().top) / travel)) : 0;
+          track.style.transform = `translate3d(${(-p * run).toFixed(1)}px, 0, 0)`;
+          show(p);
+        } else {
+          const max = track.scrollWidth - track.clientWidth;
+          show(max > 0 ? track.scrollLeft / max : 0);
+        }
+      }
+      function measure() {
+        strip.classList.remove('is-pinned');
+        track.style.transform = '';
+        if (!reduced && wide.matches) {
+          strip.classList.add('is-pinned');
+          // The stage pins at its own (pinned) height, centred in the view.
+          strip.style.setProperty('--stage-h', `${stage.offsetHeight}px`);
+          run = Math.max(0, track.scrollWidth - view.clientWidth);
+          if (!run) strip.classList.remove('is-pinned');
+        } else {
+          run = 0;
+        }
+        strip.style.setProperty('--strip-run', `${run}px`);
+        update();
+      }
+      const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+      window.addEventListener('scroll', queue, { passive: true });
+      track.addEventListener('scroll', queue, { passive: true });
+      window.addEventListener('resize', measure);
+      measure();
+    });
+  }
 
   // Closing card that points to the source Figma file.
   if (data.figma) {
