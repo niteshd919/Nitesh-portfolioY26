@@ -3251,6 +3251,147 @@
 }
 .story-evidence-sub { margin-bottom: 1.1rem; color: var(--c-fg-2); }
 
+/* ---- Desktop products in a tray (wideScreens): wider 16:10 frames,
+   cropped from the top, with near-square corners ---- */
+.case-wide-screens .story-tray {
+  --frame-w: clamp(200px, 19vw, 272px);
+  --strip-w: clamp(260px, 27vw, 400px);
+}
+.case-wide-screens .story-tray .screen-slot-frame,
+.case-wide-screens .story-strip-item .screen-slot-frame { border-radius: 6px; }
+/* A tray holding one row of frames centres it, as boards do. */
+.story-tray > .story-frames { justify-content: center; }
+/* In chapters the frames run narrower, so three groups of two share a row. */
+@media (min-width: 901px) {
+  .case-wide-screens .story-groups .story-frames { --frame-w: clamp(150px, 12.6vw, 196px); }
+}
+
+/* ---- A research ladder: stages along a rail, each option marked
+   with what the design did with it ---- */
+.story-ladder {
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--c-line-2);
+}
+.story-ladder-stage {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  padding: 1.25rem clamp(0.5rem, 1vw, 0.9rem) 0 0;
+}
+.story-ladder-stage::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--c-fg-3);
+  border-radius: 50%;
+  background: var(--c-bg);
+}
+.story-ladder-when {
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.story-ladder-rung {
+  padding: 0.9rem;
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+  background: var(--c-bg-2);
+}
+.story-ladder-rung h3 { font-size: 0.9375rem; font-weight: 500; line-height: 1.3; color: var(--c-fg); }
+.story-ladder-rung p { margin-top: 0.35rem; font-size: 0.8125rem; line-height: 1.45; color: var(--c-fg-3); }
+.story-ladder-rung .story-ladder-verdict {
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--c-line);
+  color: var(--c-fg-2);
+}
+.story-ladder-verdict b {
+  display: inline-block;
+  margin-right: 0.45rem;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-weight: 400;
+  font-size: 0.625rem;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  vertical-align: 0.1em;
+  color: var(--c-fg-3);
+}
+.story-ladder-rung.is-kept { border-color: color-mix(in srgb, var(--cs-accent) 45%, var(--c-line)); }
+.story-ladder-rung.is-kept .story-ladder-verdict b { color: var(--cs-accent); }
+.story-ladder-rung.is-cut h3 { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--c-fg-2); }
+.story-ladder-rung.is-cut,
+.story-ladder-rung.is-skip { background: transparent; }
+
+/* ---- Roads not taken: considered, instead, and why it lost ---- */
+.story-roads {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+.story-road {
+  display: grid;
+  align-content: start;
+  gap: 1.1rem;
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+  border: 1px solid var(--c-line);
+  border-radius: 14px;
+  background: var(--c-bg-2);
+}
+.story-road-source {
+  display: flex;
+  gap: 0.6rem;
+  font-family: var(--f-mono);
+  font-stretch: var(--wd-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+.story-road-source b { font-weight: 400; color: var(--cs-accent); }
+.story-road .case-label { display: block; margin-bottom: 0.4rem; }
+.story-road p { font-size: 0.9375rem; line-height: 1.5; color: var(--c-fg-2); }
+.story-road-was p { color: var(--c-fg-3); }
+.story-road-now p { color: var(--c-fg); }
+.story-road-now .case-label { color: var(--cs-accent); }
+.story-road-why { padding-top: 1.1rem; border-top: 1px solid var(--c-line); }
+.story-road-why p { font-size: 0.875rem; }
+.story-road a,
+.case-story .case-section-intro a,
+.case-story .case-panel a,
+.case-story .case-table a,
+.case-story .story-stats a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--c-line-2);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 0.3s var(--ease-out);
+}
+.story-road a:hover,
+.case-story .case-section-intro a:hover,
+.case-story .case-panel a:hover,
+.case-story .case-table a:hover,
+.case-story .story-stats a:hover { text-decoration-color: var(--cs-accent); }
+
+@media (max-width: 1200px) {
+  .story-ladder { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 1.75rem; }
+}
+
 @media (max-width: 900px) {
   .story-gap,
   .story-locked { grid-template-columns: minmax(0, 1fr); }
@@ -3287,6 +3428,18 @@
   /* The evidence stacks: its screens swipe, the note follows. */
   .story-evidence { grid-template-columns: minmax(0, 1fr); row-gap: 1.5rem; }
   .story-evidence-note { padding-left: 1rem; }
+  /* Desktop frames stay wide enough to read their layout. */
+  .case-wide-screens .story-tray { --frame-w: 220px; --strip-w: 250px; }
+  /* The ladder runs down the page, its rail on the left. */
+  .story-ladder {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 1.5rem;
+    padding-left: 1.1rem;
+    border-top: 0;
+    border-left: 1px solid var(--c-line-2);
+  }
+  .story-ladder-stage { padding: 0; }
+  .story-ladder-stage::before { top: 0.15rem; left: calc(-1.1rem - 5px); }
   .story-groups { flex-direction: column; flex-wrap: nowrap; }
   .story-group { width: 100%; }
   .story-split-row { grid-template-columns: minmax(0, 1fr); row-gap: 0.9rem; }

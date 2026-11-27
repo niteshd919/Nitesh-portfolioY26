@@ -1257,10 +1257,82 @@
       </div>`;
   }
 
+  // A row of frames on a tray, each with its code, title and line.
+  const framesHTML = (v) => trayHTML(v, `<div class="story-frames">${v.screens.map((s) => screenSlotHTML(s)).join('')}</div>`, v.screens.length);
+
+  // Cards in a row: numbered causes, labelled measures, or grouped
+  // bullets. Their text can carry a cited source's link.
+  function panelsHTML(v) {
+    return `
+      <div class="case-panel-grid${v.fill ? ' is-fill' : ''}" style="--cols:${v.cols || v.items.length};">${v.items.map((p, i) => `
+        <div class="case-panel case-reveal">
+          ${v.numbered ? `<span class="case-panel-index">${pad(i + 1)}</span>` : ''}
+          ${p.label ? `<span class="case-label">${p.label}</span>` : ''}
+          <h3>${p.title}</h3>
+          ${p.desc ? `<p>${p.desc}</p>` : ''}
+          ${p.items ? `<ul class="case-bullets">${p.items.map((x) => `<li>${x}</li>`).join('')}</ul>` : ''}
+        </div>`).join('')}
+      </div>`;
+  }
+
+  // Proto-personas: who, where they are, their words and what the design
+  // gives them. The note says where they came from.
+  function personasStoryHTML(v) {
+    return `
+      <div class="case-panel-grid" style="--cols:${v.items.length};">${v.items.map((x, i) => `
+        <article class="case-panel case-reveal">
+          <span class="case-panel-index">${pad(i + 1)}</span>
+          <h3>${x.name}</h3>
+          <span class="case-seen">${x.who}</span>
+          <blockquote class="case-persona-quote">&ldquo;${x.quote}&rdquo;</blockquote>
+          ${x.gives ? `<span class="case-label case-label-gap">What the design gives them</span>
+          <ul class="case-bullets">${x.gives.map((g) => `<li>${g}</li>`).join('')}</ul>` : ''}
+        </article>`).join('')}
+      </div>
+      ${v.note ? `<p class="case-note reveal-text">${v.note}</p>` : ''}`;
+  }
+
+  // A ladder from the research, stage by stage, with each option marked
+  // as built, cut, left for later or left out, and why where known.
+  const ladderTags = { kept: 'In v1', cut: 'Cut', later: 'Later', skip: 'Not in v1' };
+  function ladderHTML(v) {
+    return `
+      <ol class="story-ladder case-reveal" style="--n:${v.stages.length};">${v.stages.map((s) => `
+        <li class="story-ladder-stage">
+          <span class="story-ladder-when">${s.when}</span>${s.options.map((o) => `
+          <div class="story-ladder-rung is-${o.status}">
+            <h3>${o.title}</h3>
+            <p>${o.desc}</p>
+            <p class="story-ladder-verdict"><b>${ladderTags[o.status]}</b>${o.verdict || ''}</p>
+          </div>`).join('')}
+        </li>`).join('')}
+      </ol>`;
+  }
+
+  // Roads not taken: what was considered and where it came from, what
+  // was built instead, and why the first idea lost.
+  function roadsHTML(v) {
+    return `
+      <div class="story-roads">${v.items.map((r, i) => `
+        <article class="story-road case-reveal">
+          <span class="story-road-source"><b>${pad(i + 1)}</b>${r.source}</span>
+          <div class="story-road-was"><span class="case-label">Considered</span><p>${r.considered}</p></div>
+          <div class="story-road-now"><span class="case-label">Instead</span><p>${r.instead}</p></div>
+          <div class="story-road-why"><span class="case-label">Why it lost</span><p>${r.why}</p></div>
+        </article>`).join('')}
+      </div>`;
+  }
+
   const storyVisuals = {
     tariffGap: tariffGapHTML,
     tariffSplit: tariffSplitHTML,
     stats: statsHTML,
+    panels: panelsHTML,
+    table: (v) => tableHTML(v),
+    personas: personasStoryHTML,
+    ladder: ladderHTML,
+    roads: roadsHTML,
+    frames: framesHTML,
     routes: routesHTML,
     board: boardHTML,
     boards: boardsHTML,
@@ -1275,7 +1347,7 @@
   // A step can carry one visual or several, in order, each with an
   // optional small label of its own. Visuals made of frames sit in a
   // tray, which carries the label in its head.
-  const trayTypes = ['board', 'boards', 'compare', 'strip', 'chapters', 'pairs', 'evidence'];
+  const trayTypes = ['board', 'boards', 'compare', 'strip', 'chapters', 'pairs', 'evidence', 'frames'];
   function storyBodyHTML(step) {
     const list = step.visuals || (step.visual ? [step.visual] : []);
     return list.map((v) => {
