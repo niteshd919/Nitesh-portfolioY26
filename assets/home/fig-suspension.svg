@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 360" width="560" height="360">
+<!-- Fig. 02 — centre display, parked (Suspension Diagnostics print on the homepage).
+     The homepage draws this with <use href="assets/home/fig-suspension.svg#art">, so the text
+     keeps the page's fonts and the red follows the page's accent colour. Opened on its own, it falls back to #FF3B1D. -->
+<symbol id="art" viewBox="0 0 560 360">
+<g fill="none" stroke="#1A1917" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="16" y="16" width="528" height="300" rx="26"/>
+<path d="M236 316 L224 344 L336 344 L324 316"/>
+<path d="M44 262 C110 262 130 240 176 252 S268 282 330 262 S430 236 516 252" stroke="#625E58" stroke-dasharray="2 7"/>
+<path d="M130 238 L138 204 C142 192 154 186 172 184 L214 156 C220 152 228 150 236 150 L304 150 C316 150 324 156 330 166 L344 184 L376 190 C388 192 394 202 394 214 L394 238 Z"/>
+<path d="M212 182 L232 160 L300 160 L318 182 Z" stroke="#625E58"/>
+<circle cx="172" cy="240" r="22"/><circle cx="352" cy="240" r="22"/>
+<circle cx="172" cy="240" r="7"/><circle cx="352" cy="240" r="7"/>
+<path d="M164 218 L120 110 M360 218 L410 110" stroke="#625E58"/>
+<rect x="44" y="70" width="132" height="40" rx="8"/><rect x="384" y="70" width="132" height="40" rx="8"/>
+<text x="60" y="95" font-family="Bricolage Grotesque, sans-serif" font-weight="600" font-size="13" fill="#1A1917" stroke="none">FL · 95%</text>
+<text x="400" y="95" font-family="Bricolage Grotesque, sans-serif" font-weight="600" font-size="13" fill="#1A1917" stroke="none">RL · 96%</text>
+<circle cx="470" cy="244" r="5" stroke="none" style="fill:var(--accent,#FF3B1D)"/><circle cx="470" cy="244" r="15" style="stroke:var(--accent,#FF3B1D)"/>
+<text x="432" y="294" font-size="24" stroke="none" style="font-family:var(--font-hand,Caveat,cursive);fill:var(--accent,#FF3B1D)">bump, 40 m</text>
+</g>
+</symbol>
+<use href="#art"/>
+</svg>
