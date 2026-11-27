@@ -24,7 +24,7 @@
 
 /* ================= 1. SECTION ================= */
 .showroom {
-  --bays: 4;             /* 5 with Homingly (disconnected for now); the two research
+  --bays: 3;             /* 5 with HMI and Homingly (both disconnected for now); the two research
                             studies moved to Publications (home-publications.*) */
   --seg: 0.9;            /* scroll for one bay change, × viewport height */
   --dwell: 0.2;          /* held on the first and last bay, × viewport height */

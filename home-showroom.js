@@ -1,6 +1,6 @@
 /* ==================================================================
    NITESH DIXIT — PORTFOLIO 2026 · home · showroom
-   The selected work as a private viewing: four bays on one track (Homingly parked;
+   The selected work as a private viewing: three bays on one track (HMI and Homingly parked;
    the research studies moved to Publications).
 
    pinned   ≥ 900px wide, or ≥ 540px tall. The stage is sticky (CSS).
@@ -93,7 +93,7 @@
     const N = bays.length;
     if (!stage || !track || !selector || N < 2) throw new Error('showroom markup incomplete');
 
-    // The rule's meta becomes a live counter: "Case 01 / 04".
+    // The rule's meta becomes a live counter: "Case 01 / 03".
     const metaEl = rule && rule.querySelector('.rule-meta');
     let countEl = null;
     if (metaEl) {

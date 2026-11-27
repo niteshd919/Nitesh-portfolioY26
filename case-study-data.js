@@ -271,7 +271,7 @@ window.CASE_STUDIES = {
       },
     },
 
-    next: 'hmi',
+    next: 'offpeak', // 'hmi' once that case is reconnected
   },
 
   /* ================================================================ */
@@ -1146,105 +1146,109 @@ window.CASE_STUDIES = {
   */
 
   /* ================================================================ */
-  hmi: {
-    slug: 'hmi',
-    title: 'HMI',
-    subtitle: 'Cockpit experience',
-    tagline: 'Four surfaces, one cockpit.',
-    year: '2024',
-    platform: 'In-car · Škoda',
-    scope: 'Virtual Cockpit, AR Head-Up Display, 13" infotainment, Laura voice assistant',
-    tags: ['HMI', 'Automotive', 'Voice'],
-    gradient: 'linear-gradient(135deg,#4ba82e,#1a1a1a)',
-    accent: '#4ba82e',
-    wideScreens: true,
-
-    /* 2x export of the Cover page of the Figma file (assets/hmi/). */
-    heroImage: {
-      image: 'assets/hmi/cover.png',
-      alt: 'Cockpit Experience cover: Škoda in-car experience across Virtual Cockpit, AR Head-Up Display, 13" infotainment and Laura voice, with the four parts of the Figma file.',
-      ratio: '16 / 9',
-    },
-
-    overview: `A unified in-car HMI concept for Škoda. It treats four surfaces as one
-      system rather than four separate products: the Virtual Cockpit behind the
-      wheel, an AR Head-Up Display on the windshield, the 13" infotainment screen
-      and Laura, Škoda’s voice assistant.`,
-
-    problem: {
-      copy: `Inside a car, every surface competes for the same pair of eyes. The
-        cluster, the windshield, the centre screen and the voice assistant are
-        usually designed as separate products, each with its own logic. The driver
-        is left to reconcile them, at speed, while the road is the thing that needs
-        their attention.`,
-    },
-
-    approach: [
-      { title: 'One system, four surfaces', desc: 'The cluster, the HUD, the central screen and Laura share one logic, so what the driver learns on one surface holds on the rest.' },
-      { title: 'Each surface has a job', desc: 'What sits in front of the driver, what sits in the line of sight and what sits to the side are decided by the moment of driving, not by what each screen can show.' },
-      { title: 'Voice as a surface', desc: 'Laura is designed as part of the cockpit rather than a feature added on top, so a request can start on one surface and finish on another.' },
-    ],
-
-    flow: [
-      { title: 'Virtual Cockpit', desc: 'The instrument cluster behind the wheel: the surface a driver reads most often, and the one that sets the visual language for the rest.',
-        image: 'assets/hmi/ic-parked.png', ratio: '8 / 3',
-        alt: 'Virtual Cockpit, parked and ready: a Good afternoon greeting, READY in large type with the prompt to press brake and select D, and the battery, range and gear selector on the right.' },
-      { title: 'AR Head-Up Display', desc: 'Information placed on the windshield, in the line of sight, so the driver does not have to look away from the road to get it.',
-        image: 'assets/hmi/hud-driving.png', ratio: '3 / 1',
-        alt: 'AR Head-Up Display while driving: speed at 48 km/h on the left, a right-turn arrow with 300 m in the centre and the adaptive cruise control telltale on the right.' },
-      { title: '13" infotainment screen', desc: 'The central IVI: navigation, media and vehicle functions, designed as the place for everything that does not need to be glanced at while driving.',
-        image: 'assets/hmi/ivi-parked.png', ratio: '16 / 9',
-        alt: '13-inch infotainment screen, parked: a media player, eight shortcut tiles for navigation, phone, climate, seats, charging, vehicle, apps and settings, an energy card and a persistent climate bar.' },
-      { title: 'Laura', desc: 'Škoda’s voice assistant, so the driver can ask for something without taking a hand off the wheel or an eye off the road.',
-        image: 'assets/hmi/laura-parked.png', ratio: '16 / 9', inset: true,
-        alt: 'Laura voice prompt: “Hi Petr — home, or the office?”' },
-    ],
-
-    nextSteps: [
-      { title: 'Validate', items: [
-        'Test the four surfaces together in a driving simulator, not one screen at a time. The concept only works if the handoffs between them do.',
-        'Measure glance time away from the road, time on task and how often drivers fall back to touch when voice would have done.',
-        'Test with drivers who already use a Škoda, to see what the new logic breaks from habit.',
-      ] },
-      { title: 'Assumptions', items: [
-        'Each surface keeps the job it was given: the cluster for reading, the HUD for the line of sight, the central screen for everything else.',
-        'Laura is available for the tasks that would otherwise pull a hand or an eye off the driving.',
-        'This is a concept. Hardware limits of the cluster, the HUD and the 13" display have not been tested against it.',
-      ] },
-      { title: 'Open questions & v2', items: [
-        'How much should the HUD carry before it competes with the road? Where that line sits needs real-road testing.',
-        'How far should a request travel between surfaces? Starting on Laura and finishing on the central screen is the case to prove first.',
-        'What changes for the passenger, who has the same screen but not the same constraints?',
-      ] },
-    ],
-
-    figma: {
-      eyebrow: 'Go deeper',
-      title: 'The thinking lives in the Figma file.',
-      intro: `This page is the short version. The file holds the full working: every
-        decision, the ideas I parked, and the handoff a developer would build from.`,
-      cta: 'Explore Figma file',
-      url: 'https://www.figma.com/design/vAQjMwK3312ErtmDLKloSU/In-car---Experience-for-skoda?node-id=0-1&t=uS3d6tgBq9BEgt5s-1',
-      reasons: [
-        { title: 'See the approach', desc: 'A clearer picture of how it was done, what was built, and why.' },
-        { title: 'Follow the decisions', desc: 'Explore how each call was made, and what it was weighed against.' },
-        { title: 'Visit the dump yard', desc: 'Everything I explored but parked, kept in one place rather than deleted.' },
-        { title: 'Check the handoff', desc: 'How the file is organised and how the dev-handoff is maintained.' },
-      ],
-    },
-
-    sections: {
-      'whats-next': {
-        label: 'What I would do next',
-        title: 'What I’d test next, and what’s still open',
-      },
-      'figma-file': {
-        label: 'Explore the file',
-      },
-    },
-
-    next: 'offpeak',
-  },
+  /* HMI (Cockpit experience), disconnected for now: the entry is kept
+     as line comments and its exports stay in assets/hmi/. To restore,
+     uncomment it (select the lines, Ctrl+/), point suspension's `next`
+     back at 'hmi' and bring back its bay (see the note in index.html). */
+  // hmi: {
+  //   slug: 'hmi',
+  //   title: 'HMI',
+  //   subtitle: 'Cockpit experience',
+  //   tagline: 'Four surfaces, one cockpit.',
+  //   year: '2024',
+  //   platform: 'In-car · Škoda',
+  //   scope: 'Virtual Cockpit, AR Head-Up Display, 13" infotainment, Laura voice assistant',
+  //   tags: ['HMI', 'Automotive', 'Voice'],
+  //   gradient: 'linear-gradient(135deg,#4ba82e,#1a1a1a)',
+  //   accent: '#4ba82e',
+  //   wideScreens: true,
+  //
+  //   /* 2x export of the Cover page of the Figma file (assets/hmi/). */
+  //   heroImage: {
+  //     image: 'assets/hmi/cover.png',
+  //     alt: 'Cockpit Experience cover: Škoda in-car experience across Virtual Cockpit, AR Head-Up Display, 13" infotainment and Laura voice, with the four parts of the Figma file.',
+  //     ratio: '16 / 9',
+  //   },
+  //
+  //   overview: `A unified in-car HMI concept for Škoda. It treats four surfaces as one
+  //     system rather than four separate products: the Virtual Cockpit behind the
+  //     wheel, an AR Head-Up Display on the windshield, the 13" infotainment screen
+  //     and Laura, Škoda’s voice assistant.`,
+  //
+  //   problem: {
+  //     copy: `Inside a car, every surface competes for the same pair of eyes. The
+  //       cluster, the windshield, the centre screen and the voice assistant are
+  //       usually designed as separate products, each with its own logic. The driver
+  //       is left to reconcile them, at speed, while the road is the thing that needs
+  //       their attention.`,
+  //   },
+  //
+  //   approach: [
+  //     { title: 'One system, four surfaces', desc: 'The cluster, the HUD, the central screen and Laura share one logic, so what the driver learns on one surface holds on the rest.' },
+  //     { title: 'Each surface has a job', desc: 'What sits in front of the driver, what sits in the line of sight and what sits to the side are decided by the moment of driving, not by what each screen can show.' },
+  //     { title: 'Voice as a surface', desc: 'Laura is designed as part of the cockpit rather than a feature added on top, so a request can start on one surface and finish on another.' },
+  //   ],
+  //
+  //   flow: [
+  //     { title: 'Virtual Cockpit', desc: 'The instrument cluster behind the wheel: the surface a driver reads most often, and the one that sets the visual language for the rest.',
+  //       image: 'assets/hmi/ic-parked.png', ratio: '8 / 3',
+  //       alt: 'Virtual Cockpit, parked and ready: a Good afternoon greeting, READY in large type with the prompt to press brake and select D, and the battery, range and gear selector on the right.' },
+  //     { title: 'AR Head-Up Display', desc: 'Information placed on the windshield, in the line of sight, so the driver does not have to look away from the road to get it.',
+  //       image: 'assets/hmi/hud-driving.png', ratio: '3 / 1',
+  //       alt: 'AR Head-Up Display while driving: speed at 48 km/h on the left, a right-turn arrow with 300 m in the centre and the adaptive cruise control telltale on the right.' },
+  //     { title: '13" infotainment screen', desc: 'The central IVI: navigation, media and vehicle functions, designed as the place for everything that does not need to be glanced at while driving.',
+  //       image: 'assets/hmi/ivi-parked.png', ratio: '16 / 9',
+  //       alt: '13-inch infotainment screen, parked: a media player, eight shortcut tiles for navigation, phone, climate, seats, charging, vehicle, apps and settings, an energy card and a persistent climate bar.' },
+  //     { title: 'Laura', desc: 'Škoda’s voice assistant, so the driver can ask for something without taking a hand off the wheel or an eye off the road.',
+  //       image: 'assets/hmi/laura-parked.png', ratio: '16 / 9', inset: true,
+  //       alt: 'Laura voice prompt: “Hi Petr — home, or the office?”' },
+  //   ],
+  //
+  //   nextSteps: [
+  //     { title: 'Validate', items: [
+  //       'Test the four surfaces together in a driving simulator, not one screen at a time. The concept only works if the handoffs between them do.',
+  //       'Measure glance time away from the road, time on task and how often drivers fall back to touch when voice would have done.',
+  //       'Test with drivers who already use a Škoda, to see what the new logic breaks from habit.',
+  //     ] },
+  //     { title: 'Assumptions', items: [
+  //       'Each surface keeps the job it was given: the cluster for reading, the HUD for the line of sight, the central screen for everything else.',
+  //       'Laura is available for the tasks that would otherwise pull a hand or an eye off the driving.',
+  //       'This is a concept. Hardware limits of the cluster, the HUD and the 13" display have not been tested against it.',
+  //     ] },
+  //     { title: 'Open questions & v2', items: [
+  //       'How much should the HUD carry before it competes with the road? Where that line sits needs real-road testing.',
+  //       'How far should a request travel between surfaces? Starting on Laura and finishing on the central screen is the case to prove first.',
+  //       'What changes for the passenger, who has the same screen but not the same constraints?',
+  //     ] },
+  //   ],
+  //
+  //   figma: {
+  //     eyebrow: 'Go deeper',
+  //     title: 'The thinking lives in the Figma file.',
+  //     intro: `This page is the short version. The file holds the full working: every
+  //       decision, the ideas I parked, and the handoff a developer would build from.`,
+  //     cta: 'Explore Figma file',
+  //     url: 'https://www.figma.com/design/vAQjMwK3312ErtmDLKloSU/In-car---Experience-for-skoda?node-id=0-1&t=uS3d6tgBq9BEgt5s-1',
+  //     reasons: [
+  //       { title: 'See the approach', desc: 'A clearer picture of how it was done, what was built, and why.' },
+  //       { title: 'Follow the decisions', desc: 'Explore how each call was made, and what it was weighed against.' },
+  //       { title: 'Visit the dump yard', desc: 'Everything I explored but parked, kept in one place rather than deleted.' },
+  //       { title: 'Check the handoff', desc: 'How the file is organised and how the dev-handoff is maintained.' },
+  //     ],
+  //   },
+  //
+  //   sections: {
+  //     'whats-next': {
+  //       label: 'What I would do next',
+  //       title: 'What I’d test next, and what’s still open',
+  //     },
+  //     'figma-file': {
+  //       label: 'Explore the file',
+  //     },
+  //   },
+  //
+  //   next: 'offpeak',
+  // },
 
 };
 
@@ -1256,7 +1260,7 @@ window.CASE_STUDIES = {
      const S = CASE_SERIES('stepper');
      S.sequence        // ['search', 'stepper']
      S.no('stepper')   // "Writing 02 / 02"
-     S.noun('hmi')     // "case"
+     S.noun('offpeak') // "case"
    ================================================================== */
 window.CASE_SERIES = function (slug) {
   const store = window.CASE_STUDIES || {};
