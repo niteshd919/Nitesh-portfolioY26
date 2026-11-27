@@ -290,6 +290,8 @@ window.CASE_STUDIES = {
     tags: ['UX Research', 'Data Viz'],
     gradient: 'linear-gradient(135deg,#35e0a8,#1a1a1a)',
     accent: '#35e0a8',
+    // Frames stay as they are on the page; nothing opens full size.
+    zoom: false,
 
     /* Told in the playbook's thirteen steps, each a short line and real
        work from the Figma file: title (1) is the tagline and metadata (3)

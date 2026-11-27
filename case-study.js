@@ -37,6 +37,9 @@
     return;
   }
 
+  // Images open full size on click (14) unless the study sets zoom: false.
+  const zoomAttr = data.zoom === false ? '' : ' data-zoom';
+
   const Site = window.Site;
   const A = Site && Site.anime;
   const { animate, createTimeline, createAnimatable, stagger, utils } = A || {};
@@ -146,7 +149,7 @@
     const wrap = document.querySelector('.case-hero-device-wrap');
     wrap.classList.add('is-cover');
     const hero = data.heroImage;
-    const img = `<img src="${hero.image}" alt="${hero.alt || data.title}" data-zoom />`;
+    const img = `<img src="${hero.image}" alt="${hero.alt || data.title}"${zoomAttr} />`;
     if (hero.hotspots) {
       // A "live" cover: the screen boots with a scan sweep, the sensors
       // ping on the wheels, and the whole display tilts with the cursor.
@@ -183,7 +186,7 @@
      code, so the layout is final before the visuals are. ---- */
   function screenSlotHTML(screen, opts = {}) {
     const media = screen.image
-      ? `<img src="${screen.image}" alt="${screen.alt || screen.title}" loading="${opts.eager ? 'eager' : 'lazy'}" data-zoom />`
+      ? `<img src="${screen.image}" alt="${screen.alt || screen.title}" loading="${opts.eager ? 'eager' : 'lazy'}"${zoomAttr} />`
       : `<div class="slot-empty">
            <span class="slot-code">${screen.code}</span>
            ${opts.caption === false ? `<span class="slot-name">${screen.title}</span>` : ''}
@@ -204,7 +207,7 @@
   function boardSlotHTML(board) {
     if (!board) return '';
     const media = board.image
-      ? `<img src="${board.image}" alt="${board.alt || board.label}" loading="lazy" data-zoom />`
+      ? `<img src="${board.image}" alt="${board.alt || board.label}" loading="lazy"${zoomAttr} />`
       : `<div class="slot-empty"><span class="slot-name">${board.label}</span><span class="slot-hint">Board placeholder</span></div>`;
     return `<div class="board-slot${board.image ? '' : ' is-empty'}" style="aspect-ratio:${board.ratio || '16 / 10'};">${media}</div>`;
   }
@@ -493,7 +496,7 @@
           <div class="case-flow-media${step.image ? ' has-image' : ''}"${step.image && step.ratio ? ` style="aspect-ratio:${step.ratio};"` : ''}>
             <div class="case-flow-media-img" style="--flow-angle:${flowAngles[i % flowAngles.length]}deg;"></div>
             ${step.image
-              ? `<img class="case-flow-shot${step.inset ? ' is-inset' : ''}" src="${step.image}" alt="${step.alt || step.title}" loading="lazy" data-zoom />`
+              ? `<img class="case-flow-shot${step.inset ? ' is-inset' : ''}" src="${step.image}" alt="${step.alt || step.title}" loading="lazy"${zoomAttr} />`
               : step.screen ? `<div class="case-flow-chip">${step.screen}</div>` : ''}
           </div>
         </div>
@@ -868,7 +871,7 @@
         <div class="case-explore-gallery case-reveal">
           <figure class="case-explore-stage">
             <div class="case-explore-frame">
-              <img class="case-explore-main" src="${first.image}" alt="${first.alt}" loading="lazy" data-zoom />
+              <img class="case-explore-main" src="${first.image}" alt="${first.alt}" loading="lazy"${zoomAttr} />
             </div>
             <figcaption>
               <span class="case-explore-count">${pad(1)} / ${pad(e.views.length)}</span>
@@ -1087,13 +1090,13 @@
 
   // A tray: the frames of one visual kept small on a single canvas, like
   // a zoomed-out view of the Figma file. Its head names the group and
-  // says how many frames it holds; every frame opens full size (14).
+  // says how many frames it holds; with zoom on, each opens full size (14).
   function trayHTML(v, body, frames, opts = {}) {
     return `
       <div class="story-tray${opts.reveal === false ? '' : ' case-reveal'}">
         <div class="story-tray-head">
           <span class="story-tray-label">${v.label || ''}</span>
-          <span class="story-tray-hint" aria-hidden="true">${pad(frames)} ${frames === 1 ? 'frame' : 'frames'} · <span class="is-mouse">Click to enlarge</span><span class="is-touch">Tap to enlarge</span></span>
+          <span class="story-tray-hint" aria-hidden="true">${pad(frames)} ${frames === 1 ? 'frame' : 'frames'}${zoomAttr ? ' · <span class="is-mouse">Click to enlarge</span><span class="is-touch">Tap to enlarge</span>' : ''}</span>
         </div>
         ${body}
       </div>`;
@@ -1106,7 +1109,7 @@
     const text = b.caption || b.label;
     return `
       <figure class="story-sheet" style="--r:${(w / h).toFixed(4)};">
-        <div class="story-sheet-frame" style="aspect-ratio:${w} / ${h};"><img src="${b.image}" alt="${b.alt}" width="${w}" height="${h}" loading="lazy" data-zoom /></div>
+        <div class="story-sheet-frame" style="aspect-ratio:${w} / ${h};"><img src="${b.image}" alt="${b.alt}" width="${w}" height="${h}" loading="lazy"${zoomAttr} /></div>
         ${text ? `<figcaption>${b.code ? `<span class="screen-slot-code">${b.code}</span>` : ''}${text}</figcaption>` : ''}
       </figure>`;
   }
@@ -1119,7 +1122,7 @@
   function compareHTML(v) {
     return trayHTML(v, `<div class="story-compare">${v.items.map((d) => `
       <article class="story-option${d.chosen ? ' is-chosen' : ''}">
-        <div class="screen-slot-frame"><img src="${d.image}" alt="${d.alt}" loading="lazy" data-zoom /></div>
+        <div class="screen-slot-frame"><img src="${d.image}" alt="${d.alt}" loading="lazy"${zoomAttr} /></div>
         <div class="story-option-info">
           <span class="story-option-tag">${d.tag}</span>
           <h3>${d.title}</h3>
@@ -1143,7 +1146,7 @@
           <div class="story-strip-view">
             <div class="story-strip-track" role="list">${v.screens.map((s, i) => `
               <figure class="story-strip-item" role="listitem">
-                <div class="screen-slot-frame"><img src="${s.image}" alt="${s.alt}" loading="lazy" data-zoom /></div>
+                <div class="screen-slot-frame"><img src="${s.image}" alt="${s.alt}" loading="lazy"${zoomAttr} /></div>
                 <figcaption><span class="screen-slot-code">${pad(i + 1)}</span><h4>${s.title}</h4><p>${s.desc}</p></figcaption>
               </figure>`).join('')}
             </div>
@@ -1178,7 +1181,7 @@
     const shot = (s, label, cls) => `
       <figure class="${cls}">
         <span class="case-label">${label}</span>
-        <div class="screen-slot-frame"><img src="${s.image}" alt="${s.alt}" loading="lazy" data-zoom /></div>
+        <div class="screen-slot-frame"><img src="${s.image}" alt="${s.alt}" loading="lazy"${zoomAttr} /></div>
       </figure>`;
     return `<div class="story-pairs">${v.items.map((p) => `
       <article class="story-pair">
@@ -1203,7 +1206,7 @@
     const shot = (s, label, cls) => `
       <figure class="screen-slot ${cls}">
         <span class="case-label">${label}</span>
-        <div class="screen-slot-frame" style="aspect-ratio:${s.ratio};"><img src="${s.image}" alt="${s.alt}" loading="lazy" data-zoom /></div>
+        <div class="screen-slot-frame" style="aspect-ratio:${s.ratio};"><img src="${s.image}" alt="${s.alt}" loading="lazy"${zoomAttr} /></div>
         <figcaption><span class="screen-slot-code">${s.code}</span><h4>${s.title}</h4><p>${s.desc}</p></figcaption>
       </figure>`;
     return trayHTML(v, `

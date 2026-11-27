@@ -2847,7 +2847,8 @@
 
 /* ---- Trays: the frames of one visual, kept small on one canvas ----
    Like a zoomed-out view of the Figma file: a dotted canvas, a head that
-   names the group, and frames that open full size (13. ZOOM). Phones
+   names the group, and frames that open full size (13. ZOOM) unless the
+   study turns zoom off. Phones
    share one width and boards one height range across the page, so no
    single image is louder than the story around it. */
 .story-block.is-tray + .story-block.is-tray { margin-top: clamp(1rem, 2vw, 1.5rem); }
@@ -2895,7 +2896,7 @@
   border-radius: clamp(12px, 1vw, 16px);
   transition: transform 0.5s var(--ease-out);
 }
-.story-tray .screen-slot-frame:hover { transform: translateY(-3px); }
+.story-tray .screen-slot-frame:has(img[data-zoom]):hover { transform: translateY(-3px); }
 .story-tray .screen-slot figcaption,
 .story-tray .story-strip-item figcaption {
   display: block;
@@ -2943,8 +2944,9 @@
   box-shadow: 0 0 0 1px var(--c-line-2), 0 24px 48px -28px rgba(0, 0, 0, 0.9);
   transition: transform 0.5s var(--ease-out);
 }
-.story-sheet-frame img { display: block; width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
-.story-sheet-frame:hover { transform: translateY(-3px); }
+.story-sheet-frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.story-sheet-frame img[data-zoom] { cursor: zoom-in; }
+.story-sheet-frame:has(img[data-zoom]):hover { transform: translateY(-3px); }
 .story-sheet-frame:has(img:focus-visible) { outline: 1px solid var(--c-signal); outline-offset: 4px; }
 .story-sheet-frame img:focus-visible { outline: none; }
 .story-sheet figcaption {
