@@ -282,6 +282,11 @@ window.CASE_STUDIES = {
   /* ================================================================ */
   offpeak: {
     slug: 'offpeak',
+    /* Moved to its own paper page (the homepage's design). `href` sends
+       case-study.html?p=offpeak and every "next" link there. The page's
+       copy now lives in case-ev-tariff.html; the fields below are no longer
+       rendered, and deleting this line brings the old page back. */
+    href: 'case-ev-tariff.html',
     title: 'Tariff Based EV Charging',
     subtitle: 'EV Tariff Input',
     tagline: 'A paper tariff, a phone, and not one uncovered minute.',

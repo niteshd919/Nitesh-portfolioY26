@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tariff Based EV Charging — Nitesh Dixit</title>
+<meta name="description" content="A paper tariff, a phone, and not one uncovered minute. 200+ customers onboarded to tariff-based charging through the setup I designed.">
+<link rel="canonical" href="https://niteshdixit.in/case-ev-tariff.html">
+<meta name="theme-color" content="#F4F1EA">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Nitesh Dixit">
+<meta property="og:url" content="https://niteshdixit.in/case-ev-tariff.html">
+<meta property="og:title" content="Tariff Based EV Charging — Nitesh Dixit">
+<meta property="og:description" content="A paper tariff, a phone, and not one uncovered minute. 200+ customers onboarded to tariff-based charging through the setup I designed.">
+<meta property="og:image" content="https://niteshdixit.in/assets/offpeak/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Three screens of the EV tariff setup on paper: period dates, the intro and the days, above a day of charging that waits for the cheapest hours.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="assets/home/favicon-32.png" sizes="32x32">
+<link rel="icon" href="assets/home/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/home/apple-touch-icon.png">
+
+<!-- The middle screen is the largest picture on the first screen: fetch it
+     before the fonts. The text has metric-matched fallbacks. -->
+<link rel="preload" as="image" href="assets/offpeak/hf-f1-intro-400.webp" imagesrcset="assets/offpeak/hf-f1-intro-400.webp 400w, assets/offpeak/hf-f1-intro.webp 780w" imagesizes="(min-width: 700px) 196px, 118px" fetchpriority="high">
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="case.css">
+<script>document.documentElement.classList.add('js');</script>
+<script src="site.js" defer></script>
+<script src="case.js" defer></script>
+</head>
+
+<!-- The paper case study for Tariff Based EV Charging. Copy and figures come
+     from its entry in case-study-data.js; case-study.html?p=offpeak now sends
+     readers here (the entry's `href`). As on the old page, the frames stay
+     small and nothing opens full size: the Figma file has them all. -->
+<body class="grain">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="site">
+<div class="container">
+
+<header class="site-header">
+  <a class="logo" href="index.html" aria-label="Nitesh Dixit, home">Nitesh<span class="logo-dot">.</span></a>
+  <nav aria-label="Main">
+    <ul class="nav-list">
+      <li><a href="index.html#work">Work</a></li>
+      <li><a href="index.html#notebook">Notebook</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="#contact">Say hi</a></li>
+    </ul>
+  </nav>
+  <p class="label clock">In Bengaluru it's <time data-clock></time></p>
+</header>
+
+<main id="main" tabindex="-1">
+
+<!-- ============================================================ Hero -->
+<section id="top" class="case-hero" aria-labelledby="case-title">
+  <div class="case-kicker">
+    <a class="back-link" href="index.html#work"><span aria-hidden="true">←</span> All work</a>
+    <p class="label">No. 02 · 2023 · Research and mobile</p>
+  </div>
+
+  <div class="case-head">
+    <h1 id="case-title" class="case-title case-title--wide" style="--ul: 3.03em">Tariff Based EV <em>Charging</em><svg aria-hidden="true" viewBox="0 0 200 20" preserveAspectRatio="none"><path class="accent-stroke" d="M3 13 C46 5 120 3 197 10" fill="none" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></h1>
+    <div class="case-intro">
+      <p class="label">EV Tariff Input</p>
+      <p class="case-tagline">A paper tariff, a phone, and not one uncovered minute.</p>
+    </div>
+  </div>
+
+  <div class="cover-row">
+    <figure class="cover cover--phones print tilt-static" style="--tilt: -0.5deg">
+      <span class="tape" style="top: -12px; left: 48px; width: 104px; transform: rotate(-5deg)"></span>
+      <span class="tape" style="top: -10px; right: 56px; width: 88px; transform: rotate(4deg)"></span>
+      <div class="cover-phones">
+        <div class="phone-print" style="--tilt: -2.4deg"><img src="assets/offpeak/hf-f3-period-dates-400.webp" srcset="assets/offpeak/hf-f3-period-dates-400.webp 400w, assets/offpeak/hf-f3-period-dates.webp 780w" sizes="(min-width: 700px) 168px, 98px" width="780" height="1688" alt="Step 1 of 4, periods: a year ribbon split into Off-peak and Peak, with the start dates editable and the end dates filled in automatically."></div>
+        <div class="phone-print is-center"><img src="assets/offpeak/hf-f1-intro-400.webp" srcset="assets/offpeak/hf-f1-intro-400.webp 400w, assets/offpeak/hf-f1-intro.webp 780w" sizes="(min-width: 700px) 196px, 118px" width="780" height="1688" alt="The intro screen: “Charge when electricity is cheapest”, a 24-hour price bar and the three questions the flow will ask." fetchpriority="high"></div>
+        <div class="phone-print" style="--tilt: 2.2deg"><img src="assets/offpeak/hf-f4-days-400.webp" srcset="assets/offpeak/hf-f4-days-400.webp 400w, assets/offpeak/hf-f4-days.webp 780w" sizes="(min-width: 700px) 168px, 98px" width="780" height="1688" alt="Step 2 of 4, days: Monday to Thursday as weekdays and Friday to Sunday as weekends, one tap to move a day between groups."></div>
+      </div>
+
+      <!-- A day of smart charging on the example tariff: the car gets home at
+           18:00 low on charge, waits out the peak, charges in the cheap window
+           and leaves at 07:00. case.js runs the clock; this is its still frame. -->
+      <div class="charge" data-charge='{"slots":[{"from":0,"to":6,"price":24},{"from":6,"to":18,"price":35},{"from":18,"to":22,"price":40},{"from":22,"to":24,"price":24}],"away":[7,18],"low":35,"still":23.5}' aria-hidden="true">
+        <div class="charge-read">
+          <p class="charge-plan"><span class="charge-eyebrow">Smart schedule</span><strong>22:00 <span class="charge-arrow">→</span> 06:00</strong><span class="charge-sub">24 ct/kWh · ready by 07:00</span></p>
+          <p class="charge-status"><span class="charge-eyebrow" data-charge-state>Charging</span><strong><span data-charge-pct>47</span><small>%</small></strong><span class="battery"><i data-charge-fill style="transform: scaleX(.47)"></i></span><span class="charge-sub" data-charge-sub>24 ct/kWh · cheapest rate</span></p>
+        </div>
+        <div class="day day--hero" style="--max: 40">
+          <div class="day-plot">
+            <span class="day-fill is-cheap" style="--from: 0; --to: 6; --p: 24"></span>
+            <span class="day-fill is-mid" style="--from: 6; --to: 18; --p: 35"></span>
+            <span class="day-fill is-peak" style="--from: 18; --to: 22; --p: 40"></span>
+            <span class="day-fill is-cheap" style="--from: 22; --to: 24; --p: 24"></span>
+            <svg class="day-line" viewBox="0 0 24 40" preserveAspectRatio="none"><path d="M0 40 V16 H6 V5 H18 V0 H22 V16 H24 V40"/></svg>
+            <span class="day-price" style="--at: 3; --p: 24">24 ct</span>
+            <span class="day-price" style="--at: 12; --p: 35">35 ct</span>
+            <span class="day-price" style="--at: 20; --p: 40">40 ct</span>
+            <span class="day-head" data-charge-head style="--t: 23.5"><b data-charge-time>23:30</b></span>
+          </div>
+          <div class="day-ticks"><span style="--at: 0">00</span><span style="--at: 6">06</span><span style="--at: 12">12</span><span style="--at: 18">18</span><span style="--at: 24">24</span></div>
+        </div>
+      </div>
+      <figcaption class="print-caption">Fig. 01 — Period dates, intro and days</figcaption>
+    </figure>
+
+    <aside class="spec-card card card--margin" aria-label="About the project" style="--tilt: 0.8deg">
+      <span class="tape" style="top: -12px; left: 50%; width: 96px; margin-left: -48px; transform: rotate(-3deg)"></span>
+      <dl class="spec">
+        <div><dt>Status</dt><dd>Shipped</dd></div>
+        <div><dt>Role</dt><dd>UI / UX Designer</dd></div>
+        <div><dt>Platform</dt><dd>Mobile app · iOS &amp; Android</dd></div>
+        <div><dt>Scope</dt><dd>Research, Concepts, Interaction, Handover</dd></div>
+        <div><dt>Team</dt><dd>Me, a product manager and engineers</dd></div>
+        <div><dt>Tools</dt><dd>Figma</dd></div>
+      </dl>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================================================ 01 The short version -->
+<section id="overview" class="case-section" aria-labelledby="overview-title">
+  <div class="case-section-head">
+    <p class="label">01 · The short version</p>
+    <h2 id="overview-title" class="case-section-title">Every <em>minute</em> of the year needs a price.</h2>
+  </div>
+  <div class="overview-body">
+    <p class="case-lead"><span class="pen">200+ customers onboarded<svg aria-hidden="true" viewBox="0 0 200 20" preserveAspectRatio="none"><path class="accent-stroke" d="M3 12 C50 6 120 5 197 11" fill="none" stroke-width="4" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span> to tariff-based charging through the setup I designed. It gets a paper tariff into a smart wallbox, so the car charges when power is cheapest. About 18 values to type instead of 32, and no way to leave a minute out.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 02 What makes it hard -->
+<section id="hard" class="case-section" aria-labelledby="hard-title">
+  <div class="case-section-head">
+    <p class="label">02 · What makes it hard</p>
+    <h2 id="hard-title" class="case-section-title">It looks like a form. It’s a transcription <em>job.</em></h2>
+    <p class="case-section-intro">People copy up to sixteen prices off a paper contract, and from/to fields leave every gap for them to catch.</p>
+  </div>
+  <div class="hard-body">
+    <div class="sum card card--ruled card--margin tilt-static" style="--tilt: -0.6deg">
+      <p class="sum-row"><b>2</b><span>Periods a year</span></p>
+      <p class="sum-row"><i aria-hidden="true">×</i><b>2</b><span>Day groups in each</span></p>
+      <p class="sum-row"><i aria-hidden="true">×</i><b>4</b><span>Time slots a day</span></p>
+      <p class="sum-row is-total"><b><span class="pen">16<svg aria-hidden="true" viewBox="0 0 200 20" preserveAspectRatio="none"><path class="accent-stroke" d="M3 8 C60 4 130 4 197 7 M10 16 C70 12 140 12 190 15" fill="none" stroke-width="4" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span></b><span>Prices, at most</span></p>
+    </div>
+
+    <figure class="form card">
+      <figcaption class="label">The obvious design · illustrative</figcaption>
+      <table class="form-table">
+        <thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Price</th></tr></thead>
+        <tbody>
+          <tr><td>00:00</td><td>06:00</td><td>24 ct</td></tr>
+          <tr><td>06:00</td><td>18:00</td><td>35 ct</td></tr>
+          <tr class="is-late"><td><span class="ringed">18:15<svg aria-hidden="true" viewBox="0 0 100 40" preserveAspectRatio="none"><path class="accent-stroke" d="M52 4 C80 3 97 10 96 21 C95 33 72 38 48 37 C22 36 4 30 4 20 C4 9 24 3 58 5" fill="none" stroke-width="2.4" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span></td><td>22:00</td><td>40 ct</td></tr>
+          <tr><td>22:00</td><td>24:00</td><td>24 ct</td></tr>
+        </tbody>
+      </table>
+      <div class="day day--plain" style="--max: 40" aria-hidden="true">
+        <div class="day-plot">
+          <span class="day-fill is-cheap" style="--from: 0; --to: 6; --p: 24"></span>
+          <span class="day-fill is-mid" style="--from: 6; --to: 18; --p: 35"></span>
+          <span class="day-fill is-gap" style="--from: 18; --to: 18.25; --p: 40"></span>
+          <span class="day-fill is-peak" style="--from: 18.25; --to: 22; --p: 40"></span>
+          <span class="day-fill is-cheap" style="--from: 22; --to: 24; --p: 24"></span>
+          <svg class="day-line" viewBox="0 0 24 40" preserveAspectRatio="none"><path d="M0 40 V16 H6 V5 H18 V40 M18.25 40 V0 H22 V16 H24 V40"/></svg>
+          <span class="day-price" style="--at: 3; --p: 24">24 ct</span>
+          <span class="day-price" style="--at: 12; --p: 35">35 ct</span>
+          <span class="day-price" style="--at: 20.125; --p: 40">40 ct</span>
+          <span class="day-gap" style="--at: 18.125"><svg viewBox="0 0 40 40"><path class="accent-stroke" d="M20 3 C31 3 37 11 37 20 C37 30 29 37 19 37 C9 37 3 29 3 20 C3 10 11 4 22 5" fill="none" stroke-width="2.4" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span>
+        </div>
+        <div class="day-ticks"><span style="--at: 0">00</span><span style="--at: 6">06</span><span style="--at: 12">12</span><span style="--at: 18">18</span><span style="--at: 24">24</span></div>
+      </div>
+      <p class="gap-flag">18:00–18:15 · No price</p>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================================================ 03 Problem statement -->
+<section id="bar" class="case-section" aria-labelledby="bar-title">
+  <div class="case-section-head">
+    <p class="label">03 · Problem statement</p>
+    <h2 id="bar-title" class="case-section-title">Zero gaps, saved on the first <em>try.</em></h2>
+  </div>
+  <div class="problem-body problem-body--bar">
+    <figure class="statement card card--ruled card--margin tilt-static" style="--tilt: -0.5deg">
+      <p class="statement-text">How might we get the tariff saved right the first time, so the owner then knows when charging is cheapest?</p>
+    </figure>
+    <ul class="bar-list">
+      <li><b>0</b><span>Gaps or overlaps in the saved tariff</span></li>
+      <li><b>1st</b><span>Try: the tariff is saved correctly</span></li>
+      <li><b>22–06</b><span>Afterwards, the owner can name the cheapest hours. Example tariff.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================ 04 Research -->
+<section id="insight" class="case-section" aria-labelledby="insight-title">
+  <div class="case-section-head">
+    <p class="label">04 · Research</p>
+    <h2 id="insight-title" class="case-section-title">Every level has to add up to a <em>whole.</em></h2>
+    <p class="case-section-intro">Periods fill the year, day groups fill the week, slots fill the day. Three boards of research sit behind that rule.</p>
+  </div>
+  <p class="label tray-label">Three research boards</p>
+  <ol class="sheets sheets--tall">
+    <li class="sheet-item" style="--r: .8738">
+      <figure class="board print tilt-static" style="--tilt: -1.1deg">
+        <span class="tape" style="top: -11px; left: 50%; width: 76px; margin-left: -38px; transform: rotate(-4deg)"></span>
+        <img src="assets/offpeak/board-brief-480.webp" srcset="assets/offpeak/board-brief-480.webp 480w, assets/offpeak/board-brief.webp 1440w" sizes="240px" width="1440" height="1648" alt="Research board 1: the job story, who it is for, what success looks like, the data model behind every tariff, the key insight, design principles and the edge cases found in two sample tariffs." loading="lazy" decoding="async">
+      </figure>
+      <p class="sheet-caption"><span class="sheet-code">01</span>The brief, the data model and the key insight</p>
+    </li>
+    <li class="sheet-item" style="--r: .8933">
+      <figure class="board print tilt-static" style="--tilt: 0.8deg">
+        <span class="tape" style="top: -11px; left: 50%; width: 76px; margin-left: -38px; transform: rotate(3deg)"></span>
+        <img src="assets/offpeak/board-input-480.webp" srcset="assets/offpeak/board-input-480.webp 480w, assets/offpeak/board-input.webp 1440w" sizes="240px" width="1440" height="1612" alt="Research board 2: how good products let people enter structured data on a phone, nine patterns from interview-style questions to direct manipulation with snapping." loading="lazy" decoding="async">
+      </figure>
+      <p class="sheet-caption"><span class="sheet-code">02</span>Nine patterns for entering rule-bound data</p>
+    </li>
+    <li class="sheet-item" style="--r: .7302">
+      <figure class="board print tilt-static" style="--tilt: -0.6deg">
+        <span class="tape" style="top: -11px; left: 50%; width: 76px; margin-left: -38px; transform: rotate(-2deg)"></span>
+        <img src="assets/offpeak/board-dataviz-480.webp" srcset="assets/offpeak/board-dataviz-480.webp 480w, assets/offpeak/board-dataviz.webp 1440w" sizes="240px" width="1440" height="1972" alt="Research board 3: showing 16 prices across 8,760 hours on a 390 px screen, nine chart patterns and a table of which chart does which job." loading="lazy" decoding="async">
+      </figure>
+      <p class="sheet-caption"><span class="sheet-code">03</span>Nine ways to show sixteen prices on a phone</p>
+    </li>
+  </ol>
+</section>
+
+<!-- ============================================================ 05 Explorations -->
+<section id="explorations" class="case-section" aria-labelledby="explorations-title">
+  <div class="case-section-head">
+    <p class="label">05 · Explorations</p>
+    <h2 id="explorations-title" class="case-section-title">Eight sketches. Three directions. One <em>score.</em></h2>
+    <p class="case-section-intro">Eight ideas in eight minutes. Three went to low-fi and were scored against the problem statement.</p>
+  </div>
+  <p class="label tray-label">The same step three ways: entering times and prices</p>
+  <ol class="options">
+    <li class="option">
+      <div class="phone-print" style="--tilt: -1deg"><img src="assets/offpeak/dir-a-wizard-400.webp" srcset="assets/offpeak/dir-a-wizard-400.webp 400w, assets/offpeak/dir-a-wizard.webp 780w" sizes="132px" width="780" height="1688" alt="Direction A, low-fi: time slots typed as From, To and price fields, with a note that 18:00 to 22:00 is not covered yet." loading="lazy" decoding="async"></div>
+      <div class="option-body">
+        <p class="option-tag" aria-hidden="true">A</p>
+        <h3 class="option-title"><span class="sr-only">A: </span>Form-based wizard</h3>
+        <p class="option-score"><b>2.85</b><span>/ 5</span></p>
+        <span class="score-bar" aria-hidden="true"><i style="width: 57%"></i></span>
+        <p class="option-verdict">About 32 values to type, and a gap only shows up as a warning.</p>
+      </div>
+    </li>
+    <li class="option">
+      <div class="phone-print" style="--tilt: 0.8deg"><img src="assets/offpeak/dir-b-builder-400.webp" srcset="assets/offpeak/dir-b-builder-400.webp 400w, assets/offpeak/dir-b-builder.webp 780w" sizes="132px" width="780" height="1688" alt="Direction B, low-fi: a section editor for Peak, Tuesday to Friday, with day chips and a list of time slots." loading="lazy" decoding="async"></div>
+      <div class="option-body">
+        <p class="option-tag" aria-hidden="true">B</p>
+        <h3 class="option-title"><span class="sr-only">B: </span>Tariff builder</h3>
+        <p class="option-score"><b>2.75</b><span>/ 5</span></p>
+        <span class="score-bar" aria-hidden="true"><i style="width: 55%"></i></span>
+        <p class="option-verdict">Mirrors the bill, but starts on a blank page with the same gap risk.</p>
+      </div>
+    </li>
+    <li class="option is-chosen">
+      <div class="phone-print" style="--tilt: -0.6deg"><img src="assets/offpeak/dir-c-timeline-400.webp" srcset="assets/offpeak/dir-c-timeline-400.webp 400w, assets/offpeak/dir-c-timeline.webp 780w" sizes="132px" width="780" height="1688" alt="Direction C, low-fi: drag to set times on a 24-hour bar split into 24, 35 and 40 ct, with the slots listed below." loading="lazy" decoding="async"></div>
+      <div class="option-body">
+        <p class="option-tag" aria-hidden="true">C</p>
+        <h3 class="option-title"><span class="sr-only">C: </span>Guided timeline</h3>
+        <p class="option-score"><b class="ringed">4.25<svg aria-hidden="true" viewBox="0 0 100 40" preserveAspectRatio="none"><path class="accent-stroke" d="M52 4 C80 3 97 10 96 21 C95 33 72 38 48 37 C22 36 4 30 4 20 C4 9 24 3 58 5" fill="none" stroke-width="2.4" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></b><span>/ 5 · chosen</span></p>
+        <span class="score-bar" aria-hidden="true"><i style="width: 85%"></i></span>
+        <p class="option-verdict">Gaps can’t happen, and about 18 values to type.</p>
+      </div>
+    </li>
+  </ol>
+
+  <p class="label tray-label tray-label--next">Where they came from, and how they were scored</p>
+  <ol class="sheets sheets--wide">
+    <li class="sheet-item" style="--r: 3.8112">
+      <figure class="board print tilt-static" style="--tilt: -0.4deg">
+        <span class="tape" style="top: -11px; left: 36px; width: 84px; transform: rotate(-4deg)"></span>
+        <img src="assets/offpeak/board-crazy8-1100.webp" srcset="assets/offpeak/board-crazy8-1100.webp 1100w, assets/offpeak/board-crazy8.webp 1696w" sizes="(min-width: 1200px) 720px, 90vw" width="1696" height="445" alt="Crazy-8 sketches: form rows, a tariff tree, a 24-hour bar, a radial clock, paint the grid, a chat assistant, scan the bill and a provider picker." loading="lazy" decoding="async">
+      </figure>
+      <p class="sheet-caption"><span class="sheet-code">01</span>Crazy-8s. Three became directions A, B and C, three were discarded and two were parked for v2.</p>
+    </li>
+    <li class="sheet-item" style="--r: 1.8873">
+      <figure class="board print tilt-static" style="--tilt: 0.7deg">
+        <span class="tape" style="top: -11px; right: 30px; width: 76px; transform: rotate(4deg)"></span>
+        <img src="assets/offpeak/board-scorecard-800.webp" srcset="assets/offpeak/board-scorecard-800.webp 800w, assets/offpeak/board-scorecard.webp 2010w" sizes="(min-width: 1200px) 360px, 90vw" width="2010" height="1065" alt="The scorecard: seven criteria with weights, scores for the wizard, the builder and the timeline, and weighted totals of 2.85, 2.75 and 4.25." loading="lazy" decoding="async">
+      </figure>
+      <p class="sheet-caption"><span class="sheet-code">02</span>The scorecard: seven criteria, weighted. Error prevention counts most, because every minute must be covered.</p>
+    </li>
+  </ol>
+</section>
+
+<!-- ============================================================ 06 The turning point -->
+<section id="turn" class="case-section" aria-labelledby="turn-title">
+  <div class="case-section-head">
+    <p class="label">06 · The turning point</p>
+    <h2 id="turn-title" class="case-section-title">A whole you <em>split,</em> never a list you fill in.</h2>
+    <p class="case-section-intro">The UI only ever lets people split a whole, so a gap can’t happen. Try it: drag a split on the day.</p>
+  </div>
+  <div class="split card card--grid">
+    <div class="split-row">
+      <h3 class="split-label label">Year</h3>
+      <div class="split-track">
+        <div class="year">
+          <span class="year-part" style="--from: 0; --days: 59"><em>Off-peak</em></span>
+          <span class="year-part is-b" style="--from: 59; --days: 245"><b class="year-flag">1 Mar</b><em>Peak</em></span>
+          <span class="year-part" style="--from: 304; --days: 61"><b class="year-flag">1 Nov</b><em>Off-peak</em></span>
+        </div>
+        <div class="year-months" aria-hidden="true"><span style="--at: 0">J</span><span style="--at: 31">F</span><span style="--at: 59">M</span><span style="--at: 90">A</span><span style="--at: 120">M</span><span style="--at: 151">J</span><span style="--at: 181">J</span><span style="--at: 212">A</span><span style="--at: 243">S</span><span style="--at: 273">O</span><span style="--at: 304">N</span><span style="--at: 334">D</span></div>
+      </div>
+      <p class="split-note">Two start dates. Every day belongs to a period.</p>
+    </div>
+    <div class="split-row">
+      <h3 class="split-label label">Week</h3>
+      <div class="split-track">
+        <ol class="week">
+          <li>Mon<small>1</small></li><li>Tue<small>1</small></li><li>Wed<small>1</small></li><li>Thu<small>1</small></li>
+          <li class="is-b">Fri<small>2</small></li><li class="is-b">Sat<small>2</small></li><li class="is-b">Sun<small>2</small></li>
+        </ol>
+      </div>
+      <p class="split-note">Two groups. Every day sits in one.</p>
+    </div>
+    <div class="split-row">
+      <h3 class="split-label label">Day</h3>
+      <div class="split-track">
+        <div class="day day--live" style="--max: 40" data-live-day='[{"from":0,"to":6,"price":24},{"from":6,"to":18,"price":35},{"from":18,"to":22,"price":40},{"from":22,"to":24,"price":24}]'>
+          <div class="day-plot">
+            <span class="day-fill is-cheap" style="--from: 0; --to: 6; --p: 24"></span>
+            <span class="day-fill is-mid" style="--from: 6; --to: 18; --p: 35"></span>
+            <span class="day-fill is-peak" style="--from: 18; --to: 22; --p: 40"></span>
+            <span class="day-fill is-cheap" style="--from: 22; --to: 24; --p: 24"></span>
+            <svg class="day-line" viewBox="0 0 24 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 V16 H6 V5 H18 V0 H22 V16 H24 V40"/></svg>
+            <span class="day-price" style="--at: 3; --p: 24" aria-hidden="true">24 ct</span>
+            <span class="day-price" style="--at: 12; --p: 35" aria-hidden="true">35 ct</span>
+            <span class="day-price" style="--at: 20; --p: 40" aria-hidden="true">40 ct</span>
+            <span class="day-price" style="--at: 23; --p: 24" aria-hidden="true">24 ct</span>
+            <button type="button" class="day-handle" role="slider" style="--at: 6" aria-label="Split 1 of 3, between 24 ct and 35 ct" aria-valuemin="0" aria-valuemax="24" aria-valuenow="6" aria-valuetext="06:00"><b>06:00</b></button>
+            <button type="button" class="day-handle" role="slider" style="--at: 18" aria-label="Split 2 of 3, between 35 ct and 40 ct" aria-valuemin="0" aria-valuemax="24" aria-valuenow="18" aria-valuetext="18:00"><b>18:00</b></button>
+            <button type="button" class="day-handle" role="slider" style="--at: 22" aria-label="Split 3 of 3, between 40 ct and 24 ct" aria-valuemin="0" aria-valuemax="24" aria-valuenow="22" aria-valuetext="22:00"><b>22:00</b></button>
+          </div>
+          <div class="day-ticks" aria-hidden="true"><span style="--at: 0">00</span><span style="--at: 6">06</span><span style="--at: 12">12</span><span style="--at: 18">18</span><span style="--at: 24">24</span></div>
+          <p class="day-readout" aria-live="polite"><b>24 h covered</b><span class="sr-only">. </span><span>Cheapest 22:00–06:00 at 24 ct</span></p>
+        </div>
+      </div>
+      <div class="split-aside">
+        <p class="split-note">Up to four slots. Drag a split: the day stays whole.</p>
+        <p class="try-it" aria-hidden="true">try it <svg viewBox="0 0 60 40"><path class="accent-stroke" d="M4 6 C22 4 40 12 46 30 M38 24 L46 31 L52 21" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 07 Details -->
+<section id="editor" class="case-section" aria-labelledby="editor-title">
+  <div class="case-section-head">
+    <p class="label">07 · Details</p>
+    <h2 id="editor-title" class="case-section-title">One <em>gesture</em> splits the day and prices it.</h2>
+    <p class="case-section-intro">Drag sideways to split, drag up or down to set the price. No add buttons, no forms.</p>
+  </div>
+  <!-- Pins and slides sideways as the page scrolls on wide screens with
+       motion; a row to swipe everywhere else (case.js). -->
+  <div class="strip" data-strip>
+    <div class="strip-stage">
+      <p class="label tray-label">The drag editor, step by step</p>
+      <div class="strip-view">
+        <ol class="strip-track">
+          <li class="strip-item"><figure class="phone">
+            <div class="phone-print" style="--tilt: -0.8deg"><img src="assets/offpeak/drag-01-400.webp" srcset="assets/offpeak/drag-01-400.webp 400w, assets/offpeak/drag-01.webp 780w" sizes="164px" width="780" height="1688" alt="Editor step 1: the day as one line from 00:00 to 24:00, with a hint to press and drag sideways to split it." loading="lazy" decoding="async"></div>
+            <figcaption><span class="phone-name">01 — Start with one line</span><span class="phone-desc">The day starts whole: one slot, 00:00 to 24:00.</span></figcaption>
+          </figure></li>
+          <li class="strip-item"><figure class="phone">
+            <div class="phone-print" style="--tilt: 0.6deg"><img src="assets/offpeak/drag-02-400.webp" srcset="assets/offpeak/drag-02-400.webp 400w, assets/offpeak/drag-02.webp 780w" sizes="164px" width="780" height="1688" alt="Editor step 2: a split dragged to 06:00, making two slots, 00:00 to 06:00 and 06:00 to 24:00." loading="lazy" decoding="async"></div>
+            <figcaption><span class="phone-name">02 — Split the day</span><span class="phone-desc">Drag sideways on the line to cut it in two.</span></figcaption>
+          </figure></li>
+          <li class="strip-item"><figure class="phone">
+            <div class="phone-print" style="--tilt: -0.5deg"><img src="assets/offpeak/drag-03-400.webp" srcset="assets/offpeak/drag-03-400.webp 400w, assets/offpeak/drag-03.webp 780w" sizes="164px" width="780" height="1788" alt="Editor step 3: splits at 06:00, 18:00 and 22:00, with a hint to drag each part up or down to set its price." loading="lazy" decoding="async"></div>
+            <figcaption><span class="phone-name">03 — Add more splits</span><span class="phone-desc">Four parts now, still exactly 24 hours.</span></figcaption>
+          </figure></li>
+          <li class="strip-item"><figure class="phone">
+            <div class="phone-print" style="--tilt: 0.9deg"><img src="assets/offpeak/drag-04-400.webp" srcset="assets/offpeak/drag-04-400.webp 400w, assets/offpeak/drag-04.webp 780w" sizes="164px" width="780" height="1804" alt="Editor step 4: the first part dragged up to 24 ct/kWh, the slot list updating below." loading="lazy" decoding="async"></div>
+            <figcaption><span class="phone-name">04 — Drag up to set a price</span><span class="phone-desc">Height is price. The list below reads it out.</span></figcaption>
+          </figure></li>
+          <li class="strip-item"><figure class="phone">
+            <div class="phone-print" style="--tilt: -0.7deg"><img src="assets/offpeak/drag-05-400.webp" srcset="assets/offpeak/drag-05-400.webp 400w, assets/offpeak/drag-05.webp 780w" sizes="164px" width="780" height="1724" alt="Editor step 5: the slots before 06:00 and after 22:00 linked across midnight at 24 ct." loading="lazy" decoding="async"></div>
+            <figcaption><span class="phone-name">05 — Linked across midnight</span><span class="phone-desc">The night slot runs 22:00 to 06:00 as one.</span></figcaption>
+          </figure></li>
+          <li class="strip-item"><figure class="phone">
+            <div class="phone-print" style="--tilt: 0.5deg"><img src="assets/offpeak/drag-06-400.webp" srcset="assets/offpeak/drag-06-400.webp 400w, assets/offpeak/drag-06.webp 780w" sizes="164px" width="780" height="1844" alt="Editor step 6: every part priced at 24, 35 and 40 ct, with a “24 hours covered” confirmation." loading="lazy" decoding="async"></div>
+            <figcaption><span class="phone-name">06 — All prices set</span><span class="phone-desc">24 hours covered, and the screen says so.</span></figcaption>
+          </figure></li>
+          <li class="strip-item"><figure class="phone">
+            <div class="phone-print" style="--tilt: -0.9deg"><img src="assets/offpeak/drag-07-400.webp" srcset="assets/offpeak/drag-07-400.webp 400w, assets/offpeak/drag-07.webp 780w" sizes="164px" width="780" height="1728" alt="Editor step 7: a split dragged from 18:00 to 17:00, the times on both sides updating." loading="lazy" decoding="async"></div>
+            <figcaption><span class="phone-name">07 — Fine-tune by dragging</span><span class="phone-desc">Move a split and both neighbors follow.</span></figcaption>
+          </figure></li>
+          <li class="strip-item"><figure class="phone">
+            <div class="phone-print" style="--tilt: 0.7deg"><img src="assets/offpeak/drag-08-400.webp" srcset="assets/offpeak/drag-08-400.webp 400w, assets/offpeak/drag-08.webp 780w" sizes="164px" width="780" height="1706" alt="Editor step 8: a split dragged down into a “Drop to remove” zone." loading="lazy" decoding="async"></div>
+            <figcaption><span class="phone-name">08 — Drag a split off to remove it</span><span class="phone-desc">Drop it below the bar to delete it.</span></figcaption>
+          </figure></li>
+          <li class="strip-item"><figure class="phone">
+            <div class="phone-print" style="--tilt: -0.4deg"><img src="assets/offpeak/drag-09-400.webp" srcset="assets/offpeak/drag-09-400.webp 400w, assets/offpeak/drag-09.webp 780w" sizes="164px" width="780" height="1728" alt="Editor step 9: a “Max 4 slots per day” label when a fifth split is attempted." loading="lazy" decoding="async"></div>
+            <figcaption><span class="phone-name">09 — Limit reached</span><span class="phone-desc">Four slots a day, flagged before anything breaks.</span></figcaption>
+          </figure></li>
+        </ol>
+      </div>
+      <div class="strip-meter" aria-hidden="true">
+        <span class="strip-count">01 / 09</span>
+        <i><b></b></i>
+        <span class="strip-hint"><span class="is-scroll">Keep scrolling</span><span class="is-swipe">Swipe</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 08 The final flow -->
+<section id="final-flow" class="case-section" aria-labelledby="final-flow-title">
+  <div class="case-section-head">
+    <p class="label">08 · The final flow</p>
+    <h2 id="final-flow-title" class="case-section-title">From a paper bill to a plugged-in <em>car.</em></h2>
+    <p class="case-section-intro">Thirteen hi-fi screens in three parts. The map first, then every step.</p>
+  </div>
+  <p class="label tray-label">The map, then 13 shipped screens</p>
+  <div class="parts">
+    <div class="part" aria-labelledby="part-map">
+      <div class="part-text">
+        <p class="label">The map</p>
+        <h3 id="part-map" class="part-title">One loop per period and day group</h3>
+        <p class="part-line">Then review, save and sync.</p>
+      </div>
+      <figure class="board board--map print tilt-static" style="--tilt: 0.5deg">
+        <span class="tape" style="top: -11px; left: 40px; width: 84px; transform: rotate(-4deg)"></span>
+        <span class="tape" style="top: -10px; right: 44px; width: 76px; transform: rotate(3deg)"></span>
+        <img src="assets/offpeak/board-userflow-1100.webp" srcset="assets/offpeak/board-userflow-1100.webp 1100w, assets/offpeak/board-userflow.webp 2504w" sizes="(min-width: 1200px) 560px, 88vw" width="2504" height="1560" alt="The final user flow: entry, intro, period and day questions, a loop of times and prices per day group and per period, then review, sync and the tariff overview." loading="lazy" decoding="async">
+      </figure>
+    </div>
+
+    <div class="part" aria-labelledby="part-1">
+      <div class="part-text">
+        <p class="label">Part 1 · Set the frame</p>
+        <h3 id="part-1" class="part-title">Questions in the bill’s own words</h3>
+        <p class="part-line">Every answer takes work off the next step.</p>
+      </div>
+      <ol class="phones">
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: -0.8deg"><img src="assets/offpeak/hf-f1-intro-400.webp" srcset="assets/offpeak/hf-f1-intro-400.webp 400w, assets/offpeak/hf-f1-intro.webp 780w" sizes="140px" width="780" height="1688" alt="Intro: “Charge when electricity is cheapest”, the three questions the flow will ask, and a Start button." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">01 — Intro</span><span class="phone-desc">Three questions up front, and the bill to hand.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: 0.6deg"><img src="assets/offpeak/hf-f2-period-choice-400.webp" srcset="assets/offpeak/hf-f2-period-choice-400.webp 400w, assets/offpeak/hf-f2-period-choice.webp 780w" sizes="140px" width="780" height="1688" alt="Does your price change during the year? A choice between the same price all year and two periods." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">02 — Period choice</span><span class="phone-desc">One answer decides one period or two.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: -0.4deg"><img src="assets/offpeak/hf-f3-period-dates-400.webp" srcset="assets/offpeak/hf-f3-period-dates-400.webp 400w, assets/offpeak/hf-f3-period-dates.webp 780w" sizes="140px" width="780" height="1688" alt="When does each period start? A year ribbon with Off-peak from 1 November and Peak from 1 March, end dates filled in." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">03 — Period dates</span><span class="phone-desc">Two start dates. The end dates fill themselves in.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: 0.9deg"><img src="assets/offpeak/hf-f3a-date-picker-400.webp" srcset="assets/offpeak/hf-f3a-date-picker-400.webp 400w, assets/offpeak/hf-f3a-date-picker.webp 780w" sizes="140px" width="780" height="1688" alt="A wheel picker for the Off-peak start date, noting that the period then ends on 28 or 29 February automatically." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">04 — Start-date picker</span><span class="phone-desc">Day and month on a wheel. No typing.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: -0.6deg"><img src="assets/offpeak/hf-f4-days-400.webp" srcset="assets/offpeak/hf-f4-days-400.webp 400w, assets/offpeak/hf-f4-days.webp 780w" sizes="140px" width="780" height="1688" alt="Do prices differ between weekdays? Day chips with Friday to Sunday set as weekends." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">05 — Days</span><span class="phone-desc">Tap the days that have their own prices.</span></figcaption>
+        </figure></li>
+      </ol>
+    </div>
+
+    <div class="part" aria-labelledby="part-2">
+      <div class="part-text">
+        <p class="label">Part 2 · Split the day</p>
+        <h3 id="part-2" class="part-title">Split, price, then copy across</h3>
+        <p class="part-line">The editor does the hard part once. Copying does the rest.</p>
+      </div>
+      <ol class="phones">
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: 0.7deg"><img src="assets/offpeak/hf-f5-times-prices-400.webp" srcset="assets/offpeak/hf-f5-times-prices-400.webp 400w, assets/offpeak/hf-f5-times-prices.webp 780w" sizes="140px" width="780" height="1688" alt="Set times and prices for Off-peak weekends: a bar split into 24, 35 and 40 ct, “24 hours covered”, and the three slots." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">06 — Times &amp; prices</span><span class="phone-desc">Split and priced, with 24 hours covered.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: -0.5deg"><img src="assets/offpeak/hf-f8-checkpoint-400.webp" srcset="assets/offpeak/hf-f8-checkpoint-400.webp 400w, assets/offpeak/hf-f8-checkpoint.webp 780w" sizes="140px" width="780" height="1688" alt="Checkpoint: Off-peak weekends complete, with exact prices per slot, and a choice to copy the times or use one price all day." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">07 — Checkpoint</span><span class="phone-desc">One group done. Copy its times or start fresh.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: 0.4deg"><img src="assets/offpeak/hf-f7-copied-times-400.webp" srcset="assets/offpeak/hf-f7-copied-times-400.webp 400w, assets/offpeak/hf-f7-copied-times.webp 780w" sizes="140px" width="780" height="1688" alt="Set times and prices for weekdays: times copied from Friday to Sunday, prices still to add." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">08 — Copied times</span><span class="phone-desc">The times come across. Only prices to add.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: -0.9deg"><img src="assets/offpeak/hf-f7-copied-times-2-400.webp" srcset="assets/offpeak/hf-f7-copied-times-2-400.webp 400w, assets/offpeak/hf-f7-copied-times-2.webp 780w" sizes="140px" width="780" height="1688" alt="A bottom sheet to add a time and price: from 22:00, to 06:00, price per kWh with a ct or € switch." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">09 — Slot sheet</span><span class="phone-desc">Tap instead of drag: from, to and price in a sheet.</span></figcaption>
+        </figure></li>
+      </ol>
+    </div>
+
+    <div class="part" aria-labelledby="part-3">
+      <div class="part-text">
+        <p class="label">Part 3 · Review, save, sync</p>
+        <h3 id="part-3" class="part-title">See what the car will do</h3>
+        <p class="part-line">Check the tariff, save it, and get tonight’s plan.</p>
+      </div>
+      <ol class="phones">
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: -0.6deg"><img src="assets/offpeak/hf-f9-review-400.webp" srcset="assets/offpeak/hf-f9-review-400.webp 400w, assets/offpeak/hf-f9-review.webp 780w" sizes="140px" width="780" height="2026" alt="Check your tariff: the cheapest prices for weekends and weekdays, then each day group with its slots and price-hours bar." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">10 — Review</span><span class="phone-desc">Cheapest prices first, then every slot by number.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: 0.8deg"><img src="assets/offpeak/hf-f10-saved-400.webp" srcset="assets/offpeak/hf-f10-saved-400.webp 400w, assets/offpeak/hf-f10-saved.webp 780w" sizes="140px" width="780" height="1688" alt="Tariff saved: when charging is cheapest in Off-peak and Peak, for weekends and weekdays, and a prompt to sync the wallbox." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">11 — Saved</span><span class="phone-desc">The cheapest window for every season and day group.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: -0.3deg"><img src="assets/offpeak/hf-c0-syncing-400.webp" srcset="assets/offpeak/hf-c0-syncing-400.webp 400w, assets/offpeak/hf-c0-syncing.webp 780w" sizes="140px" width="780" height="1688" alt="Syncing your tariff to the wallbox, which usually takes a few seconds." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">12 — Syncing</span><span class="phone-desc">A few seconds while the wallbox picks it up.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: 0.6deg"><img src="assets/offpeak/hf-c1-all-set-400.webp" srcset="assets/offpeak/hf-c1-all-set-400.webp 400w, assets/offpeak/hf-c1-all-set.webp 780w" sizes="140px" width="780" height="1954" alt="You’re all set: tonight’s charging window from 22:00 to 06:00 at 27 ct/kWh, and the charging schedule by season." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">13 — All set</span><span class="phone-desc">Tonight’s charging window and price, up front.</span></figcaption>
+        </figure></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 09 Edge states -->
+<section id="edge-states" class="case-section" aria-labelledby="edge-title">
+  <div class="case-section-head">
+    <p class="label">09 · Edge states</p>
+    <h2 id="edge-title" class="case-section-title">What can still go wrong, and how it’s <em>caught.</em></h2>
+    <p class="case-section-intro">Partitions rule out gaps. Everything else gets a calm, specific answer.</p>
+  </div>
+  <p class="label tray-label">Six states, while entering and after saving</p>
+  <div class="states">
+    <div class="state-group card card--margin tilt-static" style="--tilt: -0.4deg" aria-labelledby="states-1">
+      <p class="label">While entering</p>
+      <h3 id="states-1" class="part-title">Caught on the slot, not in an error list</h3>
+      <ol class="phones">
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: -0.7deg"><img src="assets/offpeak/edge-s1-missing-price-400.webp" srcset="assets/offpeak/edge-s1-missing-price-400.webp 400w, assets/offpeak/edge-s1-missing-price.webp 788w" sizes="140px" width="788" height="1704" alt="A slot from 18:00 to 22:00 without a price, flagged on the bar and the row, with “Add a price for 18:00 – 22:00 to continue”." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">S1 — Missing price</span><span class="phone-desc">The one error left by design, flagged on the slot itself.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: 0.6deg"><img src="assets/offpeak/edge-s2-unit-check-400.webp" srcset="assets/offpeak/edge-s2-unit-check-400.webp 400w, assets/offpeak/edge-s2-unit-check.webp 788w" sizes="140px" width="788" height="1704" alt="A price of 24 entered in euros, with “24 €/kWh is unusually high. Did you mean 24 ct/kWh?” and buttons for each." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">S2 — Unit check</span><span class="phone-desc">24 €/kWh? A one-tap fix to 24 ct, not a blocking error.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: -0.4deg"><img src="assets/offpeak/edge-s4-flat-400.webp" srcset="assets/offpeak/edge-s4-flat-400.webp 400w, assets/offpeak/edge-s4-flat.webp 780w" sizes="140px" width="780" height="1688" alt="What do you pay per kWh? One price for every hour, with a note that charging starts as soon as the car is plugged in." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">S4 — Flat tariff</span><span class="phone-desc">One price all year, and honest that charging starts at plug-in.</span></figcaption>
+        </figure></li>
+      </ol>
+    </div>
+    <div class="state-group card card--margin tilt-static" style="--tilt: 0.5deg" aria-labelledby="states-2">
+      <p class="label">After saving</p>
+      <h3 id="states-2" class="part-title">Clear about what the wallbox has</h3>
+      <ol class="phones">
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: 0.5deg"><img src="assets/offpeak/edge-replace-400.webp" srcset="assets/offpeak/edge-replace-400.webp 400w, assets/offpeak/edge-replace.webp 780w" sizes="140px" width="780" height="1688" alt="Replace your tariff? The current tariff stays active on the wallbox until a new one is saved and synced." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">E1 — Replace tariff</span><span class="phone-desc">The current tariff stays active until the new one syncs.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: -0.6deg"><img src="assets/offpeak/edge-sync-pending-400.webp" srcset="assets/offpeak/edge-sync-pending-400.webp 400w, assets/offpeak/edge-sync-pending.webp 780w" sizes="140px" width="780" height="1688" alt="Tariff saved, not on your wallbox yet: saved in the app and retried automatically, with things worth checking." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">E2 — Sync pending</span><span class="phone-desc">Nothing is lost: saved in the app, retried automatically.</span></figcaption>
+        </figure></li>
+        <li><figure class="phone">
+          <div class="phone-print" style="--tilt: 0.7deg"><img src="assets/offpeak/edge-not-plugged-400.webp" srcset="assets/offpeak/edge-not-plugged-400.webp 400w, assets/offpeak/edge-not-plugged.webp 780w" sizes="140px" width="780" height="1738" alt="You’re all set, waiting for your car: charging starts when you plug in, at 21 ct/kWh today." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">E3 — Car not plugged in</span><span class="phone-desc">Synced, and clear that charging starts when the car does.</span></figcaption>
+        </figure></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 10 What we cut -->
+<section id="cut" class="case-section" aria-labelledby="cut-title">
+  <div class="case-section-head">
+    <p class="label">10 · What we cut</p>
+    <h2 id="cut-title" class="case-section-title">Every discarded idea left something <em>behind.</em></h2>
+    <p class="case-section-intro">The radial clock and the paint grid lost early. After review, the heatmaps went too.</p>
+  </div>
+  <p class="label tray-label">Discarded, each with the reason</p>
+  <ol class="cuts">
+    <li class="cut">
+      <figure class="board print tilt-static" style="--tilt: -0.4deg">
+        <img src="assets/offpeak/board-discarded-1100.webp" srcset="assets/offpeak/board-discarded-1100.webp 1100w, assets/offpeak/board-discarded.webp 1696w" sizes="(min-width: 1200px) 700px, 88vw" width="1696" height="392" alt="Discarded: the radial 24-hour clock and paint the grid, each with why I tried it, why it lost and what it left in the final design." loading="lazy" decoding="async">
+      </figure>
+      <p class="sheet-caption"><span class="sheet-code">01</span>Two tempting ideas I threw away. The clock’s midnight insight and the grid’s heatmap both stayed.</p>
+    </li>
+    <li class="cut">
+      <figure class="board print tilt-static" style="--tilt: 0.5deg">
+        <img src="assets/offpeak/board-dropped-1100.webp" srcset="assets/offpeak/board-dropped-1100.webp 1100w, assets/offpeak/board-dropped.webp 1696w" sizes="(min-width: 1200px) 700px, 88vw" width="1696" height="297" alt="Other ideas dropped along the way: a chat assistant, one tab per weekday, a vertical timeline, typed period dates, and scan-the-bill parked for v2." loading="lazy" decoding="async">
+      </figure>
+      <p class="sheet-caption"><span class="sheet-code">02</span>Other ideas dropped along the way, each with the reason.</p>
+    </li>
+  </ol>
+</section>
+
+<!-- ============================================================ 11 Outcomes -->
+<section id="outcomes" class="case-section" aria-labelledby="outcomes-title">
+  <div class="case-section-head">
+    <p class="label">11 · Outcomes</p>
+    <h2 id="outcomes-title" class="case-section-title">200+ customers onboarded. No minute goes without a <em>price.</em></h2>
+    <p class="case-section-intro">Built and shipped with a product manager and engineers. These are historical figures, not live data.</p>
+  </div>
+  <ul class="figures">
+    <li class="figure">
+      <span class="figure-num"><span class="pen">200+<svg aria-hidden="true" viewBox="0 0 200 20" preserveAspectRatio="none"><path class="accent-stroke" d="M3 13 C46 5 120 3 197 10" fill="none" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span></span>
+      <span class="figure-text">Customers onboarded to the feature</span>
+    </li>
+    <li class="figure">
+      <span class="figure-num">60%</span>
+      <span class="figure-text">Increase in user satisfaction</span>
+    </li>
+    <li class="figure">
+      <span class="figure-num">90%</span>
+      <span class="figure-text">Reduction in task complexity</span>
+    </li>
+  </ul>
+
+  <!-- The review in the Figma file (Design Decisions → "Review updated"):
+       its own three screens, and the note quoted word for word. -->
+  <div class="evidence">
+    <p class="label tray-label">The evidence: the review in the Figma file</p>
+    <div class="evidence-grid">
+      <div class="evidence-shots">
+        <figure class="phone is-was">
+          <p class="label">Mid-fi</p>
+          <div class="phone-print" style="--tilt: -0.8deg"><img src="assets/offpeak/was-review-chart-400.webp" srcset="assets/offpeak/was-review-chart-400.webp 400w, assets/offpeak/was-review-chart.webp 788w" sizes="132px" width="788" height="1705" alt="Mid-fi review, chart view: the cheapest price called out, a week-by-hour heatmap with a five-step color key, and each day group’s prices on one line." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">09 — Chart</span><span class="phone-desc">Heat maps didn’t add much value. The exact price wasn’t shown properly.</span></figcaption>
+        </figure>
+        <figure class="phone is-was">
+          <p class="label">Mid-fi</p>
+          <div class="phone-print" style="--tilt: 0.6deg"><img src="assets/offpeak/review-10-table-400.webp" srcset="assets/offpeak/review-10-table-400.webp 400w, assets/offpeak/review-10-table.webp 788w" sizes="132px" width="788" height="1705" alt="Mid-fi review, table view: each period’s day groups with their time slots and exact prices, 24 to 42 ct/kWh, and no way to edit a price." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">10 — Table</span><span class="phone-desc">Very easy to perceive, but no way to edit the price.</span></figcaption>
+        </figure>
+        <span class="pen-arrow" aria-hidden="true"><svg viewBox="0 0 64 28"><path class="accent-stroke" d="M3 16 C20 9 38 9 58 14 M48 6 L59 14 L49 22" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <figure class="phone is-now">
+          <p class="label">Shipped</p>
+          <div class="phone-print" style="--tilt: -0.4deg"><img src="assets/offpeak/review-f9-hybrid-400.webp" srcset="assets/offpeak/review-f9-hybrid-400.webp 400w, assets/offpeak/review-f9-hybrid.webp 780w" sizes="132px" width="780" height="1918" alt="Shipped review: an Off-peak and Peak toggle, the cheapest prices first, then each day group’s time slots with exact prices, an edit button and a colored 24-hour price bar." loading="lazy" decoding="async"></div>
+          <figcaption><span class="phone-name">F9 — Hybrid</span><span class="phone-desc">Clear numbers on every slot, colors as a visual cue, a toggle for the seasons.</span></figcaption>
+        </figure>
+      </div>
+      <blockquote class="evidence-note card card--ruled card--margin tilt-static" style="--tilt: 0.6deg">
+        <span class="tape" style="top: -12px; left: 50%; width: 92px; margin-left: -46px; transform: rotate(-3deg)"></span>
+        <p>“Showing exact price against each slot increased the user satisfaction by <b>60%</b> and reduced the task complexity by <b>90%</b>.”</p>
+        <footer><cite>Review note · Design Decisions page</cite><a href="https://www.figma.com/design/YXv8WqRuNMctzHyAyVofZ7/EV-tariff?node-id=351-712" target="_blank" rel="noopener">Open in Figma <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></footer>
+      </blockquote>
+    </div>
+
+    <p class="label tray-label tray-label--next">Changed after review</p>
+    <div class="pairs">
+      <article class="pair" aria-labelledby="pair-1">
+        <div class="pair-shots">
+          <figure class="phone is-was"><p class="label">Mid-fi</p><div class="phone-print" style="--tilt: -0.6deg"><img src="assets/offpeak/was-checkpoint-400.webp" srcset="assets/offpeak/was-checkpoint-400.webp 400w, assets/offpeak/was-checkpoint.webp 788w" sizes="120px" width="788" height="1705" alt="Mid-fi checkpoint: a heatmap of the finished period." loading="lazy" decoding="async"></div></figure>
+          <span class="pen-arrow" aria-hidden="true"><svg viewBox="0 0 64 28"><path class="accent-stroke" d="M3 16 C20 9 38 9 58 14 M48 6 L59 14 L49 22" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <figure class="phone is-now"><p class="label">Shipped</p><div class="phone-print" style="--tilt: 0.5deg"><img src="assets/offpeak/hf-f8-checkpoint-400.webp" srcset="assets/offpeak/hf-f8-checkpoint-400.webp 400w, assets/offpeak/hf-f8-checkpoint.webp 780w" sizes="120px" width="780" height="1688" alt="Shipped checkpoint: the finished group’s slots with exact prices." loading="lazy" decoding="async"></div></figure>
+        </div>
+        <h3 id="pair-1" class="pair-title">The checkpoint lost its heatmap</h3>
+        <p class="pair-why">Heat maps didn’t show any value; the price became very vague. Showing exact value against the slot in a tabular format, on the other hand, was very easy to perceive.</p>
+      </article>
+      <article class="pair" aria-labelledby="pair-2">
+        <div class="pair-shots">
+          <figure class="phone is-was"><p class="label">Mid-fi</p><div class="phone-print" style="--tilt: 0.6deg"><img src="assets/offpeak/was-all-set-400.webp" srcset="assets/offpeak/was-all-set-400.webp 400w, assets/offpeak/was-all-set.webp 788w" sizes="120px" width="788" height="1705" alt="Mid-fi “You’re all set” screen with a short confirmation." loading="lazy" decoding="async"></div></figure>
+          <span class="pen-arrow" aria-hidden="true"><svg viewBox="0 0 64 28"><path class="accent-stroke" d="M3 16 C20 9 38 9 58 14 M48 6 L59 14 L49 22" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <figure class="phone is-now"><p class="label">Shipped</p><div class="phone-print" style="--tilt: -0.5deg"><img src="assets/offpeak/hf-c1-all-set-400.webp" srcset="assets/offpeak/hf-c1-all-set-400.webp 400w, assets/offpeak/hf-c1-all-set.webp 780w" sizes="120px" width="780" height="1954" alt="Shipped “You’re all set” screen with tonight’s charging window and price." loading="lazy" decoding="async"></div></figure>
+        </div>
+        <h3 id="pair-2" class="pair-title">“All set” got specific</h3>
+        <p class="pair-why">A synced wallbox screen was not so informative. The earlier effort seemed useless without an acknowledgment of what exactly was fed to the system.</p>
+      </article>
+    </div>
+  </div>
+
+  <p class="label tray-label tray-label--next">Handed over as a system: 14 color variables, 12 text styles, 17 product components</p>
+  <ol class="sheets sheets--system">
+    <li class="sheet-item" style="--r: 2.1203">
+      <figure class="board print tilt-static" style="--tilt: -0.6deg">
+        <span class="tape" style="top: -11px; left: 40px; width: 84px; transform: rotate(-4deg)"></span>
+        <img src="assets/offpeak/board-colours-1100.webp" srcset="assets/offpeak/board-colours-1100.webp 1100w, assets/offpeak/board-colours.webp 2680w" sizes="(min-width: 1200px) 520px, 88vw" width="2680" height="1264" alt="Design system: 14 color variables, from the core teal and the price colors to the critical red." loading="lazy" decoding="async">
+      </figure>
+      <p class="sheet-caption"><span class="sheet-code">A</span>Color variables</p>
+    </li>
+    <li class="sheet-item" style="--r: 1.9406">
+      <figure class="board print tilt-static" style="--tilt: 0.5deg">
+        <span class="tape" style="top: -11px; right: 40px; width: 84px; transform: rotate(4deg)"></span>
+        <img src="assets/offpeak/board-components-1100.webp" srcset="assets/offpeak/board-components-1100.webp 1100w, assets/offpeak/board-components.webp 2680w" sizes="(min-width: 1200px) 520px, 88vw" width="2680" height="1381" alt="Design system: the product components, including buttons, card buttons, day toggles, price inputs and price slot rows." loading="lazy" decoding="async">
+      </figure>
+      <p class="sheet-caption"><span class="sheet-code">B</span>Product components</p>
+    </li>
+  </ol>
+</section>
+
+<!-- ============================================================ 12 After launch -->
+<section id="after-launch" class="case-section" aria-labelledby="after-title">
+  <div class="case-section-head">
+    <p class="label">12 · After launch</p>
+    <h2 id="after-title" class="case-section-title">Next, nobody types a tariff at <em>all.</em></h2>
+    <p class="case-section-intro">Still open: sketches 7 and 8. Scan the bill or pick the provider’s plan, then check it on the same review screen.</p>
+  </div>
+  <div class="routes">
+    <p class="routes-from">
+      <span class="route-tag card" style="--tilt: -2deg">Scan the bill</span>
+      <span class="routes-or">or</span>
+      <span class="route-tag card" style="--tilt: 1.5deg">Pick the provider’s plan</span>
+    </p>
+    <svg class="routes-arrows" viewBox="0 0 200 160" preserveAspectRatio="none" aria-hidden="true">
+      <path class="accent-stroke" d="M4 30 C70 30 110 60 188 78 M4 130 C70 130 110 100 188 84" fill="none" stroke-width="2.6" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+    </svg>
+    <p class="route-result card card--margin"><span class="route-to sr-only">then </span>Same review screen, nothing typed</p>
+  </div>
+  <p class="note routes-note">Parked for v2: both need data partnerships.</p>
+</section>
+
+<!-- ============================================================ 13 Reflection -->
+<section id="reflection" class="case-section reflection" aria-labelledby="reflection-title">
+  <h2 id="reflection-title" class="label">13 · Reflection</h2>
+  <blockquote class="reflection-quote">
+    <p>The best error message is the one the design <span class="pen">never has to show.<svg aria-hidden="true" viewBox="0 0 200 20" preserveAspectRatio="none"><path class="accent-stroke" d="M3 12 C50 6 120 5 197 11" fill="none" stroke-width="4" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span></p>
+  </blockquote>
+</section>
+
+<!-- ============================================================ The Figma file -->
+<section id="figma-file" class="case-section" aria-labelledby="figma-title">
+  <div class="figma-plate">
+    <a class="figma-stack" href="https://www.figma.com/design/YXv8WqRuNMctzHyAyVofZ7/EV-tariff?node-id=313-4504&amp;t=HfaH4HLDPM01v90e-1" target="_blank" rel="noopener" aria-label="Explore the Figma file (opens in a new tab)">
+      <span class="figma-sheet print" style="--tilt: -7deg; --x: -14%; --w: 76%; --y: 16%"><img src="assets/offpeak/board-colours-1100.webp" width="1100" height="519" alt="" loading="lazy" decoding="async"></span>
+      <span class="figma-sheet print" style="--tilt: 5deg; --x: 12%; --w: 80%; --y: 34%"><img src="assets/offpeak/board-userflow-1100.webp" width="1100" height="685" alt="" loading="lazy" decoding="async"></span>
+      <span class="figma-sheet print" style="--tilt: -2deg; --x: -6%; --w: 46%; --y: 4%"><img src="assets/offpeak/board-brief-480.webp" width="480" height="549" alt="" loading="lazy" decoding="async"></span>
+      <span class="print-caption figma-stack-caption">The Figma file</span>
+    </a>
+    <div class="figma-body">
+      <p class="try-note">Go deeper <span aria-hidden="true">↘&#xFE0E;</span></p>
+      <h2 id="figma-title" class="case-section-title">The thinking lives in the <em>Figma file.</em></h2>
+      <p class="case-text">This page is the short version. The file holds all of it: the research, the sketches, three directions, every final screen and the hand-off.</p>
+      <p><a class="ink-btn" href="https://www.figma.com/design/YXv8WqRuNMctzHyAyVofZ7/EV-tariff?node-id=313-4504&amp;t=HfaH4HLDPM01v90e-1" target="_blank" rel="noopener">Explore Figma file <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></p>
+      <ol class="reasons">
+        <li><span class="reason-name">Read the research</span><span class="reason-text">The brief and data model, nine input patterns and nine ways to chart sixteen prices.</span></li>
+        <li><span class="reason-name">Follow the decisions</span><span class="reason-text">Crazy-8s, three low-fi directions, the scorecard and what changed after review.</span></li>
+        <li><span class="reason-name">Walk the whole flow</span><span class="reason-text">Every hi-fi screen, the drag editor step by step, and the edge states.</span></li>
+        <li><span class="reason-name">Check the hand-off</span><span class="reason-text">The design system and the annotated dev hand-off.</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ Next project -->
+<section class="case-next" aria-labelledby="next-title">
+  <p class="label case-next-label">Next project</p>
+  <div class="next-card">
+    <a class="print tilt" href="case-study.html?p=codeflow" aria-label="Open the Codeflow case study" style="--tilt: -0.8deg">
+      <span class="tape" style="top: -12px; left: 44px; width: 96px; transform: rotate(4deg)"></span>
+      <span class="tape" style="bottom: -10px; right: 48px; width: 90px; transform: rotate(-5deg)"></span>
+      <svg class="print-art" viewBox="0 0 560 360" aria-hidden="true"><use href="assets/home/fig-codeflow.svg#art"/></svg>
+      <span class="print-caption">Fig. 04 — daily challenge, desktop</span>
+    </a>
+    <div class="next-body">
+      <p class="label">No. 03 · 2026 · Habits and learning</p>
+      <h2 id="next-title" class="next-title">Codeflow</h2>
+      <p class="case-text">One small coding challenge a day for students on Edwisely. The whole design has one job: get everyone to a 7-day streak.</p>
+      <a class="cta" href="case-study.html?p=codeflow">See how it came together<span class="sr-only">: Codeflow</span> <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ Contact -->
+<section id="contact" class="contact" aria-labelledby="contact-title">
+  <div class="contact-main">
+    <h2 id="contact-title" class="say-hi">say hi <span aria-hidden="true">↘&#xFE0E;</span></h2>
+    <a class="email" href="mailto:sayhi@niteshdixit.in">sayhi@niteshdixit.in</a>
+    <p class="contact-lede">Got a half-formed idea? Those are my favourite kind. Write to me.</p>
+    <ul class="socials">
+      <li><a href="https://www.instagram.com/pixelandgear/" rel="me">Instagram</a></li>
+      <li><a href="https://www.linkedin.com/in/niteshdixit/" rel="me">LinkedIn</a></li>
+      <li><a href="https://www.behance.net/niteshdixit2" rel="me">Behance</a></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <p class="footer-name" aria-hidden="true">Nitesh <em>Dixit</em></p>
+  <div class="label footer-row">
+    <span>Made by hand in India · MMXXVI</span>
+    <svg class="stamp" width="84" height="84" viewBox="0 0 84 84" role="img" aria-label="Studio stamp: Nitesh Dixit, studio, India">
+      <defs><path id="stampRing" d="M11 42 a31 31 0 1 1 62 0 a31 31 0 1 1 -62 0"/></defs>
+      <circle class="accent-stroke" cx="42" cy="42" r="40" fill="none" stroke-width="1.5"/>
+      <circle class="accent-stroke" cx="42" cy="42" r="23" fill="none" stroke-width="1"/>
+      <text class="accent-fill" font-weight="600" font-size="6.6" letter-spacing="1.8"><textPath href="#stampRing">NITESH DIXIT · STUDIO · INDIA ·</textPath></text>
+      <text class="hand accent-fill" x="42" y="50" text-anchor="middle" font-size="26" font-weight="600">N.</text>
+    </svg>
+    <span class="footer-clock">It's <time data-clock></time> here</span>
+    <a href="#top">Back to the first line <span aria-hidden="true">↑</span></a>
+  </div>
+</footer>
+
+</div>
+</div>
+</body>
+</html>
