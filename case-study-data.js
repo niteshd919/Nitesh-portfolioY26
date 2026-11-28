@@ -9,6 +9,11 @@ window.CASE_STUDIES = {
   /* ================================================================ */
   suspension: {
     slug: 'suspension',
+    /* Moved to its own paper page (the homepage's design). `href` sends
+       case-study.html?p=suspension and every "next" link there. The page's
+       copy now lives in case-suspension.html; the fields below are no longer
+       rendered, and deleting this line brings the old page back. */
+    href: 'case-suspension.html',
     title: 'Suspension Diagnostics',
     subtitle: 'Sensor based suspension diagnostic system on IVI',
     tagline: 'One clear decision, at the moment the driver can make it.',

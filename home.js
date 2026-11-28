@@ -1,53 +1,13 @@
 /* ==========================================================================
-   NITESH DIXIT — homepage ("Maker's") behaviour. Plain JS, no dependencies.
+   NITESH DIXIT — homepage behaviour ("Maker's"). Plain JS, no dependencies.
+   The clock, the housekeeping and the photo viewer live in site.js.
 
-   1. Housekeeping   clear what the case studies' page transition leaves behind
-   2. Clock          Bengaluru time in the header and footer, every minute
-   3. Film reel      pin + fly-in on scroll ("cinematic"), back / forward
-   4. Frame viewer   <dialog>: open, previous / next, ← →, Esc, focus return
+   Film reel: pin + fly-in on scroll ("cinematic"), back / forward
    ========================================================================== */
 (function () {
   'use strict';
 
-  /* 1. Housekeeping ---------------------------------------------------------
-     transition.js on the case-study pages hands the next page a label and a
-     "skip the preloader" flag. This page has neither, so drop them; otherwise
-     the next case study you open would say "Returning to the index". */
-  try {
-    sessionStorage.removeItem('nd:pt');
-    sessionStorage.removeItem('skipPreloader');
-  } catch (err) { /* storage blocked */ }
-
-
-  /* 2. Clock --------------------------------------------------------------- */
-  const clocks = document.querySelectorAll('[data-clock]');
-  if (clocks.length && window.Intl) {
-    const ist = new Intl.DateTimeFormat('en-GB', {
-      timeZone: 'Asia/Kolkata',
-      year: 'numeric', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
-    });
-    let timer = 0;
-    const tick = () => {
-      const now = new Date();
-      const p = {};
-      ist.formatToParts(now).forEach((part) => { p[part.type] = part.value; });
-      const h = Number(p.hour) % 24;
-      const text = `${h % 12 || 12}:${p.minute} ${h < 12 ? 'am' : 'pm'}`; // "7:44 pm"
-      const stamp = `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}+05:30`;
-      clocks.forEach((el) => {
-        el.textContent = text;
-        el.setAttribute('datetime', stamp);
-      });
-      clearTimeout(timer);
-      timer = setTimeout(tick, 60000 - (now.getTime() % 60000) + 50); // on the minute
-    };
-    tick();
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
-  }
-
-
-  /* 3. Film reel ------------------------------------------------------------
+  /* Film reel ------------------------------------------------------------
      The stage is as tall as the pinned strip plus 1.4 windows of scroll. Over
      the first 80% of that scroll each cell flies in from deep behind the
      strip, one after another, on a snaking path; the rest holds it still. */
@@ -162,68 +122,5 @@
     const next = stage.querySelector('[data-reel-next]');
     if (prev) prev.addEventListener('click', () => step(-1));
     if (next) next.addEventListener('click', () => step(1));
-  }
-
-
-  /* 4. Frame viewer -------------------------------------------------------- */
-  const viewer = document.querySelector('[data-viewer]');
-  const frames = Array.from(document.querySelectorAll('[data-frame]'));
-
-  if (viewer && frames.length && typeof viewer.showModal === 'function') {
-    const root = document.documentElement;
-    const meta = viewer.querySelector('[data-viewer-meta]');
-    const img = viewer.querySelector('[data-viewer-img]');
-    const caption = viewer.querySelector('[data-viewer-caption]');
-    const total = frames.length;
-    let index = 0;
-
-    const photoOf = (i) => frames[(i + total) % total].querySelector('img');
-
-    // Warm the cache for the neighbours, so previous / next swap instantly.
-    const preload = (i) => {
-      const src = photoOf(i);
-      const pre = new Image();
-      pre.sizes = img.sizes;
-      pre.srcset = src.getAttribute('srcset');
-      pre.src = src.getAttribute('src');
-    };
-
-    const show = (i) => {
-      index = (i + total) % total;
-      const frame = frames[index];
-      const photo = photoOf(index);
-      meta.textContent = `Frame ${frame.dataset.n} · ${frame.dataset.light} · ${index + 1} of ${total}`;
-      caption.textContent = frame.dataset.caption;
-      img.alt = photo.alt;
-      img.srcset = photo.getAttribute('srcset');
-      img.src = photo.getAttribute('src');
-      preload(index + 1);
-      preload(index - 1);
-    };
-
-    const open = (i) => {
-      show(i);
-      root.classList.add('is-viewing');
-      viewer.showModal();
-    };
-
-    frames.forEach((frame, i) => frame.addEventListener('click', () => open(i)));
-    viewer.querySelector('[data-viewer-close]').addEventListener('click', () => viewer.close());
-    viewer.querySelector('[data-viewer-prev]').addEventListener('click', () => show(index - 1));
-    viewer.querySelector('[data-viewer-next]').addEventListener('click', () => show(index + 1));
-
-    viewer.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') { e.preventDefault(); show(index - 1); }
-      if (e.key === 'ArrowRight') { e.preventDefault(); show(index + 1); }
-    });
-    // A click on the dark scrim (not on the photo or a button) closes it too.
-    viewer.addEventListener('click', (e) => { if (e.target === viewer) viewer.close(); });
-
-    // Esc and every other way out end here: unlock the page and hand focus
-    // back to the frame now on show, scrolled into view in the reel.
-    viewer.addEventListener('close', () => {
-      root.classList.remove('is-viewing');
-      frames[index].focus();
-    });
   }
 })();

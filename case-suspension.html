@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suspension Diagnostics — Nitesh Dixit</title>
+<meta name="description" content="Sensor based suspension diagnostic system on IVI. One clear decision, at the moment the driver can make it.">
+<link rel="canonical" href="https://niteshdixit.in/case-suspension.html">
+<meta name="theme-color" content="#F4F1EA">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Nitesh Dixit">
+<meta property="og:url" content="https://niteshdixit.in/case-suspension.html">
+<meta property="og:title" content="Suspension Diagnostics — Nitesh Dixit">
+<meta property="og:description" content="Sensor based suspension diagnostic system on IVI. One clear decision, at the moment the driver can make it.">
+<meta property="og:image" content="https://niteshdixit.in/assets/suspension/cover.png">
+<meta property="og:image:width" content="1912">
+<meta property="og:image:height" content="931">
+<meta property="og:image:alt" content="The suspension diagnostics screen, parked: a wireframe 3D SUV with all four wheels highlighted and a suspension health score of 97.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="assets/home/favicon-32.png" sizes="32x32">
+<link rel="icon" href="assets/home/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/home/apple-touch-icon.png">
+
+<!-- The cover is the largest thing on the first screen: fetch it before the
+     fonts. The text has metric-matched fallbacks, so it can wait a moment. -->
+<link rel="preload" as="image" href="assets/suspension/cover-960.webp" imagesrcset="assets/suspension/cover-640.webp 640w, assets/suspension/cover-960.webp 960w, assets/suspension/cover-1600.webp 1600w" imagesizes="(min-width: 1100px) 700px, (min-width: 960px) 62vw, 88vw" fetchpriority="high">
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="case.css">
+<script>document.documentElement.classList.add('js');</script>
+<script src="site.js" defer></script>
+<script src="case.js" defer></script>
+</head>
+
+<!-- The paper case study for Suspension Diagnostics. Copy and figures come
+     from its entry in case-study-data.js; case-study.html?p=suspension now
+     sends readers here (the entry's `href`). -->
+<body class="grain">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="site">
+<div class="container">
+
+<header class="site-header">
+  <a class="logo" href="index.html" aria-label="Nitesh Dixit, home">Nitesh<span class="logo-dot">.</span></a>
+  <nav aria-label="Main">
+    <ul class="nav-list">
+      <li><a href="index.html#work">Work</a></li>
+      <li><a href="index.html#notebook">Notebook</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="#contact">Say hi</a></li>
+    </ul>
+  </nav>
+  <p class="label clock">In Bengaluru it's <time data-clock></time></p>
+</header>
+
+<main id="main" tabindex="-1">
+
+<!-- ============================================================ Hero -->
+<section id="top" class="case-hero" aria-labelledby="case-title">
+  <div class="case-kicker">
+    <a class="back-link" href="index.html#work"><span aria-hidden="true">←</span> All work</a>
+    <p class="label">No. 01 · 2025 · HMI concept</p>
+  </div>
+
+  <div class="case-head">
+    <h1 id="case-title" class="case-title">Suspension <em>Diagnostics<svg aria-hidden="true" viewBox="0 0 200 20" preserveAspectRatio="none"><path class="accent-stroke" d="M3 13 C46 5 120 3 197 10" fill="none" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></em></h1>
+    <div class="case-intro">
+      <p class="label">Sensor based suspension diagnostic system on IVI</p>
+      <p class="case-tagline">One clear decision, at the moment the driver can make it.</p>
+    </div>
+  </div>
+
+  <div class="cover-row">
+    <figure class="cover print tilt" style="--tilt: -0.9deg">
+      <span class="tape" style="top: -12px; left: 48px; width: 104px; transform: rotate(-5deg)"></span>
+      <span class="tape" style="top: -10px; right: 56px; width: 88px; transform: rotate(4deg)"></span>
+      <button type="button" class="cover-btn" data-view data-view-meta="Fig. 01 · Center display, parked" aria-label="Open Fig. 01, the center display parked, full size">
+        <img src="assets/suspension/cover-960.webp" srcset="assets/suspension/cover-640.webp 640w, assets/suspension/cover-960.webp 960w, assets/suspension/cover-1600.webp 1600w" sizes="(min-width: 1100px) 700px, (min-width: 960px) 62vw, 88vw" width="1600" height="779" alt="The suspension diagnostics screen, parked: a wireframe 3D SUV with all four wheels highlighted, per-corner readouts for air pressure, spring life, damper life and temperature, a suspension health score of 97, a trip summary and the ride-height selector." fetchpriority="high">
+        <!-- Red pen rings on the four wheels; each one names its corner on hover. -->
+        <span class="ring" style="left: 38%; top: 54%; --d: .5s" data-note="Front left · 91% life left"><svg viewBox="0 0 40 40" aria-hidden="true"><path class="draw ring-path" pathLength="1" d="M20 3 C31 3 37 11 37 20 C37 30 29 37 19 37 C9 37 3 29 3 20 C3 10 11 4 22 5"/></svg></span>
+        <span class="ring" style="left: 44.7%; top: 51.1%; --d: .75s" data-note="Front right · 90% life left"><svg viewBox="0 0 40 40" aria-hidden="true"><path class="draw ring-path" pathLength="1" d="M20 3 C31 3 37 11 37 20 C37 30 29 37 19 37 C9 37 3 29 3 20 C3 10 11 4 22 5"/></svg></span>
+        <span class="ring" style="left: 50.2%; top: 60.1%; --d: 1s" data-note="Rear left · 94% life left"><svg viewBox="0 0 40 40" aria-hidden="true"><path class="draw ring-path" pathLength="1" d="M20 3 C31 3 37 11 37 20 C37 30 29 37 19 37 C9 37 3 29 3 20 C3 10 11 4 22 5"/></svg></span>
+        <span class="ring" style="left: 57.5%; top: 55.9%; --d: 1.25s" data-note="Rear right · 93% life left"><svg viewBox="0 0 40 40" aria-hidden="true"><path class="draw ring-path" pathLength="1" d="M20 3 C31 3 37 11 37 20 C37 30 29 37 19 37 C9 37 3 29 3 20 C3 10 11 4 22 5"/></svg></span>
+      </button>
+      <figcaption class="print-caption">Fig. 01 — Center display, parked</figcaption>
+    </figure>
+
+    <aside class="spec-card card card--margin" aria-label="About the project" style="--tilt: 0.8deg">
+      <span class="tape" style="top: -12px; left: 50%; width: 96px; margin-left: -48px; transform: rotate(-3deg)"></span>
+      <dl class="spec">
+        <div><dt>Status</dt><dd>Concept · not yet tested with drivers</dd></div>
+        <div><dt>Role</dt><dd>Product designer · self-initiated</dd></div>
+        <div><dt>Timeline</dt><dd>45-minute whiteboard, then two prototype iterations</dd></div>
+        <div><dt>Team</dt><dd>Solo</dd></div>
+        <div><dt>Platform</dt><dd>In-car · Center display, cluster and voice</dd></div>
+        <div><dt>Scope</dt><dd>Problem framing · Severity model · Alert flow · IVI screens · Working prototype</dd></div>
+        <div><dt>Tools</dt><dd>FigJam · coded web prototype</dd></div>
+      </dl>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================================================ 01 The short version -->
+<section id="overview" class="case-section" aria-labelledby="overview-title">
+  <div class="case-section-head">
+    <p class="label">01 · The short version</p>
+    <h2 id="overview-title" class="case-section-title">Drivers don’t want data. They want a <em>decision.</em></h2>
+  </div>
+  <div class="overview-body">
+    <p class="case-lead">The problem statement asked for a predictive suspension health experience on a car’s center display. After 45 minutes at the whiteboard I had a different answer. A moving driver can’t read a screen of suspension data. They need to know if it’s serious and what to do, at a moment when they can act.</p>
+    <div class="case-columns">
+      <p>So the center display stays quiet while the car moves. Most findings wait until the car is parked and arrive as a single card: what’s happening, what it means, what to do, and why the car thinks so. Only a critical fault interrupts a drive, through the instrument cluster, a chime and a voice.</p>
+      <p>I then built it as a working IVI prototype and reworked it twice. The first iteration turned the whiteboard into code, and seeing it run overturned one of my own rules. The second added line guidance on rough ground: the car shows which way to steer, how far and how soon, so the suspension takes fewer hits.</p>
+      <p>This is a concept. Nothing has shipped and no driver has used it yet, so the page ends with the plan to test it, starting with usability testing.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 02 What's broken today -->
+<section id="problem" class="case-section" aria-labelledby="problem-title">
+  <div class="case-section-head">
+    <p class="label">02 · What’s broken today</p>
+    <h2 id="problem-title" class="case-section-title">Wear is gradual. The warning is all or <em>nothing.</em></h2>
+  </div>
+  <div class="problem-body">
+    <p class="case-text">Today the car has one amber warning light and a fixed service schedule. Suspension wears out gradually, and faster on India’s speed breakers, potholes and monsoon roads, so drivers get used to it and stop noticing. When the light does come on, it says nothing about how serious things are. Some drivers panic. Others ignore it. For the carmaker, late catches mean more breakdowns and warranty claims.</p>
+    <figure class="statement card card--ruled card--margin tilt-static" style="--tilt: -0.5deg">
+      <figcaption class="label">Problem statement</figcaption>
+      <p class="statement-text">Owner-drivers can’t tell when suspension wear starts to matter, so they find out late: from a scrape, a breakdown or a bigger repair bill. How might the car’s center display give them warnings they trust, in time to act, without taking their eyes off the road for more than <span class="pen">2 seconds<svg aria-hidden="true" viewBox="0 0 200 20" preserveAspectRatio="none"><path class="accent-stroke" d="M3 12 C50 6 120 5 197 11" fill="none" stroke-width="4" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span>?</p>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================================================ 03 Explore the journey -->
+<section id="explore" class="case-section" aria-labelledby="explore-title">
+  <div class="explore-grid">
+    <div class="explore-info">
+      <p class="label">03 · FigJam board</p>
+      <h2 id="explore-title" class="case-section-title">Explore the journey <em>yourself.</em></h2>
+      <ul class="explore-meta label">
+        <li>45-minute whiteboard</li>
+        <li>8 steps</li>
+        <li>2 iterations</li>
+      </ul>
+      <p class="explore-cta">
+        <a class="ink-btn" href="https://www.figma.com/board/v9LTQjbC1MvnnNToJBNvwJ/Whiteboard---suspension-diagnostics?node-id=0-1&amp;t=jpWTXSg0PppW5Me7-1" target="_blank" rel="noopener">Open in FigJam <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>
+        <span class="explore-note" aria-hidden="true">Opens in a new tab</span>
+      </p>
+      <p class="case-text">The full working is on one board, read left to right in the order it happened. Here’s what you’ll find:</p>
+      <ol class="zones">
+        <li><span class="zone-name">Clarify</span><span class="zone-text">Five assumptions, the reframe and the problem statement.</span></li>
+        <li><span class="zone-name">Users</span><span class="zone-text">Who it’s for, their pains, three moments and the job to be done.</span></li>
+        <li><span class="zone-name">Principles</span><span class="zone-text">Four rules, the 2-second limit and the severity model.</span></li>
+        <li><span class="zone-name">Flow</span><span class="zone-text">Three checks before any alert, then booking, snoozing and closing the loop.</span></li>
+        <li><span class="zone-name">Screens</span><span class="zone-text">Five lo-fi screens and the card pattern they share.</span></li>
+        <li><span class="zone-name">Edge cases</span><span class="zone-text">Five edge cases and two trade-offs, with what each costs.</span></li>
+        <li><span class="zone-name">Metrics</span><span class="zone-text">A north star, adoption, three guardrails and the business number.</span></li>
+        <li><span class="zone-name">Wrap-up</span><span class="zone-text">The recap, who I’d bring in, what I’d test and what’s open.</span></li>
+        <li><span class="zone-name">Iteration 1</span><span class="zone-text">What got built, four changes after review, decisions and open questions.</span></li>
+        <li><span class="zone-name">Iteration 2</span><span class="zone-text">Line guidance on rough ground, how it decides and what the simulation measured.</span></li>
+      </ol>
+    </div>
+
+    <!-- The board itself: one view at a time, chosen from the contact sheet. -->
+    <div class="explore-board" data-board>
+      <figure class="board-print print tilt" style="--tilt: 0.7deg">
+        <span class="tape" style="top: -12px; left: 40px; width: 96px; transform: rotate(-4deg)"></span>
+        <span class="tape" style="top: -10px; right: 48px; width: 84px; transform: rotate(4deg)"></span>
+        <button type="button" class="board-btn" data-view data-view-meta="FigJam board · Whole board" data-view-caption="The whole board, left to right: the whiteboard, then both iterations." aria-label="Open this view of the board full size" data-board-main>
+          <img src="assets/suspension/board-overview-1200.webp" srcset="assets/suspension/board-overview-1200.webp 1200w, assets/suspension/board-overview-2400.webp 2400w" sizes="(min-width: 1100px) 640px, (min-width: 960px) 54vw, 88vw" width="2400" height="978" alt="The full FigJam board: the 45-minute whiteboard on the left, with Iteration 1 and Iteration 2 to its right." loading="lazy" decoding="async">
+        </button>
+        <figcaption class="print-note" data-board-caption>The whole board, left to right: the whiteboard, then both iterations.</figcaption>
+      </figure>
+
+      <div class="sheet" role="group" aria-label="Views of the board">
+        <button type="button" class="sheet-thumb" aria-pressed="true" style="--tilt: -2deg"
+          data-board-view data-label="Whole board" data-w="2400" data-h="978"
+          data-srcset="assets/suspension/board-overview-1200.webp 1200w, assets/suspension/board-overview-2400.webp 2400w"
+          data-src="assets/suspension/board-overview-1200.webp"
+          data-caption="The whole board, left to right: the whiteboard, then both iterations."
+          data-alt="The full FigJam board: the 45-minute whiteboard on the left, with Iteration 1 and Iteration 2 to its right.">
+          <img src="assets/suspension/board-overview-thumb.webp" width="560" height="229" alt="" loading="lazy" decoding="async"><span>Whole board</span>
+        </button>
+        <button type="button" class="sheet-thumb" aria-pressed="false" style="--tilt: 1.5deg"
+          data-board-view data-label="Whiteboard" data-w="1600" data-h="1753"
+          data-srcset="assets/suspension/board-whiteboard-800.webp 800w, assets/suspension/board-whiteboard-1600.webp 1600w"
+          data-src="assets/suspension/board-whiteboard-800.webp"
+          data-caption="The 45-minute whiteboard, in eight steps from Clarify to Wrap-up."
+          data-alt="The 45-minute whiteboard in eight zones, from Clarify and reframe to Wrap-up: sticky notes, a persona, a severity table, an alert flowchart and lo-fi screens.">
+          <img src="assets/suspension/board-whiteboard-thumb.webp" width="512" height="560" alt="" loading="lazy" decoding="async"><span>Whiteboard</span>
+        </button>
+        <button type="button" class="sheet-thumb" aria-pressed="false" style="--tilt: -1deg"
+          data-board-view data-label="Iteration 1" data-w="2400" data-h="1925"
+          data-srcset="assets/suspension/board-iteration-1-1200.webp 1200w, assets/suspension/board-iteration-1-2400.webp 2400w"
+          data-src="assets/suspension/board-iteration-1-1200.webp"
+          data-caption="Iteration 1: the whiteboard built into the prototype, then refined."
+          data-alt="Iteration 1 on the board: what was built, what changed after review, three prototype screenshots, decisions and open questions.">
+          <img src="assets/suspension/board-iteration-1-thumb.webp" width="560" height="450" alt="" loading="lazy" decoding="async"><span>Iteration 1</span>
+        </button>
+        <button type="button" class="sheet-thumb" aria-pressed="false" style="--tilt: 2deg"
+          data-board-view data-label="Iteration 2" data-w="2400" data-h="1929"
+          data-srcset="assets/suspension/board-iteration-2-1200.webp 1200w, assets/suspension/board-iteration-2-2400.webp 2400w"
+          data-src="assets/suspension/board-iteration-2-1200.webp"
+          data-caption="Iteration 2: line guidance on rough ground, with simulated results."
+          data-alt="Iteration 2 on the board: how line guidance works and decides, two prototype screenshots, simulated trail results, decisions and questions.">
+          <img src="assets/suspension/board-iteration-2-thumb.webp" width="560" height="450" alt="" loading="lazy" decoding="async"><span>Iteration 2</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 04 The screens -->
+<section id="flow" class="case-section" aria-labelledby="flow-title">
+  <div class="case-section-head">
+    <p class="label">04 · The screens</p>
+    <h2 id="flow-title" class="case-section-title">From whiteboard sketch to a running <em>prototype.</em></h2>
+    <p class="case-section-intro">Center display, landscape. Select any screen to open it full size.</p>
+  </div>
+
+  <!-- All nine screens browse together in the viewer. -->
+  <div class="chapters" data-view-group>
+
+    <div class="chapter" aria-labelledby="chapter-1">
+      <div class="chapter-text">
+        <p class="label">Whiteboard · minutes 24–32</p>
+        <h3 id="chapter-1" class="chapter-title">Lo-fi, built around the parked card</h3>
+        <p class="chapter-intro">Most of the screen time went on the parked state, because that’s where the driver actually decides.</p>
+      </div>
+      <div class="chapter-prints">
+        <figure class="screen">
+          <button type="button" class="screen-print print tilt" style="--tilt: -1.2deg" data-view data-view-meta="W1 · Parked card" data-view-caption="One decision in four parts: what’s happening, what it means, what to do, why we think so." aria-label="Open W1, Parked card, full size">
+            <img src="assets/suspension/lofi-parked-card.webp" width="720" height="405" alt="W1, Parked card" loading="lazy" decoding="async">
+          </button>
+          <figcaption><span class="screen-name">W1 — Parked card</span><span class="screen-desc">One decision in four parts: what’s happening, what it means, what to do, why we think so.</span></figcaption>
+        </figure>
+        <figure class="screen">
+          <button type="button" class="screen-print print tilt" style="--tilt: 0.9deg" data-view data-view-meta="W2 · Vehicle Health detail" data-view-caption="Opened from “Why?”. Evidence for the curious, never the default." aria-label="Open W2, Vehicle Health detail, full size">
+            <img src="assets/suspension/lofi-health-detail.webp" width="720" height="405" alt="W2, Vehicle Health detail" loading="lazy" decoding="async">
+          </button>
+          <figcaption><span class="screen-name">W2 — Vehicle Health detail</span><span class="screen-desc">Opened from “Why?”. Evidence for the curious, never the default.</span></figcaption>
+        </figure>
+        <figure class="screen">
+          <button type="button" class="screen-print print tilt" style="--tilt: 1.1deg" data-view data-view-meta="W3 · Book service" data-view-caption="Pre-filled from the diagnosis, with an estimate and dealer slots. Finish on the phone if in a hurry." aria-label="Open W3, Book service, full size">
+            <img src="assets/suspension/lofi-book-service.webp" width="720" height="405" alt="W3, Book service" loading="lazy" decoding="async">
+          </button>
+          <figcaption><span class="screen-name">W3 — Book service</span><span class="screen-desc">Pre-filled from the diagnosis, with an estimate and dealer slots. Finish on the phone if in a hurry.</span></figcaption>
+        </figure>
+        <figure class="screen">
+          <button type="button" class="screen-print print tilt" style="--tilt: -0.7deg" data-view data-view-meta="W4 · Close the loop" data-view-caption="Proves the alert was real, so the next one is trusted." aria-label="Open W4, Close the loop, full size">
+            <img src="assets/suspension/lofi-close-loop.webp" width="720" height="405" alt="W4, Close the loop" loading="lazy" decoding="async">
+          </button>
+          <figcaption><span class="screen-name">W4 — Close the loop</span><span class="screen-desc">Proves the alert was real, so the next one is trusted.</span></figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="chapter chapter--flip" aria-labelledby="chapter-2">
+      <div class="chapter-text">
+        <p class="label">Iteration 1</p>
+        <h3 id="chapter-2" class="chapter-title">The whiteboard, running</h3>
+        <p class="chapter-intro">The severity model, the three checks and the parked card, built into the IVI prototype. 47 automated checks cover every severity, snoozing, escalation, the monthly cap, offline booking and both service outcomes. The panel on the right is the prototype’s dev control, used to switch scenarios.</p>
+      </div>
+      <div class="chapter-prints">
+        <figure class="screen screen--wide">
+          <button type="button" class="screen-print print tilt" style="--tilt: 0.6deg" data-view data-view-meta="P1 · After a drive" data-view-caption="Every wheel’s readings, with a Plan card alongside: the front-left shock absorber is wearing faster than usual." aria-label="Open P1, After a drive, full size">
+            <img src="assets/suspension/parked-plan-card-640.webp" srcset="assets/suspension/parked-plan-card-640.webp 640w, assets/suspension/parked-plan-card.webp 1272w" sizes="(min-width: 1100px) 680px, (min-width: 900px) 58vw, 84vw" width="1272" height="716" alt="P1, After a drive" loading="lazy" decoding="async">
+          </button>
+          <figcaption><span class="screen-name">P1 — After a drive</span><span class="screen-desc">Every wheel’s readings, with a Plan card alongside: the front-left shock absorber is wearing faster than usual.</span></figcaption>
+        </figure>
+        <figure class="screen">
+          <button type="button" class="screen-print print tilt" style="--tilt: -1deg" data-view data-view-meta="P2 · Start screen" data-view-caption="Health is worked out whenever the car is parked, so every wheel’s state shows before the first drive." aria-label="Open P2, Start screen, full size">
+            <img src="assets/suspension/start-screen-640.webp" srcset="assets/suspension/start-screen-640.webp 640w, assets/suspension/start-screen.webp 1272w" sizes="(min-width: 1100px) 330px, (min-width: 900px) 28vw, 84vw" width="1272" height="716" alt="P2, Start screen" loading="lazy" decoding="async">
+          </button>
+          <figcaption><span class="screen-name">P2 — Start screen</span><span class="screen-desc">Health is worked out whenever the car is parked, so every wheel’s state shows before the first drive.</span></figcaption>
+        </figure>
+        <figure class="screen">
+          <button type="button" class="screen-print print tilt" style="--tilt: 1.2deg" data-view data-view-meta="P3 · Driving with a critical leak" data-view-caption="The center display stays quiet. The cluster, chime and voice carry the alert, and the report log records it." aria-label="Open P3, Driving with a critical leak, full size">
+            <img src="assets/suspension/critical-driving-640.webp" srcset="assets/suspension/critical-driving-640.webp 640w, assets/suspension/critical-driving.webp 1272w" sizes="(min-width: 1100px) 330px, (min-width: 900px) 28vw, 84vw" width="1272" height="716" alt="P3, Driving with a critical leak" loading="lazy" decoding="async">
+          </button>
+          <figcaption><span class="screen-name">P3 — Driving with a critical leak</span><span class="screen-desc">The center display stays quiet. The cluster, chime and voice carry the alert, and the report log records it.</span></figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="chapter" aria-labelledby="chapter-3">
+      <div class="chapter-text">
+        <p class="label">Iteration 2</p>
+        <h3 id="chapter-3" class="chapter-title">Line guidance on rough ground</h3>
+        <p class="chapter-intro">Five times a second, the car scores the scanned ground 22&nbsp;m ahead for every line it could take, counting where all four wheels will roll. It asks for a move only when shifting at least 0.6&nbsp;m cuts the suspension load by 55% or more. The countdown ends 0.8&nbsp;s before the obstacle. If it’s too close to steer round, there’s no cue and the predictive pre-set takes the hit.</p>
+      </div>
+      <div class="chapter-prints">
+        <figure class="screen">
+          <button type="button" class="screen-print print tilt" style="--tilt: -0.8deg" data-view data-view-meta="P4 · The cue" data-view-caption="Steer right 1.7&nbsp;m within 1.3&nbsp;s to miss a 228&nbsp;mm rock. The better line is painted on the scan in green." aria-label="Open P4, The cue, full size">
+            <img src="assets/suspension/line-cue-960.webp" srcset="assets/suspension/line-cue-960.webp 960w, assets/suspension/line-cue.webp 1940w" sizes="(min-width: 1100px) 330px, (min-width: 900px) 28vw, 84vw" width="1940" height="1091" alt="P4, The cue" loading="lazy" decoding="async">
+          </button>
+          <figcaption><span class="screen-name">P4 — The cue</span><span class="screen-desc">Steer right 1.7&nbsp;m within 1.3&nbsp;s to miss a 228&nbsp;mm rock. The better line is painted on the scan in green.</span></figcaption>
+        </figure>
+        <figure class="screen">
+          <button type="button" class="screen-print print tilt" style="--tilt: 1deg" data-view data-view-meta="P5 · On the best line" data-view-caption="Under a second later, the cue turns green and shows the load it saved, for about 2.5&nbsp;seconds." aria-label="Open P5, On the best line, full size">
+            <img src="assets/suspension/line-on-best-960.webp" srcset="assets/suspension/line-on-best-960.webp 960w, assets/suspension/line-on-best.webp 1940w" sizes="(min-width: 1100px) 330px, (min-width: 900px) 28vw, 84vw" width="1940" height="1091" alt="P5, On the best line" loading="lazy" decoding="async">
+          </button>
+          <figcaption><span class="screen-name">P5 — On the best line</span><span class="screen-desc">Under a second later, the cue turns green and shows the load it saved, for about 2.5&nbsp;seconds.</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 05 What building it taught me -->
+<section id="testing" class="case-section" aria-labelledby="testing-title">
+  <div class="case-section-head">
+    <p class="label">05 · What building it taught me</p>
+    <h2 id="testing-title" class="case-section-title">Seeing it run overturned one of my own <em>rules.</em></h2>
+    <p class="case-section-intro">No drivers yet. These came from reviewing the running prototype myself.</p>
+  </div>
+  <ol class="lessons">
+    <li class="lesson card" style="--tilt: -0.6deg"><h3>The data earned its place back</h3><p>The board said evidence is never the default. Running it, every wheel’s state was worth a glance, so per-wheel readings now show by default when parked, beside the decision card. The data came back, but only for the moment a driver can read it.</p></li>
+    <li class="lesson card" style="--tilt: 0.5deg"><h3>Point with the wheel, not the camera</h3><p>The camera used to turn the car toward an affected corner. Now each parked state has one fixed shot, framed so all four wheel cards fit, and a corner is pointed out by its own card and ring.</p></li>
+    <li class="lesson card" style="--tilt: -0.3deg"><h3>Removing the cluster preview left a gap</h3><p>I took the cluster mock-up off the center display; the car’s real cluster is still the channel while driving. The cost: a critical alert has no visual on this screen. The chime, voice, screen-reader alert and report log carry it.</p></li>
+    <li class="lesson card" style="--tilt: 0.7deg"><h3>Small screens need a priority</h3><p>At 1366&nbsp;×&nbsp;768 the four wheel cards don’t fit beside a decision card. The decision card wins, and the numbers move to All readings, one tap away.</p></li>
+    <li class="lesson card" style="--tilt: -0.5deg"><h3>Fewer, bigger moves</h3><p>Looser thresholds for line guidance gave the same benefit with 70% more cues. I chose fewer, bigger moves: at least 0.6&nbsp;m and 55% less load. That still means about 17 cues a minute on very rough ground.</p></li>
+    <li class="lesson card" style="--tilt: 0.4deg"><h3>One exception to my own rule</h3><p>Line guidance shows on the center display while driving. I treat it as driving assistance, like a hazard callout, so the quiet-while-moving rule for health alerts doesn’t apply. It’s the riskiest call here, and the first thing to test.</p></li>
+  </ol>
+</section>
+
+<!-- ============================================================ 06 What the simulation shows -->
+<section id="impact" class="case-section" aria-labelledby="impact-title">
+  <div class="case-section-head">
+    <p class="label">06 · What the simulation shows</p>
+    <h2 id="impact-title" class="case-section-title">Fewer hits on a simulated trail. Not yet tested on a real <em>driver.</em></h2>
+  </div>
+  <ul class="figures">
+    <li class="figure">
+      <span class="figure-num"><span class="pen">68%<svg aria-hidden="true" viewBox="0 0 200 20" preserveAspectRatio="none"><path class="accent-stroke" d="M3 13 C46 5 120 3 197 10" fill="none" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span></span>
+      <span class="figure-text">fewer rock strikes when following the cue than holding the line: 86 against 271 across three stretches</span>
+    </li>
+    <li class="figure">
+      <span class="figure-num">66%</span>
+      <span class="figure-text">less suspension load past the comfortable height, between 53% and 73% per stretch</span>
+    </li>
+    <li class="figure">
+      <span class="figure-num">17</span>
+      <span class="figure-text">cues a minute on very rough ground. That’s the cost, and the number usability testing has to check</span>
+    </li>
+  </ul>
+  <p class="figures-note">Measured in the prototype’s own simulation: its terrain, speed and steering, run headless over three 600&nbsp;m stretches at 80% roughness, following the cue against holding the line. It shows the guidance logic works. Whether a driver can follow it safely is still untested.</p>
+</section>
+
+<!-- ============================================================ 07 What I'd do next -->
+<section id="whats-next" class="case-section" aria-labelledby="next-steps-title">
+  <div class="case-section-head">
+    <p class="label">07 · What I’d do next</p>
+    <h2 id="next-steps-title" class="case-section-title">Put it in front of drivers before building anything <em>else.</em></h2>
+  </div>
+  <div class="plan card card--ruled card--margin">
+    <div class="plan-col">
+      <h3>Usability testing first</h3>
+      <ul>
+        <li>Parked card, with 10 owners: show it for five seconds, then ask what’s wrong, how serious it is and what they’d do. It passes if most can answer all three without help.</li>
+        <li>Driving simulator, for the critical alert and the steering cue: eye-tracked glances under 2&nbsp;seconds and tasks under 12. Run the same trail with and without cues.</li>
+        <li>Line guidance at 17 cues a minute: do drivers follow, hesitate or tune it out? This decides whether the feature stays.</li>
+        <li>Severity labels: can owners tell Plan from Caution unaided, and does “Plan · not urgent” calm them or get ignored?</li>
+        <li>Service advisors: sit with them as they explain a report to a driver, including the false alarm where the dealer finds no fault.</li>
+        <li>Then a small pilot on test cars, tracking issues fixed before they fail, false alarms, alerts per car and glance time, before anything scales.</li>
+      </ul>
+    </div>
+    <div class="plan-col">
+      <h3>Who I’d bring in</h3>
+      <ul>
+        <li>Vehicle dynamics engineers.</li>
+        <li>Data science, to set the confidence bar that triggers an alert.</li>
+        <li>Functional safety and legal, for the liability wording.</li>
+        <li>The instrument-cluster HMI team.</li>
+        <li>Dealer operations.</li>
+      </ul>
+    </div>
+    <div class="plan-col">
+      <h3>Still open</h3>
+      <ul>
+        <li>What confidence should trigger an alert? 70% is a placeholder.</li>
+        <li>How do we say “Safe to drive” without liability risk? It lives in one constant, so legal can change it in one place.</li>
+        <li>What should a booking really cost? The ₹ figures are placeholders.</li>
+        <li>Should a critical alert show anything on the center display when audio is off?</li>
+        <li>Should a new steering cue also play a sound?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 08 Try it live -->
+<section id="playground" class="case-section" aria-labelledby="playground-title">
+  <div class="playground">
+    <a class="playground-print print tilt" href="https://suspension-hud.vercel.app/" target="_blank" rel="noopener" aria-label="Open the interactive prototype (opens in a new tab)" style="--tilt: 1.2deg">
+      <span class="tape" style="top: -12px; left: 50%; width: 110px; margin-left: -55px; transform: rotate(-3deg)"></span>
+      <img src="assets/suspension/line-cue-960.webp" srcset="assets/suspension/line-cue-960.webp 960w, assets/suspension/line-cue.webp 1940w" sizes="(min-width: 1100px) 620px, (min-width: 900px) 54vw, 88vw" width="1940" height="1091" alt="" loading="lazy" decoding="async">
+      <span class="print-caption">Interactive prototype</span>
+    </a>
+    <div class="playground-body">
+      <p class="try-note">Try it live <span aria-hidden="true">↘&#xFE0E;</span></p>
+      <h2 id="playground-title" class="case-section-title">Simulate it <em>yourself.</em></h2>
+      <p class="case-text">Reading about a suspension is one thing. Drive it on the highway, over rough ground or into floodwater, and see how the screen responds in the moment.</p>
+      <p><a class="ink-btn" href="https://suspension-hud.vercel.app/" target="_blank" rel="noopener">Take me to playground <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ Next project -->
+<section class="case-next" aria-labelledby="next-title">
+  <p class="label case-next-label">Next project</p>
+  <div class="next-card">
+    <a class="print tilt" href="case-study.html?p=offpeak" aria-label="Open the Tariff-based EV charging case study" style="--tilt: 1.6deg">
+      <span class="tape" style="top: -12px; left: 50%; width: 110px; margin-left: -55px; transform: rotate(-3deg)"></span>
+      <svg class="print-art" viewBox="0 0 560 360" aria-hidden="true"><use href="assets/home/fig-offpeak.svg#art"/></svg>
+      <span class="print-caption">Fig. 03 — paper tariff to schedule</span>
+    </a>
+    <div class="next-body">
+      <p class="label">No. 02 · 2023 · Research and mobile</p>
+      <h2 id="next-title" class="next-title">Tariff-based EV charging</h2>
+      <p class="case-text">Electricity tariffs arrive as dense paper tables. This flow turns one into a charging schedule, and quietly makes gaps and overlaps impossible.</p>
+      <a class="cta" href="case-study.html?p=offpeak">See how it came together<span class="sr-only">: Tariff-based EV charging</span> <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ Contact -->
+<section id="contact" class="contact" aria-labelledby="contact-title">
+  <div class="contact-main">
+    <h2 id="contact-title" class="say-hi">say hi <span aria-hidden="true">↘&#xFE0E;</span></h2>
+    <a class="email" href="mailto:sayhi@niteshdixit.in">sayhi@niteshdixit.in</a>
+    <p class="contact-lede">Got a half-formed idea? Those are my favourite kind. Write to me.</p>
+    <ul class="socials">
+      <li><a href="https://www.instagram.com/pixelandgear/" rel="me">Instagram</a></li>
+      <li><a href="https://www.linkedin.com/in/niteshdixit/" rel="me">LinkedIn</a></li>
+      <li><a href="https://www.behance.net/niteshdixit2" rel="me">Behance</a></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <p class="footer-name" aria-hidden="true">Nitesh <em>Dixit</em></p>
+  <div class="label footer-row">
+    <span>Made by hand in India · MMXXVI</span>
+    <svg class="stamp" width="84" height="84" viewBox="0 0 84 84" role="img" aria-label="Studio stamp: Nitesh Dixit, studio, India">
+      <defs><path id="stampRing" d="M11 42 a31 31 0 1 1 62 0 a31 31 0 1 1 -62 0"/></defs>
+      <circle class="accent-stroke" cx="42" cy="42" r="40" fill="none" stroke-width="1.5"/>
+      <circle class="accent-stroke" cx="42" cy="42" r="23" fill="none" stroke-width="1"/>
+      <text class="accent-fill" font-weight="600" font-size="6.6" letter-spacing="1.8"><textPath href="#stampRing">NITESH DIXIT · STUDIO · INDIA ·</textPath></text>
+      <text class="hand accent-fill" x="42" y="50" text-anchor="middle" font-size="26" font-weight="600">N.</text>
+    </svg>
+    <span class="footer-clock">It's <time data-clock></time> here</span>
+    <a href="#top">Back to the first line <span aria-hidden="true">↑</span></a>
+  </div>
+</footer>
+
+</div>
+</div>
+
+<!-- Photo viewer: site.js fills it from the picture that was opened. -->
+<dialog class="viewer" data-viewer aria-label="Screen viewer" style="--view-max: 1200px">
+  <div class="viewer-inner">
+    <button type="button" class="viewer-close" data-viewer-close aria-label="Close the viewer">×</button>
+    <p class="viewer-meta" data-viewer-meta aria-live="polite"></p>
+    <div class="viewer-mat">
+      <img data-viewer-img src="assets/suspension/cover-960.webp" sizes="(min-width: 1300px) 1180px, 92vw" width="1600" height="779" alt="" loading="lazy" decoding="async">
+    </div>
+    <p class="viewer-caption" data-viewer-caption hidden></p>
+    <div class="viewer-nav" data-viewer-nav>
+      <button type="button" class="pill-btn" data-viewer-prev>← Previous</button>
+      <button type="button" class="pill-btn" data-viewer-next>Next →</button>
+    </div>
+  </div>
+</dialog>
+</body>
+</html>

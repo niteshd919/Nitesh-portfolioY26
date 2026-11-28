@@ -27,8 +27,10 @@
      in the headline are preloaded; the hand font loads on first use. -->
 <link rel="preload" href="assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="site.css">
 <link rel="stylesheet" href="home.css">
 <script>document.documentElement.classList.add('js');</script>
+<script src="site.js" defer></script>
 <script src="home.js" defer></script>
 </head>
 
@@ -102,7 +104,7 @@
   </div>
 
   <article class="project" aria-labelledby="work-1">
-    <a class="print tilt" href="case-study.html?p=suspension" aria-label="Open the Suspension Diagnostics case study" style="--tilt: -1.4deg">
+    <a class="print tilt" href="case-suspension.html" aria-label="Open the Suspension Diagnostics case study" style="--tilt: -1.4deg">
       <span class="tape" style="top: -12px; left: 40px; width: 96px; transform: rotate(-6deg)"></span>
       <span class="tape" style="top: -10px; right: 44px; width: 84px; transform: rotate(5deg)"></span>
       <svg class="print-art" viewBox="0 0 560 360" aria-hidden="true"><use href="assets/home/fig-suspension.svg#art"/></svg>
@@ -114,7 +116,7 @@
       <p class="project-story">A display that tells you what's coming before you feel it: the bump ahead, how the suspension will take it, and when something needs a look.</p>
       <p class="stat"><span class="stat-num">1</span><span class="stat-text">glance is all it should take</span></p>
       <p class="note">one glance, not a stare</p>
-      <a class="cta" href="case-study.html?p=suspension">See how it came together<span class="sr-only">: Suspension Diagnostics</span> <span aria-hidden="true">→</span></a>
+      <a class="cta" href="case-suspension.html">See how it came together<span class="sr-only">: Suspension Diagnostics</span> <span aria-hidden="true">→</span></a>
     </div>
   </article>
 
@@ -226,13 +228,13 @@
        frames in; home.js sizes it and turns the pin on ("is-cinematic"). -->
   <div class="reel-stage" data-reel-stage>
     <div class="reel-pin" data-reel-pin>
-      <div class="reel" data-reel>
+      <div class="reel" data-reel data-view-group>
         <div class="cell reel-end reel-end--start" aria-hidden="true"><span>ROLL No. 26 ▸</span></div>
 
         <figure class="cell shot">
           <span class="film-mark film-mark--tl" aria-hidden="true">Roll 26 · 01</span>
           <span class="film-mark film-mark--tr" aria-hidden="true">▸ 01A</span>
-          <button type="button" class="shot-btn" data-frame data-n="01" data-light="First light" data-caption="Waiting on the sun at the cliff edge. Pick of the roll." aria-label="Look closer at frame 01, First light" aria-describedby="frame-01">
+          <button type="button" class="shot-btn" data-view data-view-meta="Frame 01 · First light" data-view-caption="Waiting on the sun at the cliff edge. Pick of the roll." aria-label="Look closer at frame 01, First light" aria-describedby="frame-01">
             <img id="frame-01" src="assets/rearview/01-1024.webp" srcset="assets/rearview/01-480.webp 480w, assets/rearview/01-1024.webp 1024w, assets/rearview/01.webp 1600w" sizes="(min-width: 768px) 56vw, 260px" width="1600" height="1200" alt="Four people sit at a cliff edge with their backpacks, watching an orange sun rise through haze beside a large tree." loading="lazy" decoding="async">
           </button>
           <figcaption class="film-mark film-mark--bl">First light</figcaption>
@@ -242,7 +244,7 @@
         <figure class="cell shot">
           <span class="film-mark film-mark--tl" aria-hidden="true">Roll 26 · 02</span>
           <span class="film-mark film-mark--tr" aria-hidden="true">▸ 02A</span>
-          <button type="button" class="shot-btn" data-frame data-n="02" data-light="Morning" data-caption="[Your caption for this frame.]" aria-label="Look closer at frame 02, Morning" aria-describedby="frame-02">
+          <button type="button" class="shot-btn" data-view data-view-meta="Frame 02 · Morning" data-view-caption="[Your caption for this frame.]" aria-label="Look closer at frame 02, Morning" aria-describedby="frame-02">
             <img id="frame-02" src="assets/rearview/02-1024.webp" srcset="assets/rearview/02-480.webp 480w, assets/rearview/02-1024.webp 1024w, assets/rearview/02.webp 1600w" sizes="(min-width: 768px) 56vw, 260px" width="1600" height="1200" alt="A pale sun burns through morning haze over a wide valley; a flat-topped hill stands to the right and a tree is silhouetted on the left." loading="lazy" decoding="async">
           </button>
           <figcaption class="film-mark film-mark--bl">Morning</figcaption>
@@ -251,7 +253,7 @@
         <figure class="cell shot">
           <span class="film-mark film-mark--tl" aria-hidden="true">Roll 26 · 11</span>
           <span class="film-mark film-mark--tr" aria-hidden="true">▸ 11A</span>
-          <button type="button" class="shot-btn" data-frame data-n="11" data-light="High sun" data-caption="Hills in rows beyond a green roof." aria-label="Look closer at frame 11, High sun" aria-describedby="frame-11">
+          <button type="button" class="shot-btn" data-view data-view-meta="Frame 11 · High sun" data-view-caption="Hills in rows beyond a green roof." aria-label="Look closer at frame 11, High sun" aria-describedby="frame-11">
             <img id="frame-11" src="assets/rearview/11-1024.webp" srcset="assets/rearview/11-480.webp 480w, assets/rearview/11-1024.webp 1024w, assets/rearview/11.webp 1600w" sizes="(min-width: 768px) 56vw, 260px" width="1600" height="1200" alt="Layer after layer of blue mountain ridges under a bright, cloudy sky, seen from above a green metal roof and treetops." loading="lazy" decoding="async">
           </button>
           <figcaption class="film-mark film-mark--bl">High sun</figcaption>
@@ -261,7 +263,7 @@
         <figure class="cell shot">
           <span class="film-mark film-mark--tl" aria-hidden="true">Roll 26 · 24</span>
           <span class="film-mark film-mark--tr" aria-hidden="true">▸ 24A</span>
-          <button type="button" class="shot-btn" data-frame data-n="24" data-light="Golden hour" data-caption="[Your caption for this frame.]" aria-label="Look closer at frame 24, Golden hour" aria-describedby="frame-24">
+          <button type="button" class="shot-btn" data-view data-view-meta="Frame 24 · Golden hour" data-view-caption="[Your caption for this frame.]" aria-label="Look closer at frame 24, Golden hour" aria-describedby="frame-24">
             <img id="frame-24" src="assets/rearview/24-1024.webp" srcset="assets/rearview/24-480.webp 480w, assets/rearview/24-1024.webp 1024w, assets/rearview/24.webp 1600w" sizes="(min-width: 768px) 56vw, 260px" width="1600" height="1200" alt="A green landscape scattered with granite boulders, the sun a bright patch behind a thick gray cloud cover." loading="lazy" decoding="async">
           </button>
           <figcaption class="film-mark film-mark--bl">Golden hour</figcaption>
@@ -271,7 +273,7 @@
         <figure class="cell shot">
           <span class="film-mark film-mark--tl" aria-hidden="true">Roll 26 · 33</span>
           <span class="film-mark film-mark--tr" aria-hidden="true">▸ 33A</span>
-          <button type="button" class="shot-btn" data-frame data-n="33" data-light="Last light" data-caption="[Your caption for this frame.]" aria-label="Look closer at frame 33, Last light" aria-describedby="frame-33">
+          <button type="button" class="shot-btn" data-view data-view-meta="Frame 33 · Last light" data-view-caption="[Your caption for this frame.]" aria-label="Look closer at frame 33, Last light" aria-describedby="frame-33">
             <img id="frame-33" src="assets/rearview/33-1024.webp" srcset="assets/rearview/33-480.webp 480w, assets/rearview/33-1024.webp 1024w, assets/rearview/33.webp 1600w" sizes="(min-width: 768px) 56vw, 260px" width="1600" height="1200" alt="Coconut palms silhouetted against an orange sunset sky, a striped crash barrier blurred in the foreground." loading="lazy" decoding="async">
           </button>
           <figcaption class="film-mark film-mark--bl">Last light</figcaption>
@@ -281,7 +283,7 @@
         <figure class="cell shot">
           <span class="film-mark film-mark--tl" aria-hidden="true">Roll 26 · 40</span>
           <span class="film-mark film-mark--tr" aria-hidden="true">▸ 40A</span>
-          <button type="button" class="shot-btn" data-frame data-n="40" data-light="After dark" data-caption="[Your caption for this frame.]" aria-label="Look closer at frame 40, After dark" aria-describedby="frame-40">
+          <button type="button" class="shot-btn" data-view data-view-meta="Frame 40 · After dark" data-view-caption="[Your caption for this frame.]" aria-label="Look closer at frame 40, After dark" aria-describedby="frame-40">
             <img id="frame-40" src="assets/rearview/40-1024.webp" srcset="assets/rearview/40-480.webp 480w, assets/rearview/40-1024.webp 1024w, assets/rearview/40.webp 1600w" sizes="(min-width: 768px) 56vw, 260px" width="1600" height="1200" alt="Inside a moving car at night, the side window a blur of trees and orange street lights." loading="lazy" decoding="async">
           </button>
           <figcaption class="film-mark film-mark--bl">After dark</figcaption>
@@ -354,7 +356,7 @@
       <img data-viewer-img src="assets/rearview/01-1024.webp" srcset="assets/rearview/01-480.webp 480w, assets/rearview/01-1024.webp 1024w, assets/rearview/01.webp 1600w" sizes="(min-width: 1117px) 940px, 86vw" width="1600" height="1200" alt="Four people sit at a cliff edge with their backpacks, watching an orange sun rise through haze beside a large tree." loading="lazy" decoding="async">
     </div>
     <p class="viewer-caption" data-viewer-caption>Waiting on the sun at the cliff edge. Pick of the roll.</p>
-    <div class="viewer-nav">
+    <div class="viewer-nav" data-viewer-nav>
       <button type="button" class="pill-btn" data-viewer-prev>← Previous frame</button>
       <button type="button" class="pill-btn" data-viewer-next>Next frame →</button>
     </div>
