@@ -342,7 +342,9 @@
     let elapsed = msAt(still);
     let frame = 0;
     let before = 0;
-    let onScreen = true;
+    // Wait for the observer's first word before running (it reports at once),
+    // so a clock below the fold never starts.
+    let onScreen = !('IntersectionObserver' in window);
     const tick = (now) => {
       // Cap each step, so a stalled tab or a long frame doesn't skip hours.
       // (A frame's time can be a little earlier than play() was called.)

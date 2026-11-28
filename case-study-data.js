@@ -774,6 +774,11 @@ window.CASE_STUDIES = {
   /* ================================================================ */
   codeflow: {
     slug: 'codeflow',
+    /* Moved to its own paper page (the homepage's design). `href` sends
+       case-study.html?p=codeflow and every "next" link there. The page's
+       copy now lives in case-codeflow.html; the fields below are no longer
+       rendered, and deleting this line brings the old page back. */
+    href: 'case-codeflow.html',
     title: 'Codeflow',
     subtitle: 'Daily Coding Challenge',
     tagline: 'Make coding a daily habit.',

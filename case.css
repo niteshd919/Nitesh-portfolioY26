@@ -11,6 +11,8 @@
    4. Problem statement 8. Figures                12. Small screens, motion
    13. Story pieces (case-ev-tariff.html): phone prints, boards, the day
        chart, the worksheet, the strip, the evidence, routes, Figma plate
+   14. More story pieces (case-codeflow.html): desktop screens, causes, the
+       research ladder, personas, roads not taken, the map, the storyboard
    ========================================================================== */
 
 
@@ -119,7 +121,8 @@
 .case-title em { white-space: nowrap; }
 .case-title > svg {
   position: absolute;
-  left: 0;
+  left: var(--ul-x, 0);
+  right: var(--ul-right, auto);
   top: calc(100% + .08em);
   width: var(--ul, 3em);
   height: .2em;
@@ -632,6 +635,9 @@ html:not(.js) .sheet { display: none; }
    the Figma file holds the rest. */
 
 .case-title--wide { max-width: 13ch; }
+/* A one-word title (Code<em>flow</em>): the title is as wide as the word, so
+   the pen line hangs from its right end, under the serif part. */
+.case-title--word { width: fit-content; max-width: none; }
 
 /* Graph paper, for the worksheet. */
 .card--grid {
@@ -664,14 +670,14 @@ html:not(.js) .sheet { display: none; }
   background: #fff;
 }
 .phone figcaption { display: flex; flex-direction: column; gap: 5px; }
-.phone-name {
+.phone-name, .shot-name {
   font-weight: 600;
   font-size: 11px;
   letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--ink);
 }
-.phone-desc { font-size: 14px; line-height: 1.45; color: var(--graphite); }
+.phone-desc, .shot-desc { font-size: 14px; line-height: 1.45; color: var(--graphite); }
 .phone > .label { margin-bottom: -4px; }
 .phone.is-now > .label { color: var(--ink); }
 /* The earlier version, faded like an old photocopy. */
@@ -1571,4 +1577,362 @@ html:not(.js) .strip-meter { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .figma-sheet { transition: none; }
+}
+
+
+/* 14. More story pieces ---------------------------------------------------------------
+   Codeflow is a desktop product, so its screens print landscape, cropped
+   16:10 from the top as on the old page. Its research and decisions are
+   argued in words, so they get paper of their own: index cards, a ladder
+   with stamps, ideas crossed out in red pen. */
+
+/* The cover, with a pen ring that names what it circles on hover. */
+.cover-frame { position: relative; background: #22211F; }
+.cover-frame img { width: 100%; height: auto; }
+.ring--left::after { left: auto; right: -20%; transform: rotate(-2deg); }
+
+/* A desktop screen, printed small. */
+.shot { display: flex; flex-direction: column; gap: 14px; min-width: 0; margin: 0; }
+.shot-print {
+  padding: 6px;
+  background: var(--card);
+  box-shadow: 0 1px 0 rgba(26, 25, 23, .06), 0 16px 30px -20px rgba(26, 25, 23, .55);
+  transform: rotate(var(--tilt, 0deg));
+}
+.shot-print img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 2px;
+  background: #fff;
+}
+.shot figcaption { display: flex; flex-direction: column; gap: 5px; }
+.strip--wide .strip-track { gap: 40px; }
+.strip--wide .strip-item .shot { width: 336px; }
+
+/* 02 · Why it happens: five causes on index cards. */
+.causes {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 28px 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: cause;
+}
+.cause { padding: 22px 20px 24px; counter-increment: cause; }
+.cause::before {
+  content: counter(cause, decimal-leading-zero);
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .1em;
+  color: var(--graphite);
+}
+.cause h3 {
+  margin: 0 0 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 59, 29, .45);
+  border-bottom-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  font-weight: 600;
+  font-stretch: 78%;
+  font-size: 21px;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+}
+.cause p { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--text); }
+
+/* 04 · The recovery ladder: stages along a pen-drawn rail, each option a
+   card stamped with what Codeflow did with it. Built ones are pinned
+   cards; the rest stay flat on the paper. */
+.ladder {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ladder::before { /* the rail */
+  content: '';
+  position: absolute;
+  top: 33px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--ink);
+}
+.ladder-stage { position: relative; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.ladder-when {
+  margin: 0 0 30px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.ladder-when::after { /* its stop on the rail */
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+}
+.rung { position: relative; padding: 16px; background: var(--paper-deep); }
+.rung.is-kept { background: var(--card); box-shadow: 0 16px 28px -22px rgba(26, 25, 23, .55); }
+.rung-title { margin: 0 0 6px; font-weight: 600; font-size: 16px; line-height: 1.25; }
+.rung.is-cut .rung-title {
+  text-decoration: line-through;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+.rung-desc { margin: 0 0 12px; font-size: 13.5px; line-height: 1.45; color: var(--graphite); }
+.rung-verdict {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(26, 25, 23, .25);
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+/* A rubber stamp: a red ring for what is in v1, dashed for later, plain for
+   the rest. Its words stay in ink, which reads at this size. */
+.stamp {
+  display: inline-block;
+  margin: 0 6px 2px 0;
+  padding: 1px 6px;
+  border: 1.5px solid var(--graphite);
+  border-radius: 3px;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transform: rotate(-3deg);
+}
+.is-kept .stamp { border-color: var(--accent); }
+.is-later .stamp { border-style: dashed; }
+
+/* Proto-personas on index cards. */
+.personas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.persona { display: flex; flex-direction: column; gap: 6px; padding: 28px 26px 30px 58px; --margin: 38px; }
+.persona-name {
+  margin: 0;
+  font-weight: 600;
+  font-stretch: 78%;
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+}
+.persona-quote { margin: 14px 0 18px; }
+.persona-quote p {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 20px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.persona-list { display: grid; gap: 8px; margin: 6px 0 0; padding: 0; list-style: none; }
+.persona-list li { position: relative; padding-left: 18px; font-size: 14.5px; line-height: 1.45; color: var(--text); }
+.persona-list li::before { content: '–'; position: absolute; left: 0; color: var(--graphite); }
+.personas + .figures-note { margin-top: 40px; }
+
+/* 05 · Roads not taken: the idea crossed out in red pen, what was built
+   instead, and why it lost. */
+.roads {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px 32px;
+  margin: 56px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.road { display: flex; flex-direction: column; gap: 18px; padding: 26px 26px 28px; }
+.road-source {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+.road-source b { color: var(--ink); }
+.road-part .label { margin-bottom: 6px; }
+.road-part p:not(.label) { margin: 0; }
+.road-was {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--graphite);
+  text-decoration: line-through;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+.road-now { font-weight: 500; font-size: 16px; line-height: 1.5; color: var(--ink); }
+.road-why { font-size: 14.5px; line-height: 1.55; color: var(--text); }
+.road-part:last-child { padding-top: 16px; border-top: 1px solid var(--rule); }
+
+/* 06 · The problem → solution map, printed on a card. */
+.map { padding: 8px 34px 12px; }
+.map-table { width: 100%; border-collapse: collapse; }
+.map-table thead th {
+  padding: 18px 20px 12px 0;
+  border-bottom: 2px solid var(--ink);
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+.map-table tbody th,
+.map-table td {
+  padding: 18px 24px 18px 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+.map-table tbody tr:last-child > * { border-bottom: 0; }
+.map-table tbody th { width: 21%; font-weight: 600; font-size: 16px; line-height: 1.35; color: var(--ink); }
+.map-table td { width: 39.5%; font-size: 15px; line-height: 1.55; color: var(--text); }
+
+/* 08 · Day 1 as a storyboard: three screens, a pen arrow between each. */
+.storyboard {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px 76px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.storyboard > li { position: relative; min-width: 0; container-type: inline-size; }
+.storyboard > li + li::before {
+  content: '';
+  position: absolute;
+  top: calc(31.25cqi - 10px); /* the middle of a 16:10 print */
+  left: -62px;
+  width: 48px;
+  height: 22px;
+  background: var(--accent);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 28'%3E%3Cpath d='M3 16 C20 9 38 9 58 14 M48 6 L59 14 L49 22' fill='none' stroke='%23000' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 28'%3E%3Cpath d='M3 16 C20 9 38 9 58 14 M48 6 L59 14 L49 22' fill='none' stroke='%23000' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* 09 · Bad days: three cards, each with its two states. */
+.states--three { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.states--three .state-group { padding: 26px 22px 28px 50px; --margin: 32px; }
+.shots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 28px 20px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 10 · The trade-off: units sit small; the zero is ringed. */
+.figure-num small { margin-left: .06em; font-size: .36em; letter-spacing: 0; }
+.figure .ringed svg { top: -.08em; left: -.22em; width: calc(100% + .44em); height: calc(100% + .16em); }
+
+/* 11 · How we will know: the north star pinned, the rest beside it. */
+.measures {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 32px;
+  margin: 56px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.measure { display: flex; flex-direction: column; gap: 10px; padding: 28px 26px 30px; }
+.measure.is-north { padding: 34px 30px 34px 66px; --margin: 46px; }
+.measure h3 {
+  margin: 0;
+  font-weight: 600;
+  font-stretch: 78%;
+  font-size: 22px;
+  line-height: 1.15;
+  letter-spacing: -.02em;
+}
+.measure.is-north h3 { font-size: 30px; }
+.measure p:not(.label) { margin: 0; font-size: 15px; line-height: 1.5; color: var(--text); }
+
+
+/* More story pieces on smaller screens. */
+@media (max-width: 1100px) {
+  .causes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  /* Three cards of two screens need about 1050px; below that, one card a row. */
+  .states--three { grid-template-columns: minmax(0, 1fr); max-width: 640px; }
+  /* The ladder turns to run down the page. */
+  .ladder { grid-template-columns: minmax(0, 1fr); gap: 26px; max-width: 640px; padding-left: 30px; }
+  .ladder::before { top: 4px; bottom: 4px; left: 5px; right: auto; width: 2px; height: auto; }
+  .ladder-when { margin-bottom: 0; }
+  .ladder-when::after { top: 3px; left: -30px; }
+  .ladder-stage { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px 16px; }
+  .ladder-stage > .ladder-when { grid-column: 1 / -1; }
+}
+@media (max-width: 1000px) {
+  .personas, .roads, .measures { grid-template-columns: minmax(0, 1fr); max-width: 600px; }
+}
+@media (max-width: 900px) {
+  .storyboard { gap: 28px 56px; }
+  .storyboard > li + li::before { left: -48px; width: 38px; }
+}
+@media (max-width: 700px) {
+  .causes { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .strip--wide .strip-item .shot { width: 270px; }
+  .storyboard {
+    display: flex;
+    gap: 20px;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: 12px var(--gutter) 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    overscroll-behavior-x: contain;
+  }
+  .storyboard > li { flex: none; width: 270px; scroll-snap-align: start; }
+  .storyboard > li + li::before { display: none; }
+  .states--three .state-group { padding: 24px 20px 26px 44px; --margin: 28px; }
+  .persona { padding: 24px 20px 26px 50px; --margin: 32px; }
+  .map { padding: 4px 20px 8px; }
+  /* The map's rows become blocks, each cell under its own heading. */
+  .map-table, .map-table tbody, .map-table tr, .map-table tbody th, .map-table td { display: block; width: auto; }
+  .map-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .map-table tr { padding: 20px 0; border-bottom: 1px solid var(--rule); }
+  .map-table tbody tr:last-child { border-bottom: 0; }
+  .map-table tbody th, .map-table td { padding: 0; border: 0; }
+  .map-table td { margin-top: 12px; }
+  .map-table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--graphite);
+  }
+  .measure.is-north { padding: 28px 22px 28px 54px; --margin: 36px; }
 }
